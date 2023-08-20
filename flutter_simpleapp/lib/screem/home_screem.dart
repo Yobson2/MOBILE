@@ -1,0 +1,103 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_simpleapp/components/add_hastag_component.dart';
+import 'package:flutter_simpleapp/views/home_view.dart';
+import 'package:flutter_simpleapp/views/liste_view.dart';
+
+class HomeScreem extends StatefulWidget {
+  const HomeScreem({Key? key}) : super(key: key);
+
+  @override
+  State<HomeScreem> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreem> {
+  late PageController _pageController;
+  int _currentIndex = 1; // Initialize the current index to 0
+
+  //initState() est utilisé pour les initialisations 
+  //nécessaires lors de l'ajout du widget à l'interface utilisateur
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(
+      initialPage: _currentIndex,
+    );
+  } 
+
+  //dispose() est utilisé pour libérer les ressources lorsque
+  // le widget n'est plus nécessaire, afin d'éviter des problèmes
+  // de mémoire et de comportement indésirable.
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        shadowColor: Colors.black,
+        title: const Text('YouCode'),
+      ),
+      body: PageView(
+        onPageChanged: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        controller: _pageController,
+        children: const <Widget>[
+          HomeView(),
+          ListeView(),
+        ],
+      ),
+      //boutton floating
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            onPressed: () {
+              // Logique pour le premier FloatingActionButton
+            },
+            child: Icon(Icons.add),
+          ),
+          SizedBox(height: 10), // Espacement entre les boutons flottants
+          FloatingActionButton(
+            onPressed: () {
+              // Logique pour le deuxième FloatingActionButton
+            },
+            child: Icon(Icons.remove),
+          ),
+        ],
+      ),
+      
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+            _pageController.animateToPage(
+              index,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+            );
+          });
+        },
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list),
+            label: 'List',
+          ),
+        ],
+      ),
+    );
+  }
+}
