@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
@@ -9,9 +11,11 @@ class MyDetailsItems extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-          // DetailsHeader(),
+          DetailsHeader(),
           MyChangeInfos(),
-          SizedBox(height: 20), 
+          Infos1Description(),
+          infos1Avis(),
+          // SizedBox(height: 20), 
         ],
       ),
     );
@@ -105,7 +109,6 @@ class MyTables extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 2000,
       child: Container(
         height: 300,
         color: Colors.amber,
@@ -115,19 +118,7 @@ class MyTables extends StatelessWidget {
               child: Infos1Blocs(),
             ),
             Center(
-              child: Column(
-                children: [
-                  SizedBox(height: 20),
-                  Text(
-                    "Carte",
-                    style: TextStyle(color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  Container(
-                    height: 600,
-                    color: Colors.black,
-                  )
-                ],
-              )
+              child: Infos2(),
             ),
           ],
         ),
@@ -154,7 +145,7 @@ class Infos2 extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text("database1")
+              Text("Ma carte")
             ]),])
     );
   }
@@ -172,8 +163,6 @@ class Infos1Blocs extends StatelessWidget {
     return const Column(
        children: [
         Infos1(),
-        // Infos1Description(),
-        // infos1Avis(),
        ],
     );
   }
@@ -225,7 +214,7 @@ class Infos1 extends StatelessWidget {
           Container(
             // color: Colors.amber,
             margin: EdgeInsets.only(left: 10), 
-            child: Row(
+            child: const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
@@ -269,24 +258,38 @@ class Infos1Description extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Description",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+    return Container(
+      padding: const EdgeInsets.all(16),
+      margin: EdgeInsets.only(left: 10.0, right: 10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildTitle("Description"),
+          SizedBox(height: 10),
+          _buildDescription(
+            "Bienvenue sur notre plateforme d'informations. Cette section contient des détails essentiels que vous devez connaître pour naviguer au mieux dans notre application. Prenez le temps de lire ces informations attentivement afin de profiter pleinement de toutes les fonctionnalités que nous offrons.",
           ),
-        ),
-        SizedBox(height: 10),
-        Text(
-          "Bienvenue sur notre plateforme d'informations. Cette section contient des détails essentiels que vous devez connaître pour naviguer au mieux dans notre application. Prenez le temps de lire ces informations attentivement afin de profiter pleinement de toutes les fonctionnalités que nous offrons.",
-          style: TextStyle(
-            fontSize: 16,
-          ),
-        ),
-      ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTitle(String title) {
+    return Text(
+      title,
+      style: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+  }
+
+  Widget _buildDescription(String description) {
+    return Text(
+      description,
+      style: TextStyle(
+        fontSize: 16,
+      ),
     );
   }
 }
@@ -300,11 +303,172 @@ class infos1Avis extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 100,
-      color: Colors.amber,
+      color: Colors.grey,
+      height: 200,
+      padding: EdgeInsets.all(10),
+      margin: EdgeInsets.only(left: 20.0, right: 20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Notes  et avis',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const Text(
+            'Notes et avis validés par des utilisateurs ayant bénéficié du même service.',
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w100,
+            ),
+          ),
+        ])
     );
   }
 }
+class MyComment extends StatefulWidget {
+  @override
+  _MyCommentState createState() => _MyCommentState();
+}
+
+class _MyCommentState extends State<MyComment> {
+  int visibleCommentCount = 2; 
+  final int commentsPerPage = 2;
+
+  final List<Map<String, dynamic>> avisRecents = [
+    {
+      "name": 'John',
+      "surname": 'Doe',
+      "photoUrl": 'https://images.unsplash.com/photo-1692116716561-953cc9a868b6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80',
+      "time": '12/12/2021',
+      "starCount": 4,
+      "comment": 'Great experience! Highly recommended.',
+    },
+    {
+      "name": 'John',
+      "surname": 'Doe',
+      "photoUrl": '',
+       "time": '12/12/2021',
+      "starCount": 4,
+      "comment": 'Great experience! Highly recommended.',
+    },
+    {
+      "name": 'John',
+      "surname": 'Doe',
+      "photoUrl": '',
+       "time": '12/12/2021',
+      "starCount": 4,
+      "comment": 'Great experience! Highly recommended.',
+    },
+  ];
+
+  void loadMoreComments() {
+    setState(() {
+      visibleCommentCount += commentsPerPage;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Évaluations récentes',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Expanded(
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: min(visibleCommentCount, avisRecents.length),
+              // itemCount: avisRecents.length,
+              itemBuilder: (context, index) {
+                final avis = avisRecents[index];
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const CircleAvatar(
+                        // backgroundImage: NetworkImage(avis["photoUrl"]),
+                        radius: 30,
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${avis["name"]} ${avis["surname"]}',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            SizedBox(height: 5),
+                            Text(
+                              avis["comment"],
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                            SizedBox(height: 5),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.star,
+                                  color: Colors.yellow,
+                                  size: 18,
+                                ),
+                                SizedBox(width: 5),
+                                Text(
+                                  '${avis["starCount"]} etoiles',
+                                  style: TextStyle(
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                                Spacer(),
+                                Text(
+                                  avis["time"],
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey[600],
+                                    
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+
+          if (visibleCommentCount < avisRecents.length)
+            TextButton(
+              onPressed: loadMoreComments,
+              child: Text("Voir plus"),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
 
 
 
