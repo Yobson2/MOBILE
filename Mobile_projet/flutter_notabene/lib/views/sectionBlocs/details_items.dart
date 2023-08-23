@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
@@ -303,7 +301,7 @@ class infos1Avis extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.grey,
+      color: Colors.blue,
       height: 200,
       padding: EdgeInsets.all(10),
       margin: EdgeInsets.only(left: 20.0, right: 20.0),
@@ -320,159 +318,91 @@ class infos1Avis extends StatelessWidget {
           const Text(
             'Notes et avis validés par des utilisateurs ayant bénéficié du même service.',
             style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w100,
+              fontSize: 12,
+              fontWeight: FontWeight.w300,
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(left: 10,top: 10.0),
+            child: const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AvisListes(),
+              ],
             ),
           ),
         ])
     );
   }
 }
-class MyComment extends StatefulWidget {
-  @override
-  _MyCommentState createState() => _MyCommentState();
-}
 
-class _MyCommentState extends State<MyComment> {
-  int visibleCommentCount = 2; 
-  final int commentsPerPage = 2;
-
-  final List<Map<String, dynamic>> avisRecents = [
-    {
-      "name": 'John',
-      "surname": 'Doe',
-      "photoUrl": 'https://images.unsplash.com/photo-1692116716561-953cc9a868b6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80',
-      "time": '12/12/2021',
-      "starCount": 4,
-      "comment": 'Great experience! Highly recommended.',
-    },
-    {
-      "name": 'John',
-      "surname": 'Doe',
-      "photoUrl": '',
-       "time": '12/12/2021',
-      "starCount": 4,
-      "comment": 'Great experience! Highly recommended.',
-    },
-    {
-      "name": 'John',
-      "surname": 'Doe',
-      "photoUrl": '',
-       "time": '12/12/2021',
-      "starCount": 4,
-      "comment": 'Great experience! Highly recommended.',
-    },
-  ];
-
-  void loadMoreComments() {
-    setState(() {
-      visibleCommentCount += commentsPerPage;
-    });
-  }
+class AvisListes extends StatelessWidget {
+  const AvisListes({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Évaluations récentes',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+    return const Row(
+      children: [
+        const CircleAvatar(
+          // backgroundImage: NetworkImage(avis["photoUrl"]),
+          radius: 30,
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "name surname",
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+              SizedBox(height: 5),
+              Text(
+                "commentufbhuguhfuhbuhguhubhguhbuhguhuhuuubvhfuhughufhguhufhughurhfguhufhguhu",
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: Colors.grey,
+                ),
+              ),
+              SizedBox(height: 5),
+              Row(
+                children: [
+                  Row(
+            children: [
+              Icon(Icons.star, color: Colors.yellow, size: 20),
+              Icon(Icons.star, color: Colors.yellow, size: 20),
+              Icon(Icons.star, color: Colors.yellow, size: 20),
+              Icon(Icons.star, color: Colors.yellow, size: 20),
+              Icon(Icons.star, color: Colors.yellow, size: 20),
+            ],
           ),
-          const SizedBox(height: 10),
-          Expanded(
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: min(visibleCommentCount, avisRecents.length),
-              // itemCount: avisRecents.length,
-              itemBuilder: (context, index) {
-                final avis = avisRecents[index];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const CircleAvatar(
-                        // backgroundImage: NetworkImage(avis["photoUrl"]),
-                        radius: 30,
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '${avis["name"]} ${avis["surname"]}',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            ),
-                            SizedBox(height: 5),
-                            Text(
-                              avis["comment"],
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                            SizedBox(height: 5),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.star,
-                                  color: Colors.yellow,
-                                  size: 18,
-                                ),
-                                SizedBox(width: 5),
-                                Text(
-                                  '${avis["starCount"]} etoiles',
-                                  style: TextStyle(
-                                    color: Colors.grey[600],
-                                  ),
-                                ),
-                                Spacer(),
-                                Text(
-                                  avis["time"],
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey[600],
-                                    
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                  SizedBox(width: 5),
+                  Spacer(),
+                  Text(
+                    "time",
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey,
+                    ),
                   ),
-                );
-              },
-            ),
+                  SizedBox(width: 5),
+                  Text(
+                    "date",
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
-
-          if (visibleCommentCount < avisRecents.length)
-            TextButton(
-              onPressed: loadMoreComments,
-              child: Text("Voir plus"),
-            ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
-
-
-
-
-
-
-
-

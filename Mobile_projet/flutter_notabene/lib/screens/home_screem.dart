@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_notabene/components/add_destinationMap_component.dart';
 import 'package:flutter_notabene/components/add_message_components.dart';
-import 'package:flutter_notabene/views/carte_view.dart';
+// import 'package:flutter_notabene/views/carte_view.dart';
 import 'package:flutter_notabene/views/home_view.dart';
 // import 'package:flutter_notabene/views/parametres_view.dart';
 import 'package:flutter_notabene/views/photo_view.dart';
-import 'package:flutter_notabene/views/sectionBlocs/details_items.dart';
+// import 'package:flutter_notabene/views/sectionBlocs/details_items.dart';
 // import 'package:flutter_notabene/views/sectionBlocs/listes_sections.dart';
 
 
@@ -84,11 +84,11 @@ class _HomeScreenState extends State<HomeScreem> {
         controller: _pageController,
         children: const <Widget>[
           HomeView(),
-          CarteView(),
+          // CarteView(),
           PhotoView(),
           // ParamsView(),
           // ListesBlocItems(),
-          MyDetailsItems()
+          // MyDetailsItems()
         ],
       ),
       //boutton floating
