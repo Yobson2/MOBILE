@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_notabene/screens/Sign_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 // import 'package:font_awesome/font_awesome.dart';
+Color googleBlueColor = Color(0xFF4285F4);
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -8,6 +10,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  
   @override
   Widget build(BuildContext context) {
   
@@ -30,23 +33,23 @@ class _LoginScreenState extends State<LoginScreen> {
              child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
                children: [
-                SizedBox(height: 80,),
-                Image.asset("assets/images/logot.png", width: 80, height: 80),
-                SizedBox(height: 15,),
-                Text("Notabene",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold
-                ),),
-                SizedBox(height: 20,),
+                const SizedBox(height: 100,),
+                // Image.asset("assets/images/logot.png", width: 80, height: 80),
+                // const SizedBox(height: 15,),
+                // const Text("Notabene",
+                // style: TextStyle(
+                //   color: Colors.white,
+                //   fontSize: 20,
+                //   fontWeight: FontWeight.bold
+                // ),),
+                const SizedBox(height: 20,),
                 Container(
                   alignment: Alignment.center,
                   height: 480,
                   width: 320,
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.1),
@@ -59,8 +62,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,  
                     children: [
-                      SizedBox(height: 15,),
-                       const Text("Bonjour"
+                      const SizedBox(height: 15,),
+                       const Text("BIENVENUE !"
                        ,style: TextStyle(
                           color: Colors.black,
                           fontSize: 20,
@@ -134,52 +137,31 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),),
                             ),
                           ),
-                          SizedBox(height: 10,),
-                          const Text("Ou avec",
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold
-                          ),),
+                          
                           SizedBox(height: 10,),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Container(
-                                width: 200,
-                                height: 20,
-                                alignment: Alignment.center,
-                                decoration: const BoxDecoration(
-                                  borderRadius: BorderRadius.all(Radius.circular(40)),
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                    colors: [
-                                      Color(0xFFFFFFFF),
-                                      Color(0xFF0000FF)
-                                    ]
-                                    
-                                    )
-                                ),
-                                child: const Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                  Icon(FontAwesomeIcons.google,
-                                   size: 18,
-                                   color: Colors.grey,
+                              Text("Nouveau sur Notabene ?"),
+                                     GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => RegistrationPage()),
+                                  );
+                                },
+                                child: Text(
+                                  "S'enregistrer",
+                                  style: TextStyle(
+                                    color: Colors.blue,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                  SizedBox(width: 10,),
-                                  Text("Facebook",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold
-                                ),),
-                                ],)
-                              )
-                            ],
-                          ),
-                    ],
+                                ),
+                              ),
+                                            ],
+                          )
+                          ],
                   ),
                 ),
                 

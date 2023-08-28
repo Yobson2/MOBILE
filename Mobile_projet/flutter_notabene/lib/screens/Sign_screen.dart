@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_notabene/screens/login_screen.dart';
+
+import 'Inscrire/sign_entreprise.dart';
+import 'Inscrire/sign_user.dart';
 
 
 class RegistrationPage extends StatefulWidget {
@@ -9,30 +13,28 @@ class RegistrationPage extends StatefulWidget {
 class _RegistrationPageState extends State<RegistrationPage> {
   bool _isUserSection = true;
 
-  void _toggleSection() {
+  void _toggleSection(bool isUserSection) {
     setState(() {
-      _isUserSection = !_isUserSection;
+      _isUserSection = isUserSection;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Inscription"),
-      ),
       body: SingleChildScrollView(
+   
         child: Column(
           children: [
-            SizedBox(height: 20),
+            SizedBox(height: 100),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-                  onPressed: () => _toggleSection(),
-                  child: Text("Utilisateur Simple"),
+                  onPressed: () => _toggleSection(true),
+                  child: Icon(Icons.person),
                   style: ElevatedButton.styleFrom(
-                    primary: _isUserSection? const Color.fromARGB(255, 34, 38, 41) : Colors.grey,
+                    primary: _isUserSection ? const Color.fromARGB(255, 34, 38, 41) : Colors.grey,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -40,82 +42,41 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 ),
                 SizedBox(width: 20),
                 ElevatedButton(
-                  onPressed: () => _toggleSection(),
-                  child: Text("Entreprise"),
+                  onPressed: () => _toggleSection(false),
+                  child: Icon(Icons.business),
                   style: ElevatedButton.styleFrom(
-                  primary: _isUserSection ? Colors.blue : Colors.black,
-                ),
+                    primary: !_isUserSection ? Colors.blue : Colors.black,
                   ),
+                ),
               ],
             ),
             SizedBox(height: 20),
             _isUserSection ? UserRegistrationSection() : CompanyRegistrationSection(),
+            SizedBox(height: 1,),
+            Row(
+                 mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                  Text("Vous avez déjà un compte ?"),
+                   GestureDetector(
+                      onTap: () {
+                           Navigator.push(
+                               context,
+                                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                                  );
+                                },
+                                child: const Text(
+                                  "Connexion",
+                                  style: TextStyle(
+                                    color: Colors.blue,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                          ),
+                      ),
+                                            ],                         
+                  )
           ],
         ),
-      ),
-    );
-  }
-}
-
-class UserRegistrationSection extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Column(
-        children: [
-          TextFormField(
-            decoration: InputDecoration(labelText: "Nom"),
-          ),
-          TextFormField(
-            decoration: InputDecoration(labelText: "Adresse e-mail"),
-          ),
-          TextFormField(
-            decoration: InputDecoration(labelText: "Mot de passe"),
-            obscureText: true,
-          ),
-          SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {
-              // Logique d'inscription pour l'utilisateur simple
-            },
-            child: Text("S'inscrire"),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class CompanyRegistrationSection extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Column(
-        children: [
-          TextFormField(
-            decoration: InputDecoration(labelText: "Nom de l'entreprise"),
-          ),
-          TextFormField(
-            decoration: InputDecoration(labelText: "Adresse e-mail de l'entreprise"),
-          ),
-          TextFormField(
-            decoration: InputDecoration(labelText: "Mot de passe"),
-            obscureText: true,
-          ),
-          TextFormField(
-            decoration: InputDecoration(labelText: "Numéro de téléphone"),
-          ),
-          SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {
-              // Logique d'inscription pour l'entreprise
-            },
-            child: Text("S'inscrire"),
-          ),
-        ],
-      ),
-    );
+      ) );
   }
 }
