@@ -34,6 +34,7 @@ dependencies:
   modal_bottom_sheet: ^2.1.2
   font_awesome_flutter: ^10.5.0
   http: ^1.1.0
+  camera: ^0.10.5+3
   # image_picker: ^1.0.2
   flutter:
     sdk: flutter

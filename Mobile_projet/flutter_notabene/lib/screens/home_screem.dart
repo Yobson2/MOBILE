@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_notabene/components/add_destinationMap_component.dart';
 import 'package:flutter_notabene/components/add_message_components.dart';
+import 'package:flutter_notabene/screens/login_screen.dart';
 import 'package:flutter_notabene/views/carte_view.dart';
 import 'package:flutter_notabene/views/home_view.dart';
 import 'package:flutter_notabene/views/parametres_view.dart';
@@ -64,11 +65,10 @@ class _HomeScreenState extends State<HomeScreem> {
             color: Colors.black,
             icon: Icon(Icons.person_outline),
             onPressed: () {
-              // Action du bouton de notifications
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => NotificationsPage()),
-              // );
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => LoginScreen()),
+              );
             },
           ),
         ],

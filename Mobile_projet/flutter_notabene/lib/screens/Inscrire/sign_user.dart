@@ -5,36 +5,37 @@ import 'dart:convert';
 
 class UserRegistrationSection extends StatelessWidget {
 
-  //Insert with my api
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
   Future<void> registerUser() async {
-    final apiUrl = Uri.parse("http://localhost:8082/v1/registerUsers");  
+  final userData = {
+    "nom_utilisateur": _nameController.text,
+    "adresse_email": _emailController.text,
+    "mot_de_passe": _passwordController.text,
+  };
 
-    final userData = {
-      "nom_utilisateur": "Nom de l'utilisateur",
-      "adresse_email": "exemple@email.com",
-      "mot_de_passe": "mot_de_passe"
-    }; 
+  final url = Uri.parse("http://192.168.1.4:8082/apiNotabene/v1/registerUsers");
 
-    final response = await http.post(
-      apiUrl,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: jsonEncode(userData),
-    );
+  var response = await http.post(
+    url,
+    headers: <String, String>{
+      "Content-Type": "application/json; charset=utf-8",
+    },
+    body: jsonEncode(userData),
+  );
 
-    if (response.statusCode == 201) {
-      print("Utilisateur enregistré avec succès!");
-    } else {
-      print("Échec de l'enregistrement de l'utilisateur.");
-      print("Code d'erreur: ${response.statusCode}");
-      print("Message d'erreur: ${response.body}");
-    }
+  if (response.statusCode == 201) {
+    // Réinitialiser les contrôleurs de texte et le formulaire
+    _nameController.clear();
+    _emailController.clear();
+    _passwordController.clear();
+
+    print("creation terminée");
   }
+}
 
-  void test(){
-    print("object: bonjour de l'utilisateur");
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +50,7 @@ class UserRegistrationSection extends StatelessWidget {
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 20,
-                fontWeight: FontWeight.bold
+                fontWeight: FontWeight.bold,
               ),
             ),
             SizedBox(height: 10,),
@@ -58,13 +59,14 @@ class UserRegistrationSection extends StatelessWidget {
               style: TextStyle(
                 color: Colors.grey,
                 fontSize: 15,
-                fontWeight: FontWeight.bold
+                fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 10,),
             Container(
               width: 260,
-              child: const TextField(
+              child: TextField(
+                controller: _nameController,
                 decoration: InputDecoration(
                   suffixIcon: Icon(FontAwesomeIcons.user, size: 17,),
                   labelText: "Nom",
@@ -74,7 +76,8 @@ class UserRegistrationSection extends StatelessWidget {
             SizedBox(height: 10,),
             Container(
               width: 260,
-              child: const TextField(
+              child: TextField(
+                controller: _emailController, 
                 decoration: InputDecoration(
                   suffixIcon: Icon(FontAwesomeIcons.envelope, size: 17,),
                   labelText: "Email",
@@ -83,7 +86,8 @@ class UserRegistrationSection extends StatelessWidget {
             ),
             Container(
               width: 260,
-              child: const TextField(
+              child: TextField(
+                controller: _passwordController, 
                 obscureText: true,
                 decoration: InputDecoration(
                   suffixIcon: Icon(FontAwesomeIcons.eyeSlash, size: 17,),
@@ -103,15 +107,15 @@ class UserRegistrationSection extends StatelessWidget {
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [Color(0xFFFFFFFF), Color(0xFF0000FF)]
-                  )
+                    colors: [Color(0xFFFFFFFF), Color(0xFF0000FF)],
+                  ),
                 ),
                 child: const Text(
                   "S'inscrire",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 15,
-                    fontWeight: FontWeight.bold
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
