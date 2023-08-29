@@ -1,9 +1,9 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:camera/camera.dart'; // Pour la caméra
+import 'package:path_provider/path_provider.dart'; // Pour le stockage local
 
 class PhotoView extends StatefulWidget {
   const PhotoView({Key? key}) : super(key: key);
-
   @override
   _PhotoViewState createState() => _PhotoViewState();
 }
@@ -14,18 +14,38 @@ class _PhotoViewState extends State<PhotoView> {
 
   @override
   void initState() {
-    _controller=CameraController(
-      const CameraDescription(
-        name: '0', 
-        lensDirection: CameraLensDirection.back, 
-        sensorOrientation: 1),
-        ResolutionPreset.medium
-      
-      );
-       _initializeControllerFuture = _controller.initialize();
-      super.initState();
+    super.initState();
+    _initializeCamera();
   }
 
+  Future<void> _initializeCamera() async {
+    final cameras = await availableCameras();
+    final firstCamera = cameras.first;
+
+    _controller = CameraController(
+      firstCamera,
+      ResolutionPreset.medium,
+    );
+
+    _initializeControllerFuture = _controller.initialize();
+  }
+
+  Future<void> _takePicture() async {
+    try {
+      await _initializeControllerFuture;
+      final image = await _controller.takePicture();
+
+      final appDir = await getApplicationDocumentsDirectory();
+      final imageName = DateTime.now().toString() + '.png';
+      final imagePath = appDir.path + '/' + imageName;
+
+      // Enregistrez l'image ici avec les données associées
+
+      print('Image saved at: $imagePath');
+    } catch (e) {
+      print('Error taking picture: $e');
+    }
+  }
 
   @override
   void dispose() {
@@ -33,10 +53,12 @@ class _PhotoViewState extends State<PhotoView> {
     super.dispose();
   }
 
-//=======USER INTERFACE=======//  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Panorama Camera App'),
+      ),
       body: FutureBuilder<void>(
         future: _initializeControllerFuture,
         builder: (context, snapshot) {
@@ -47,16 +69,10 @@ class _PhotoViewState extends State<PhotoView> {
           }
         },
       ),
-     floatingActionButton: FloatingActionButton(
-      backgroundColor: Colors.white,
-      child: Icon(Icons.camera, ),
-      onPressed: (){
-        try {
-          
-        } catch (error) {
-           print("Error:  $error"); 
-        }
-      }),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _takePicture,
+        child: Icon(Icons.camera, color: Colors.red,),
+      ),
     );
   }
 }
