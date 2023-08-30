@@ -34,7 +34,9 @@ class UserRegistrationSection extends StatelessWidget {
 
     print("creation terminée");
   }
+  print( userData);
 }
+
 
 
   @override

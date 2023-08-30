@@ -49,7 +49,7 @@ class AppRoutes {
       case carte:
         return MaterialPageRoute(builder: (context) => const CarteGloblale());
       case photo:
-        return MaterialPageRoute(builder: (context) =>  PhotoView());
+        return MaterialPageRoute(builder: (context) =>  const PhotoViewWithHero());
       case parametres:
         return MaterialPageRoute(builder: (context) => const ParamsView());
       case banque:

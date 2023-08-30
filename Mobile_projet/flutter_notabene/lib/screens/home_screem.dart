@@ -81,15 +81,15 @@ class _HomeScreenState extends State<HomeScreem> {
         },
         controller: _pageController,
         children: const <Widget>[
-          HomeView(),
+          // HomeView(),
           CarteGloblale(),
-          PhotoView(),
+          PhotoViewWithHero(),
           
           ParamsView(),
         ],
       ),
       //boutton floating
-      floatingActionButton: Column(
+      floatingActionButton: const Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
@@ -115,6 +115,7 @@ class _HomeScreenState extends State<HomeScreem> {
           BottomNavigationBarItem(
                 icon: Icon(Icons.home),
                 label: "Accueil",
+                
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.map),
