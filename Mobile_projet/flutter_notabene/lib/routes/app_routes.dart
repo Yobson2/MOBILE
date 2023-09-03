@@ -16,11 +16,15 @@ import '../views/cartegories_pages/spermarche_page.dart';
 
 class AppRoutes {
   static const String login = '/login';
-  static const String signIn = '/login';
+  static const String signup = '/signup';
   static const String home = '/';
   static const String carte = '/carte';
   static const String photo = '/photo';
 
+  static const String parametres = '/parametres';
+  static const String homeConnect = '/home/:id';
+  static const String listes = '/home/list/:id';
+  static const String details = '/home/details/:id';
 
   static const String restaurant = '/restaurant_page';
   static const String banque = '/banque_page';
@@ -29,20 +33,12 @@ class AppRoutes {
   static const String divers = '/divers_page';
 
 
-
-
-  static const String parametres = '/parametres';
-  static const String homeConnect = '/home/:id';
-  static const String listes = '/home/list/:id';
-  static const String details = '/home/details/:id';
-
-
   static Route<dynamic>? generateRoute(RouteSettings settings)
   {
     switch(settings.name){
       case login:
         return MaterialPageRoute(builder: (context) => LoginScreen());
-      case signIn:
+      case signup:
         return MaterialPageRoute(builder: (context) => RegistrationPage());
       case home:
         return MaterialPageRoute(builder: (context) => const HomeScreem());

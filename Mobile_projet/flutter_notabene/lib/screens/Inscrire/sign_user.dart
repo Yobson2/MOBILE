@@ -16,7 +16,7 @@ class UserRegistrationSection extends StatelessWidget {
     "mot_de_passe": _passwordController.text,
   };
 
-  final url = Uri.parse("http://192.168.1.4:8082/apiNotabene/v1/registerUsers");
+  final url = Uri.parse("http://192.168.111.1:8082/apiNotabene/v1/registerUsers");
 
   var response = await http.post(
     url,
@@ -26,6 +26,7 @@ class UserRegistrationSection extends StatelessWidget {
     body: jsonEncode(userData),
   );
 
+
   if (response.statusCode == 201) {
     // Réinitialiser les contrôleurs de texte et le formulaire
     _nameController.clear();
@@ -34,7 +35,7 @@ class UserRegistrationSection extends StatelessWidget {
 
     print("creation terminée");
   }
-  print( userData);
+  print(userData);
 }
 
 
@@ -69,7 +70,7 @@ class UserRegistrationSection extends StatelessWidget {
               width: 260,
               child: TextField(
                 controller: _nameController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   suffixIcon: Icon(FontAwesomeIcons.user, size: 17,),
                   labelText: "Nom",
                 ),
@@ -80,7 +81,7 @@ class UserRegistrationSection extends StatelessWidget {
               width: 260,
               child: TextField(
                 controller: _emailController, 
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   suffixIcon: Icon(FontAwesomeIcons.envelope, size: 17,),
                   labelText: "Email",
                 ),

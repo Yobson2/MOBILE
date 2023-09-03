@@ -2,7 +2,6 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'galerie_photo.dart';
 
 class MyCamera extends StatefulWidget {
   const MyCamera({Key? key}) : super(key: key);
@@ -15,34 +14,40 @@ class _MyCameraState extends State<MyCamera> {
   late CameraController _controller;
   String? _capturedImagePath;
   late Future<void> _initializeControllerFuture;
-  bool _isCameraInitialized = false; 
+  bool _isCameraInitialized = false;
+  bool _isFrontCamera = false; 
 
-
-  @override
-  void initState() {
-    super.initState();
-    _initializeCamera();
+  _MyCameraState() {
+    _initializeControllerFuture = _initializeCamera();
   }
 
   Future<void> _initializeCamera() async {
     final cameras = await availableCameras();
-    final firstCamera = cameras.first;
+    final camera = _isFrontCamera ? cameras.last : cameras.first; // Use the selected camera
 
     _controller = CameraController(
-      firstCamera,
+      camera,
       ResolutionPreset.medium,
     );
 
-    // _initializeControllerFuture = _controller.initialize();
-     _initializeControllerFuture = _controller.initialize().then((_) {
-      setState(() {
-        _isCameraInitialized = true;
-      });
+    await _controller.initialize();
+
+    setState(() {
+      _isCameraInitialized = true;
     });
   }
 
+  void _toggleCamera() {
+    setState(() {
+      _isFrontCamera = !_isFrontCamera;
+      _isCameraInitialized = false;
+    });
+    _controller.dispose();
+    _initializeCamera();
+  }
+
   Future<void> _takePicture() async {
-    if (!_isCameraInitialized) return; 
+    if (!_isCameraInitialized) return;
     try {
       await _initializeControllerFuture;
       final image = await _controller.takePicture();
@@ -52,16 +57,18 @@ class _MyCameraState extends State<MyCamera> {
       final imagePath = appDir.path + '/' + imageName;
 
       setState(() {
-        _capturedImagePath = imagePath; 
+        _capturedImagePath = imagePath;
       });
-
-      // Enregistrez l'image ici avec les données associées
 
       print('Image saved at: $imagePath');
     } catch (e) {
       print('Error taking picture: $e');
     }
   }
+
+      void _createPanorama() {
+         ///traitement
+      }
 
   @override
   void dispose() {
@@ -73,13 +80,16 @@ class _MyCameraState extends State<MyCamera> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Panorama Camera App'),
+        title: Text('Panorama Camera'),
       ),
       body: FutureBuilder<void>(
         future: _initializeControllerFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return CameraPreview(_controller);
+            return Container(
+              height: 800,
+              child: CameraPreview(_controller),
+            );
           } else {
             return Center(child: CircularProgressIndicator());
           }
@@ -91,26 +101,28 @@ class _MyCameraState extends State<MyCamera> {
           margin: EdgeInsets.only(left: 30.0),
           child: Row(
             children: [
-              FloatingActionButton(
-                onPressed: () {
-                  if (_capturedImagePath != null) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            GalleryPage(capturedImagePath: _capturedImagePath!),
-                      ),
-                    );
-                  }
-                },
-                child: Icon(Icons.photo_library),
-                backgroundColor: Colors.black12,
-              ),
+              // FloatingActionButton(
+              //   onPressed: () {
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(
+              //         builder: (context) => GalleryPage(),
+              //       ),
+              //     );
+              //   },
+              //   child: Icon(Icons.photo_library),
+              //   backgroundColor: Colors.black12,
+              // ),
               FloatingActionButton(
                 onPressed: _takePicture,
                 child: Icon(Icons.camera),
                 backgroundColor: Colors.black12,
               ),
+              // FloatingActionButton( 
+              //   onPressed: _toggleCamera,
+              //   child: Icon(_isFrontCamera ? Icons.camera_rear : Icons.camera_front),
+              //   backgroundColor: Colors.black12,
+              // ),
             ],
           ),
         ),

@@ -44,7 +44,7 @@ class _HomeScreenState extends State<HomeScreem> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
+        title: const Row(
           children: [
             Icon(Icons.note),
             Text(
@@ -81,7 +81,7 @@ class _HomeScreenState extends State<HomeScreem> {
         },
         controller: _pageController,
         children: const <Widget>[
-          // HomeView(),
+          HomeView(),
           CarteGloblale(),
           PhotoViewWithHero(),
           
@@ -89,13 +89,13 @@ class _HomeScreenState extends State<HomeScreem> {
         ],
       ),
       //boutton floating
-      floatingActionButton: const Column(
+      floatingActionButton:  Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           AddCommentaireComponent(),
-          SizedBox(height: 5), // Espacement entre les boutons flottants
-          AddDestinationMapComponent()
+      //     SizedBox(height: 5), 
+      //     AddDestinationMapComponent()
         ],
       ),
       
