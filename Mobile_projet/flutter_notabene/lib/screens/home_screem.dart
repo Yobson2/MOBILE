@@ -39,6 +39,63 @@ class _HomeScreenState extends State<HomeScreem> {
   }
 
   
+ void _showSettingsModal(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(
+        top: Radius.circular(20.0),
+      ),
+    ),
+    builder: (BuildContext context) {
+      return Container(
+        padding: EdgeInsets.all(30.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Paramètres',
+              style: TextStyle(
+                fontSize: 24.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 20.0),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Profil'),
+              onTap: () {
+                // Mettez ici la logique pour l'option 1
+                Navigator.pop(context);
+              },
+            ),
+            Divider(),
+            ListTile(
+              leading: Icon(Icons.notification_add),
+              title: Text('Notifications'),
+              onTap: () {
+                // Mettez ici la logique pour l'option 2
+                Navigator.pop(context);
+              },
+            ),
+            Divider(),
+            ListTile(
+              leading: Icon(Icons.exit_to_app),
+              title: Text('Quitter'),
+              onTap: () {
+                // Mettez ici la logique pour l'option 2
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
+
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -84,8 +141,7 @@ class _HomeScreenState extends State<HomeScreem> {
           HomeView(),
           CarteGloblale(),
           PhotoViewWithHero(),
-          
-          ParamsView(),
+          // HomeView(),
         ],
       ),
       //boutton floating
@@ -99,6 +155,7 @@ class _HomeScreenState extends State<HomeScreem> {
         ],
       ),
       
+      
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) {
@@ -109,6 +166,10 @@ class _HomeScreenState extends State<HomeScreem> {
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut,
             );
+            // Afficher le modal des paramètres lorsque l'élément "Paramètres" est cliqué
+            if (index == 3) {
+              _showSettingsModal(context);
+            }
           });
         },
         items: const <BottomNavigationBarItem>[
@@ -128,6 +189,7 @@ class _HomeScreenState extends State<HomeScreem> {
               BottomNavigationBarItem(
                 icon: Icon(Icons.settings),
                 label: "Paramètres",
+                
               ),
         ],
          selectedItemColor: Colors.blue,
