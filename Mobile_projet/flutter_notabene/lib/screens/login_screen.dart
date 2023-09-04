@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_notabene/screens/Sign_screen.dart';
+import 'package:flutter_notabene/screens/home_screem.dart';
 import 'package:flutter_notabene/views/dash.dart';
+import 'package:flutter_notabene/views/views_Connect/home_connect.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -60,14 +62,13 @@ class _LoginScreenState extends State<LoginScreen> {
     prefs.setString("token", myToken);
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => Dash(token: myToken)),
+      MaterialPageRoute(builder: (context) => ConnectedUserWidget(token:myToken)),
     );
   } else {
     // En cas d'erreur, affichez un message d'erreur
     print("Erreur loginUser: ${response.statusCode}");
   }
 
-  print(userLogin);
 }
 
   @override

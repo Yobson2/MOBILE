@@ -1,12 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart'; 
+import '../services/connectEtat.dart';
 
 class CarteGloblale extends StatelessWidget {
-    const CarteGloblale({Key? key}) : super(key: key);
+  const CarteGloblale({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('carte'),
+    // Accédez à l'ID de l'utilisateur en utilisant Provider
+    final userId = Provider.of<UserProvider>(context).userId;
+
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('Carte Globale'),
+          Text('ID de l\'utilisateur : $userId'),
+          // Ajoutez d'autres éléments de votre carte ici
+        ],
+      ),
     );
   }
 }

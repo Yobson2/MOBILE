@@ -41,7 +41,7 @@ class AppRoutes {
       case signup:
         return MaterialPageRoute(builder: (context) => RegistrationPage());
       case home:
-        return MaterialPageRoute(builder: (context) => const HomeScreem());
+        return MaterialPageRoute(builder: (context) =>  const HomeScreen());
       case carte:
         return MaterialPageRoute(builder: (context) => const CarteGloblale());
       case photo:
@@ -59,8 +59,6 @@ class AppRoutes {
         return MaterialPageRoute(builder: (context) => const SpermarchePage());
       case divers :
         return MaterialPageRoute(builder: (context) => const DiversPage());
-      case homeConnect:
-        // return MaterialPageRoute(builder: (context) => HomeConnectScreen());
       case listes:
         return MaterialPageRoute(builder: (context) => const ListesBlocItems());
       case details:
