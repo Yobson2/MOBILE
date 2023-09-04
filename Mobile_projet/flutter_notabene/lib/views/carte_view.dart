@@ -15,7 +15,7 @@ class CarteGloblale extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text('Carte Globale'),
-          Text('ID de l\'utilisateur : $userId'),
+          Text('ID de l\'utilisat : $userId'),
           // Ajoutez d'autres éléments de votre carte ici
         ],
       ),
