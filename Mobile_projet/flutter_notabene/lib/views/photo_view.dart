@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_notabene/views/photos/galerie_photo.dart';
-import 'package:flutter_notabene/views/photos/panorama_test.dart';
 import 'package:flutter_notabene/views/photos/print_camera.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -71,30 +70,6 @@ class PhotoViewWithHero extends StatelessWidget {
               ),
               child: Text(
                 'Explorer la Galerie',
-                style: GoogleFonts.dangrek(
-                textStyle: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue,
-                  decoration: TextDecoration.underline,
-                ),
-              ),
-              ),
-            ),
-            ElevatedButton(
-              // onPressed: () {
-              //   Navigator.push(
-              //     context,
-              //     MaterialPageRoute(builder: (context) => const MyAppanora()),
-              //   );
-              // },
-              onPressed: ()=> {},
-              style: ElevatedButton.styleFrom(
-                primary: Colors.transparent,
-                elevation: 0,
-              ),
-              child: Text(
-                'Panorama',
                 style: GoogleFonts.dangrek(
                 textStyle: const TextStyle(
                   fontSize: 22,

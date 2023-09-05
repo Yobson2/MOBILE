@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_notabene/components/add_message_components.dart';
 import 'package:flutter_notabene/screens/login_screen.dart';
+import 'package:flutter_notabene/views/photo_view.dart';
 // import 'package:flutter_notabene/views/carte_view.dart';
 // import 'package:flutter_notabene/views/home_view.dart';
 // import 'package:flutter_notabene/views/photo_view.dart';
@@ -139,9 +140,9 @@ class _NotConnectedUserWidgetState extends State<NotConnectedUserWidget> {
         children: const <Widget>[
           // HomeView(),
           // CarteGloblale(),
-          // PhotoViewWithHero(),
+          PhotoViewWithHero(),
           // // HomeView(),
-          Center(child: Text("Non connecté"))
+          // Center(child: Text("Non connecté"))
         ],
       ),
       //boutton floating

@@ -57,7 +57,7 @@ class _ConnectedUserWidgetState extends State<ConnectedUserWidget> {
   Future<void> fetchUserData() async {
     try {
       // Effectuez une requête HTTP pour récupérer les données de l'utilisateur en fonction de son email
-      final response = await http.get(Uri.parse('http://192.168.120.248:8082/apiNotabene/v1/userByEmail/$email'));
+      final response = await http.get(Uri.parse('http://192.168.1.17:8082/apiNotabene/v1/userByEmail/$email'));
 
       if (response.statusCode == 200) {
         userData = json.decode(response.body);

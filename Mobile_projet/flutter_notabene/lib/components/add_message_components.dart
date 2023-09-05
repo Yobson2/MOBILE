@@ -1,7 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_notabene/views/photo_view.dart';
+import 'package:flutter_notabene/views/photos/galerie_photo.dart';
+import 'package:flutter_notabene/views/photos/galerie_tel.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
@@ -12,19 +15,20 @@ class AddCommentaireComponent extends StatelessWidget {
   final TextEditingController _nomStructureController = TextEditingController();
   final TextEditingController _commentaireController = TextEditingController();
   final TextEditingController _etoilesController = TextEditingController();
+  String? imagePath; 
   
   //  const AddCommentaireComponent({Key? key});
   Future<void> addCommentaire(myId) async {
  
   final userData = {
     "contenu_commentaire": _commentaireController.text,
-    "nom_entreprise": _nomStructureController,
+    "nom_entreprise": _nomStructureController.text,
     "nombre_etoiles":_etoilesController.text,
     "photo": "bfgbebgb",
   };
 
   
-  final url = Uri.parse("http://192.168.120.248:8082/apiNotabene/v1/addPost/$myId");
+  final url = Uri.parse("http://192.168.1.17:8082/apiNotabene/v1/addPost/$myId");
 
   var response = await http.post(
     url,
@@ -49,6 +53,20 @@ class AddCommentaireComponent extends StatelessWidget {
   print(userData);
 
 }
+
+//Acceder et recuperer les images de mon tel
+
+// Future<void> _pickImageFromGallery() async {
+//   final picker = ImagePicker();
+//   final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+//   if (pickedFile != null) {
+//      imagePath = pickedFile.path;
+//   } else {
+//     print('User canceled image selection');
+//   }
+// }
+
   
   // Méthode pour afficher le modal des commentaires
   void _modal(BuildContext context) {
@@ -61,7 +79,7 @@ class AddCommentaireComponent extends StatelessWidget {
         padding: EdgeInsets.all(16.0),
         child: Wrap(
           children: <Widget>[
-                 Padding(
+                 const Padding(
               padding: EdgeInsets.all(8.0),
               child: Text(
                 "Ajoutez un commentaire",
@@ -72,40 +90,40 @@ class AddCommentaireComponent extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
-              SizedBox(height: 5,),
+              const SizedBox(height: 5,),
                Container(
                       width: 300,
                       child: TextField(
                         controller: _nomStructureController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: "Nom de la structure ",
                            border: OutlineInputBorder(),
                         ),
                       ),
                 ),
-                 SizedBox(height: 5),
+                 const SizedBox(height: 5),
                 Container(
                       width: 300,
                       child: TextField(
                         controller: _commentaireController,
                          maxLines: 5,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: "Votre commentaire",
                            border: OutlineInputBorder(),
                         ),
                       ),
                 ),
-                 SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Container(
                       width: 100,
                       child: TextField(
                       maxLines: 1, 
                       maxLength: 1, 
                         controller: _etoilesController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: "Etoiles ",
                            border: OutlineInputBorder(),
                         ),
@@ -167,16 +185,31 @@ class AddCommentaireComponent extends StatelessWidget {
               leading: Icon(Icons.camera),
               title: Text("Prendre une photo"),
               onTap: () {
-                // Gérer la logique pour prendre une photo ici
-                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const PhotoViewWithHero()),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.photo_album),
+              title: Text("Galerie de notabene"),
+              onTap: () {
+               Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const GalleryPage()),
+                );
               },
             ),
             ListTile(
               leading: Icon(Icons.photo),
-              title: Text("Sélectionner une photo depuis la galerie"),
+              title: Text("Galerie du telephone"),
               onTap: () {
-                // Gérer la logique pour sélectionner une photo depuis la galerie ici
-                Navigator.pop(context);
+                // _pickImageFromGallery();
+                 Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyImagePicker()),
+                );
               },
             ),
           ],

@@ -16,7 +16,7 @@ class UserRegistrationSection extends StatelessWidget {
     "mot_de_passe": _passwordController.text,
   };
 
-  final url = Uri.parse("http://192.168.111.1:8082/apiNotabene/v1/registerUsers");
+  final url = Uri.parse("http://192.168.1.17:8082/apiNotabene/v1/registerUsers");
 
   var response = await http.post(
     url,

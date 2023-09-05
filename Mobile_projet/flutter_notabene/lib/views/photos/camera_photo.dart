@@ -1,6 +1,11 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
+
+
+import 'ImagePreviewPage.dart';
 
 
 class MyCamera extends StatefulWidget {
@@ -46,6 +51,16 @@ class _MyCameraState extends State<MyCamera> {
     _initializeCamera();
   }
 
+  void _navigateToImagePreview( imagePath) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => ImagePreviewPage(imagePath: imagePath),
+    ),
+  );
+}
+
+
   Future<void> _takePicture() async {
     if (!_isCameraInitialized) return;
     try {
@@ -53,22 +68,20 @@ class _MyCameraState extends State<MyCamera> {
       final image = await _controller.takePicture();
 
       final appDir = await getApplicationDocumentsDirectory();
-      final imageName = DateTime.now().toString() + '.png';
-      final imagePath = appDir.path + '/' + imageName;
+      final formattedDate = DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
+      final imageName = 'Notabene_$formattedDate.png';
+      final imagePath = '${appDir.path}/$imageName';
 
       setState(() {
         _capturedImagePath = imagePath;
       });
-
+      _navigateToImagePreview(imagePath);
       print('Image saved at: $imagePath');
-    } catch (e) {
+    } on PlatformException catch (e) {
       print('Error taking picture: $e');
     }
   }
 
-      void _createPanorama() {
-         ///traitement
-      }
 
   @override
   void dispose() {
@@ -80,7 +93,7 @@ class _MyCameraState extends State<MyCamera> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Panorama Camera'),
+        title: const Text('Notabene Camera'),
       ),
       body: FutureBuilder<void>(
         future: _initializeControllerFuture,
@@ -91,14 +104,14 @@ class _MyCameraState extends State<MyCamera> {
               child: CameraPreview(_controller),
             );
           } else {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
         },
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
-          margin: EdgeInsets.only(left: 30.0),
+          margin:const EdgeInsets.only(left: 30.0),
           child: Row(
             children: [
               // FloatingActionButton(
