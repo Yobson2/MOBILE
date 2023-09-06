@@ -98,7 +98,7 @@ class _ConnectedUserWidgetState extends State<ConnectedUserWidget> {
  void _showSettingsModal(BuildContext context) {
   showModalBottomSheet(
     context: context,
-    shape: RoundedRectangleBorder(
+    shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(
         top: Radius.circular(20.0),
       ),
@@ -109,17 +109,17 @@ class _ConnectedUserWidgetState extends State<ConnectedUserWidget> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
+            const Text(
               'Paramètres',
               style: TextStyle(
                 fontSize: 24.0,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Profil'),
+              leading: const Icon(Icons.settings),
+              title: const Text('Profil'),
               onTap: () {
                 // Mettez ici la logique pour l'option 1
                 Navigator.pop(context);
@@ -127,8 +127,8 @@ class _ConnectedUserWidgetState extends State<ConnectedUserWidget> {
             ),
             Divider(),
             ListTile(
-              leading: Icon(Icons.notification_add),
-              title: Text('Notifications'),
+              leading: const Icon(Icons.notification_add),
+              title: const Text('Notifications'),
               onTap: () {
                 // Mettez ici la logique pour l'option 2
                 Navigator.pop(context);
@@ -136,8 +136,8 @@ class _ConnectedUserWidgetState extends State<ConnectedUserWidget> {
             ),
             Divider(),
             ListTile(
-              leading: Icon(Icons.exit_to_app),
-              title: Text('Quitter'),
+              leading: const Icon(Icons.exit_to_app),
+              title: const Text('Quitter'),
               onTap: () {
                 // Mettez ici la logique pour l'option 2
                 Navigator.pop(context);
@@ -176,7 +176,7 @@ class _ConnectedUserWidgetState extends State<ConnectedUserWidget> {
         actions: [
           IconButton(
             color: Colors.black,
-            icon: Icon(Icons.person_outline),
+            icon: const Icon(Icons.person_outline),
             onPressed: () {
               Navigator.push(
                 context,

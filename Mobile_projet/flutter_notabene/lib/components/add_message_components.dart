@@ -15,9 +15,9 @@ class AddCommentaireComponent extends StatelessWidget {
   final TextEditingController _nomStructureController = TextEditingController();
   final TextEditingController _commentaireController = TextEditingController();
   final TextEditingController _etoilesController = TextEditingController();
-  String? imagePath; 
+
   
-  //  const AddCommentaireComponent({Key? key});
+  //  AddCommentaireComponent({Key? key});
   Future<void> addCommentaire(myId) async {
  
   final userData = {
@@ -28,7 +28,7 @@ class AddCommentaireComponent extends StatelessWidget {
   };
 
   
-  final url = Uri.parse("http://192.168.1.17:8082/apiNotabene/v1/addPost/$myId");
+  final url = Uri.parse("http://192.168.1.13:8082/apiNotabene/v1/addPost/$myId");
 
   var response = await http.post(
     url,
@@ -54,18 +54,8 @@ class AddCommentaireComponent extends StatelessWidget {
 
 }
 
-//Acceder et recuperer les images de mon tel
 
-// Future<void> _pickImageFromGallery() async {
-//   final picker = ImagePicker();
-//   final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
-//   if (pickedFile != null) {
-//      imagePath = pickedFile.path;
-//   } else {
-//     print('User canceled image selection');
-//   }
-// }
 
   
   // Méthode pour afficher le modal des commentaires
@@ -132,21 +122,35 @@ class AddCommentaireComponent extends StatelessWidget {
                 ]
               ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                // Ouvrir la feuille de bas de page pour ajouter des photos ici
-                _showPhotoBottomSheet(context);
-              },
-              style: ElevatedButton.styleFrom(
-                primary: Colors.blue,
-              ),
-              child: Text("Ajouter une photo"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    // Ouvrir la feuille de bas de page pour ajouter des photos ici
+                    _showPhotoBottomSheet(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.blue,
+                  ),
+                  child: Text("Ajouter une photo"),
+                ),
+                Container(
+                  height: 80,
+                  width: 80,
+                  decoration:const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0))
+                  ),
+                  child: Image.asset("assets/images/pict2.jpg"),
+                )
+              ],
             ),
             Padding(
               padding: EdgeInsets.only(top: 16.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
+                  const Mydata(),
                   TextButton(
                     onPressed: () => Navigator.pop(context),
                     style: TextButton.styleFrom(
@@ -226,5 +230,22 @@ class AddCommentaireComponent extends StatelessWidget {
         _modal(context);
       },
     );
+  }
+}
+
+
+
+class Mydata extends StatelessWidget {
+  const Mydata({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      child: Container(
+        height: 50,
+        color: Colors.amber,
+        child: Text('Build'),
+        ),
+      );
   }
 }

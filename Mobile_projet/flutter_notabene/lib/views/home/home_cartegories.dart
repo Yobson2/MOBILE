@@ -42,7 +42,7 @@ class CategorySection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         // color: Colors.black,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(20),
@@ -67,8 +67,7 @@ class CategorySection extends StatelessWidget {
                   ),
                   IconButton(
                     onPressed: () {
-                      // Add your onPressed logic here
-                      
+                    
                     },
                     icon: Icon(Icons.arrow_forward_ios),
                   ),

@@ -17,7 +17,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(),
       body: isLoggedIn
-          ? ConnectedUserWidget(token: "",)
+          ? const ConnectedUserWidget(token: "",)
           : const NotConnectedUserWidget(),
     );
   }

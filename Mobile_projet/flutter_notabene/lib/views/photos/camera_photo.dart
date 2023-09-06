@@ -66,17 +66,11 @@ class _MyCameraState extends State<MyCamera> {
     try {
       await _initializeControllerFuture;
       final image = await _controller.takePicture();
-
-      final appDir = await getApplicationDocumentsDirectory();
-      final formattedDate = DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
-      final imageName = 'Notabene_$formattedDate.png';
-      final imagePath = '${appDir.path}/$imageName';
-
       setState(() {
-        _capturedImagePath = imagePath;
+        _capturedImagePath = image.path;
       });
-      _navigateToImagePreview(imagePath);
-      print('Image saved at: $imagePath');
+      _navigateToImagePreview(_capturedImagePath);
+      print('Image saved at: $_capturedImagePath');
     } on PlatformException catch (e) {
       print('Error taking picture: $e');
     }
@@ -99,7 +93,7 @@ class _MyCameraState extends State<MyCamera> {
         future: _initializeControllerFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return Container(
+            return SizedBox(
               height: 800,
               child: CameraPreview(_controller),
             );
@@ -128,7 +122,7 @@ class _MyCameraState extends State<MyCamera> {
               // ),
               FloatingActionButton(
                 onPressed: _takePicture,
-                child: Icon(Icons.camera),
+                child: const Icon(Icons.camera),
                 backgroundColor: Colors.black12,
               ),
               // FloatingActionButton( 
