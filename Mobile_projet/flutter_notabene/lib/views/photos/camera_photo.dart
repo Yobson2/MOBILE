@@ -1,8 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
-import 'package:path_provider/path_provider.dart';
+
 
 
 import 'ImagePreviewPage.dart';
@@ -62,19 +61,26 @@ class _MyCameraState extends State<MyCamera> {
 
 
   Future<void> _takePicture() async {
-    if (!_isCameraInitialized) return;
-    try {
-      await _initializeControllerFuture;
-      final image = await _controller.takePicture();
-      setState(() {
-        _capturedImagePath = image.path;
-      });
-      _navigateToImagePreview(_capturedImagePath);
-      print('Image saved at: $_capturedImagePath');
-    } on PlatformException catch (e) {
-      print('Error taking picture: $e');
-    }
+  if (!_isCameraInitialized) return;
+  try {
+    await _initializeControllerFuture;
+    final image = await _controller.takePicture();
+    setState(() {
+      _capturedImagePath = image.path;
+    });
+
+    _navigateToImagePreview(_capturedImagePath);
+
+    print('Image saved at: $_capturedImagePath');
+    
+    // Arrêtez le flux de l'image après avoir pris la photo
+    // _controller.dispose();
+
+  } on PlatformException catch (e) {
+    print('Error taking picture: $e');
   }
+}
+
 
 
   @override

@@ -5,7 +5,9 @@ import 'package:flutter_notabene/screens/home_screem.dart';
 import 'package:flutter_notabene/views/dash.dart';
 import 'package:flutter_notabene/views/views_Connect/home_connect.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -33,6 +35,8 @@ class _LoginScreenState extends State<LoginScreen> {
      }
 
 
+
+
     Future<void> loginUser() async {
   if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
     return;
@@ -43,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
     "mot_de_passe": _passwordController.text,
   };
 
-  final url = Uri.parse("http://192.168.1.13:8082/apiNotabene/v1/loginUsers");
+  final url = Uri.parse("http://192.168.1.5:8082/apiNotabene/v1/loginUsers");
 
   var response = await http.post(
     url,

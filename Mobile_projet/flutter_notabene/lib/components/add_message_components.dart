@@ -28,26 +28,26 @@ class AddCommentaireComponent extends StatelessWidget {
   };
 
   
-  final url = Uri.parse("http://192.168.1.13:8082/apiNotabene/v1/addPost/$myId");
+  // final url = Uri.parse("http://192.168.1.5:8082/apiNotabene/v1/addPost/$myId");
 
-  var response = await http.post(
-    url,
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: jsonEncode(userData),
-  );
+  // var response = await http.post(
+  //   url,
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: jsonEncode(userData),
+  // );
 
-  if (response.statusCode == 200) {
-     _nomStructureController.clear();
-     _commentaireController.clear();
-     _etoilesController.clear();
+  // if (response.statusCode == 200) {
+  //    _nomStructureController.clear();
+  //    _commentaireController.clear();
+  //    _etoilesController.clear();
    
-     print("Commentaire envoyée");
-  } else {
-    // En cas d'erreur, affichez un message d'erreur
-    print("Erreur photoCommentUser: ${response.statusCode}");
-  }
+  //    print("Commentaire envoyée");
+  // } else {
+  //   // En cas d'erreur, affichez un message d'erreur
+  //   print("Erreur photoCommentUser: ${response.statusCode}");
+  // }
 
   print("test $myId");
   print(userData);
@@ -72,7 +72,7 @@ class AddCommentaireComponent extends StatelessWidget {
                  const Padding(
               padding: EdgeInsets.all(8.0),
               child: Text(
-                "Ajoutez un commentaire",
+                "Ajoutez un commentaire ",
                 style: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
@@ -89,7 +89,7 @@ class AddCommentaireComponent extends StatelessWidget {
                       child: TextField(
                         controller: _nomStructureController,
                         decoration: const InputDecoration(
-                          labelText: "Nom de la structure ",
+                          labelText: "Nom de la structure  ",
                            border: OutlineInputBorder(),
                         ),
                       ),

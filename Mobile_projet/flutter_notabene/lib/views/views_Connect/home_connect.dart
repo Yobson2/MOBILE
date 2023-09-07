@@ -195,8 +195,8 @@ class _ConnectedUserWidgetState extends State<ConnectedUserWidget> {
         controller: _pageController,
         children: const <Widget>[
           // HomeView(),
-          // CarteGloblale(),
-          // PhotoViewWithHero(),
+          CarteGloblale(),
+          PhotoViewWithHero(),
           // HomeView(),
            Text("Bienvenue,"),
         ],
