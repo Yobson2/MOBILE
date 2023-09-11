@@ -5,6 +5,9 @@ import 'package:flutter_notabene/views/photos/galerie_photo.dart';
 import 'package:flutter_notabene/views/photos/print_camera.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+
+import '../../services/connectEtat.dart';
 
 
 class ImagePreviewPage extends StatefulWidget {
@@ -18,39 +21,18 @@ class ImagePreviewPage extends StatefulWidget {
 
 class _ImagePreviewPageState extends State<ImagePreviewPage> {
   bool _isLoading = false;
-  // Future<void> _retrieveLocation() async {
-  //     await Geolocator.checkPermission();
-  //     await Geolocator.requestPermission();
-
-  //     try {
-  //       Position position = await Geolocator.getCurrentPosition(
-  //         desiredAccuracy: LocationAccuracy.high,
-  //       );
-
-  //       double latitude = position.latitude;
-  //       double longitude = position.longitude;
-
-  //       print('Latitude: $latitude, Longitude: $longitude');
-  //     } catch (e) {
-  //       print('Erreur lors de la récupération de la position: $e');
-  //     }
-    
-  // }
-
-
   
 
- Future<void> savePhoto() async {
+ Future<void> savePhoto(int userId) async {
   setState(() {
     _isLoading = true;
   });
-  //  await _retrieveLocation(); 
       await Geolocator.checkPermission();
       await Geolocator.requestPermission();
 
       
 
-  final url = Uri.parse("http://192.168.1.5:8082/apiNotabene/v1/sendPhotoLocalisation");
+  final url = Uri.parse("http://192.168.1.8:8082/apiNotabene/v1/sendPhotoLocalisation/$userId");
 
   var request = http.MultipartRequest('POST', url);
 
@@ -58,8 +40,8 @@ class _ImagePreviewPageState extends State<ImagePreviewPage> {
           desiredAccuracy: LocationAccuracy.high,
         );
 
-        double latitude = position.latitude;
-        double longitude = position.longitude;
+  double latitude = position.latitude;
+  double longitude = position.longitude;
 
   request.fields['latitude'] = latitude.toString();
   request.fields['longitude'] = longitude.toString();
@@ -68,11 +50,9 @@ class _ImagePreviewPageState extends State<ImagePreviewPage> {
 
   try {
     var response = await request.send();
-
     if (response.statusCode == 200) {
-      print('Latitude: $latitude, Longitude: $longitude');
       print('Image envoyée avec succès');
-      // Arrêter le loader et rediriger vers une nouvelle page
+
       setState(() {
         _isLoading = false;
       });
@@ -100,9 +80,14 @@ class _ImagePreviewPageState extends State<ImagePreviewPage> {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+    userProvider.getUserIdFromStorage();
+
+    // Maintenant vous pouvez accéder à l'ID
+    final userId = userProvider.userId;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mon image'),
+        title: const Text('Mon image '),
         backgroundColor: Colors.black,
       ),
       body: Container(
@@ -136,7 +121,7 @@ class _ImagePreviewPageState extends State<ImagePreviewPage> {
                 children: [
                   IconButton(
                     onPressed: () {
-                      savePhoto();
+                      savePhoto(userId!);
                       Navigator.push(
                         context,
                         MaterialPageRoute(

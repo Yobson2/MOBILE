@@ -26,7 +26,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
    
         child: Column(
           children: [
-            SizedBox(height: 100),
+            const SizedBox(height: 100),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -40,7 +40,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ),
                   ),
                 ),
-                SizedBox(width: 20),
+                const SizedBox(width: 20),
                 ElevatedButton(
                   onPressed: () => _toggleSection(false),
                   child: Icon(Icons.business),
@@ -50,13 +50,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _isUserSection ? UserRegistrationSection() : CompanyRegistrationSection(),
-            SizedBox(height: 1,),
+            const SizedBox(height: 1,),
             Row(
                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                  Text("Vous avez déjà un compte ?"),
+                  const Text("Vous avez déjà un compte ?"),
                    GestureDetector(
                       onTap: () {
                            Navigator.push(

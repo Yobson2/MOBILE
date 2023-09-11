@@ -28,26 +28,26 @@ class AddCommentaireComponent extends StatelessWidget {
   };
 
   
-  // final url = Uri.parse("http://192.168.1.5:8082/apiNotabene/v1/addPost/$myId");
+  final url = Uri.parse("http://192.168.1.8:8082/apiNotabene/v1/addPost/$myId");
 
-  // var response = await http.post(
-  //   url,
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: jsonEncode(userData),
-  // );
+  var response = await http.post(
+    url,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: jsonEncode(userData),
+  );
 
-  // if (response.statusCode == 200) {
-  //    _nomStructureController.clear();
-  //    _commentaireController.clear();
-  //    _etoilesController.clear();
+  if (response.statusCode == 200) {
+     _nomStructureController.clear();
+     _commentaireController.clear();
+     _etoilesController.clear();
    
-  //    print("Commentaire envoyée");
-  // } else {
-  //   // En cas d'erreur, affichez un message d'erreur
-  //   print("Erreur photoCommentUser: ${response.statusCode}");
-  // }
+     print("Commentaire envoyée");
+  } else {
+    // En cas d'erreur, affichez un message d'erreur
+    print("Erreur photoCommentUser: ${response.statusCode}");
+  }
 
   print("test $myId");
   print(userData);
@@ -60,7 +60,12 @@ class AddCommentaireComponent extends StatelessWidget {
   
   // Méthode pour afficher le modal des commentaires
   void _modal(BuildContext context) {
-     final userId = Provider.of<UserProvider>(context, listen: false).userId;
+
+     final userProvider = Provider.of<UserProvider>(context, listen: false);
+    userProvider.getUserIdFromStorage(); // Récupérez l'ID à partir du stockage
+
+    // Maintenant vous pouvez accéder à l'ID
+    final userId = userProvider.userId;
 
     showModalBottomSheet(
       context: context,
@@ -133,7 +138,7 @@ class AddCommentaireComponent extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     primary: Colors.blue,
                   ),
-                  child: Text("Ajouter une photo"),
+                  child: Text("Ajouter une photo "),
                 ),
                 Container(
                   height: 80,

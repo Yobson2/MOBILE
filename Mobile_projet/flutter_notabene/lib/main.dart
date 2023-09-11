@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_notabene/routes/app_routes.dart';
 import 'package:flutter_notabene/services/connectEtat.dart';
+import 'package:flutter_notabene/services/getId.dart';
 import 'package:provider/provider.dart';
 
+import 'gestion/session.dart';
+
 void main() {
+  
   runApp(
      ChangeNotifierProvider(
       create: (context) => UserProvider(),
-      child: MyApp(),
+       child: MyApp(),
     ),
   );
 }

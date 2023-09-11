@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 
 
 import 'ImagePreviewPage.dart';
+import 'galerie_photo.dart';
 
 
 class MyCamera extends StatefulWidget {
@@ -46,7 +47,7 @@ class _MyCameraState extends State<MyCamera> {
       _isFrontCamera = !_isFrontCamera;
       _isCameraInitialized = false;
     });
-    _controller.dispose();
+    // _controller.dispose();
     _initializeCamera();
   }
 
@@ -114,28 +115,28 @@ class _MyCameraState extends State<MyCamera> {
           margin:const EdgeInsets.only(left: 30.0),
           child: Row(
             children: [
-              // FloatingActionButton(
-              //   onPressed: () {
-              //     Navigator.push(
-              //       context,
-              //       MaterialPageRoute(
-              //         builder: (context) => GalleryPage(),
-              //       ),
-              //     );
-              //   },
-              //   child: Icon(Icons.photo_library),
-              //   backgroundColor: Colors.black12,
-              // ),
+              FloatingActionButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const GalleryPage(),
+                    ),
+                  );
+                },
+                child: Icon(Icons.photo_library),
+                backgroundColor: Colors.black12,
+              ),
               FloatingActionButton(
                 onPressed: _takePicture,
                 child: const Icon(Icons.camera),
                 backgroundColor: Colors.black12,
               ),
-              // FloatingActionButton( 
-              //   onPressed: _toggleCamera,
-              //   child: Icon(_isFrontCamera ? Icons.camera_rear : Icons.camera_front),
-              //   backgroundColor: Colors.black12,
-              // ),
+              FloatingActionButton( 
+                onPressed: _toggleCamera,
+                child: Icon(_isFrontCamera ? Icons.camera_rear : Icons.camera_front),
+                backgroundColor: Colors.black12,
+              ),
             ],
           ),
         ),

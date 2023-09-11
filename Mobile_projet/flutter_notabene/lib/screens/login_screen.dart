@@ -5,9 +5,7 @@ import 'package:flutter_notabene/screens/home_screem.dart';
 import 'package:flutter_notabene/views/dash.dart';
 import 'package:flutter_notabene/views/views_Connect/home_connect.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
-import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -36,43 +34,43 @@ class _LoginScreenState extends State<LoginScreen> {
 
 
 
+Future<void> loginUser() async {
+  try {
+    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+      return;
+    }
 
-    Future<void> loginUser() async {
-  if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
-    return;
-  }
-  
-  final userLogin = {
-    "adresse_email": _emailController.text,
-    "mot_de_passe": _passwordController.text,
-  };
+    final userLogin = {
+      "adresse_email": _emailController.text,
+      "mot_de_passe": _passwordController.text,
+    };
 
-  final url = Uri.parse("http://192.168.1.5:8082/apiNotabene/v1/loginUsers");
+    final url = Uri.parse("http://192.168.1.8:8082/apiNotabene/v1/loginUsers");
 
-  var response = await http.post(
-    url,
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: jsonEncode(userLogin),
-  );
-
-  if (response.statusCode == 200) {
-     _emailController.clear();
-    _passwordController.clear();
-    var jsonResponse = jsonDecode(response.body);
-    var myToken = jsonResponse['token'];
-    print('myToken: ' + myToken);
-    prefs.setString("token", myToken);
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => ConnectedUserWidget(token:myToken)),
+    var response = await http.post(
+      url,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: jsonEncode(userLogin),
     );
-  } else {
-    // En cas d'erreur, affichez un message d'erreur
-    print("Erreur loginUser: ${response.statusCode}");
-  }
 
+    if (response.statusCode == 200) {
+      _emailController.clear();
+      _passwordController.clear();
+      var jsonResponse = jsonDecode(response.body);
+      var myToken = jsonResponse['token'];
+      print('myToken: ' + myToken);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => ConnectedUserWidget(token: myToken)),
+      );
+    } else {
+      print("Erreur loginUser: ${response.statusCode}");
+    }
+  } catch (e) {
+    print("Erreur lors de la requête : $e");
+  }
 }
 
   @override
@@ -106,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       color: Colors.black.withOpacity(0.1),
                       spreadRadius: 1,
                       blurRadius: 1,
-                      offset: Offset(0, 1),
+                      offset: const Offset(0, 1),
                     ),
                   ],
                 ),
@@ -122,7 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 10,),
+                    const SizedBox(height: 10,),
                     const Text(
                       "Veuillez vous connecter à votre compte",
                       style: TextStyle(
@@ -131,12 +129,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 10,),
+                    const SizedBox(height: 10,),
                     Container(
                       width: 250,
                       child: TextField(
                         controller: _emailController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           suffixIcon: Icon(FontAwesomeIcons.envelope, size: 17,),
                           labelText: "Email",
                         ),
@@ -147,13 +145,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: TextField(
                         obscureText: true,
                         controller: _passwordController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           suffixIcon: Icon(FontAwesomeIcons.eyeSlash, size: 17,),
                           labelText: "Mot de passe",
                         ),
                       ),
                     ),
-                    Padding(
+                    const Padding(
                       padding: EdgeInsets.fromLTRB(20, 20, 40, 20),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -161,7 +159,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           Text(
                             "Mot de passe oublié ?",
                             style: TextStyle(
-                              color: Colors.black, // Changement de couleur ici
+                              color: Colors.black, 
                               fontSize: 10,
                               fontWeight: FontWeight.bold,
                             ),
@@ -169,7 +167,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ],
                       ),
                     ),
-                    SizedBox(height: 20,),
+                    const SizedBox(height: 20,),
                     GestureDetector(
                       onTap:loginUser,
                       child: Container(
@@ -207,7 +205,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     MaterialPageRoute(builder: (context) => RegistrationPage()),
                                   );
                           },
-                          child: Text(
+                          child: const Text(
                             "S'enregistrer",
                             style: TextStyle(
                               color: Colors.blue,

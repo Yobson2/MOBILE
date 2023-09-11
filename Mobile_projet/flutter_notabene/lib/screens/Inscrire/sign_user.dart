@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_notabene/services/api_service.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -15,27 +16,15 @@ class UserRegistrationSection extends StatelessWidget {
     "adresse_email": _emailController.text,
     "mot_de_passe": _passwordController.text,
   };
-
-  final url = Uri.parse("http://192.168.1.5:8082/apiNotabene/v1/registerUsers");
-
-  var response = await http.post(
-    url,
-    headers: <String, String>{
-      "Content-Type": "application/json; charset=utf-8",
-    },
-    body: jsonEncode(userData),
-  );
-
-
-  if (response.statusCode == 201) {
-    // Réinitialiser les contrôleurs de texte et le formulaire
+  try {
+    await ApiManager("http://192.168.1.8:8082/apiNotabene/v1").postData("registerUsers", userData,"creation terminée", "Error d'envoi");
     _nameController.clear();
     _emailController.clear();
     _passwordController.clear();
-
-    print("creation terminée");
+  } catch (e) {
+    print("erreur message");
   }
-  print(userData);
+ 
 }
 
 
