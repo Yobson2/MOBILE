@@ -62,7 +62,7 @@ class AddCommentaireComponent extends StatelessWidget {
   void _modal(BuildContext context) {
 
      final userProvider = Provider.of<UserProvider>(context, listen: false);
-    userProvider.getUserIdFromStorage(); // Récupérez l'ID à partir du stockage
+    userProvider.getUserIdFromStorage(); 
 
     // Maintenant vous pouvez accéder à l'ID
     final userId = userProvider.userId;
@@ -132,7 +132,6 @@ class AddCommentaireComponent extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    // Ouvrir la feuille de bas de page pour ajouter des photos ici
                     _showPhotoBottomSheet(context);
                   },
                   style: ElevatedButton.styleFrom(
@@ -146,7 +145,12 @@ class AddCommentaireComponent extends StatelessWidget {
                   decoration:const BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(10.0))
                   ),
-                  child: Image.asset("assets/images/pict2.jpg"),
+                  child: Column(
+                    children: [
+                      Image.asset("assets/images/pict2.jpg"),
+                    ]
+                    
+                    ),
                 )
               ],
             ),

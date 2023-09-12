@@ -2,6 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+
+import '../../services/connectEtat.dart';
 
 class MyImagePicker extends StatefulWidget {
   @override
@@ -20,8 +23,15 @@ class _MyImagePickerState extends State<MyImagePicker> {
     });
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+    userProvider.getUserIdFromStorage();
+
+    // Maintenant vous pouvez accéder à l'ID
+    final userId = userProvider.userId;
     return Scaffold(
       appBar: AppBar(
         title: Text('Image Picker Example'),
@@ -33,14 +43,33 @@ class _MyImagePickerState extends State<MyImagePicker> {
             if (_imageFile != null)
               Image.file(
                 File(_imageFile!.path),
-                width: 400,
-                height: 400,
+                width: 800,
+                height: 450,
               )
             else
-              Text('No image selected'),
-            ElevatedButton(
-              onPressed: _pickImageFromGallery,
-              child: Text('Pick Image from Gallery'),
+              Text('Aucune image sélectionnée'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                     onPressed: _pickImageFromGallery,
+                    icon: const Icon(
+                      Icons.check_box_outline_blank_sharp,
+                      color: Colors.blue,
+                      size: 32.0,
+                    ),
+                  ),
+                IconButton(
+                    onPressed: () {
+                      print("object bjfb");
+                    },
+                    icon: const Icon(
+                      Icons.check,
+                      color: Colors.blue,
+                      size: 32.0,
+                    ),
+                  ),
+              ],
             ),
           ],
         ),

@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 import '../../services/connectEtat.dart';
+import '../photo_view.dart';
 
 
 class ImagePreviewPage extends StatefulWidget {
@@ -32,7 +33,7 @@ class _ImagePreviewPageState extends State<ImagePreviewPage> {
 
       
 
-  final url = Uri.parse("http://192.168.1.8:8082/apiNotabene/v1/sendPhotoLocalisation/$userId");
+  final url = Uri.parse("http://192.168.1.10:8082/apiNotabene/v1/sendPhotoLocalisation/$userId");
 
   var request = http.MultipartRequest('POST', url);
 
@@ -125,7 +126,7 @@ class _ImagePreviewPageState extends State<ImagePreviewPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const GalleryPage(),
+                          builder: (context) => const  PhotoViewWithHero(),
                         ),
                       );
                     },

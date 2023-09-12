@@ -1,8 +1,10 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_notabene/views/photos/print_photo.dart';
 import 'package:provider/provider.dart';
 import '../../services/connectEtat.dart';
+import 'package:http/http.dart' as http;
 
 class GalleryPage extends StatefulWidget {
   const GalleryPage({Key? key}) : super(key: key);
@@ -12,60 +14,112 @@ class GalleryPage extends StatefulWidget {
 }
 
 class _GalleryPageState extends State<GalleryPage> {
-  late Future<List<String>> futurePhotos;
+  bool isLoading = true;
+  List<dynamic> photos = []; 
+   bool _isClicked = false;
+   bool _isLoading = true;
 
- Future<List<String>> fetchServerPhotos(id) async {
-  final response = await http.get(Uri.parse('http://192.168.1.8:8082/apiNotabene/v1/getAllPhoto'));
-
-  if (response.statusCode == 200) {
-    List<dynamic> data = json.decode(response.body);
-    List<String> photoPaths = [];
-
-    for (var item in data) {
-      if (item is String) {
-        photoPaths.add(item);
-      }
-    }
-
-    return photoPaths.where((path) => path.contains('id_photos=$id')).toList();
-  } else {
-    throw Exception('Failed to load photos from server');
+  Future<void> getData(id) async {
+    setState(() {
+    _isLoading = true;
+  });
+    final result = await someAsyncMethod(id);
+    print("object is loading $result");
+    setState(() {
+      photos = result; 
+      print("object $photos");
+       _isLoading = false; 
+    });
   }
-}
 
+  Future<List<dynamic>> someAsyncMethod(id) async {
+    final response = await http.get(Uri.parse('http://192.168.1.10:8082/apiNotabene/v1/getAllPhoto/$id'));
+    final data = json.decode(response.body);
+    return data;
+  }
 
+   void _onPhotoClicked(String id, String imageUrl) {
+    setState(() {
+      _isClicked = true;
+    });
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PhotoDetailPage(id: id, imageUrl: imageUrl),
+      ),
+    ).then((value) {
+      setState(() {
+        _isClicked = false;
+      });
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    final userId = userProvider.getUserIdFromStorage();
-    futurePhotos = fetchServerPhotos(userId);
+    final userId = userProvider.userId;
+    getData(userId);
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+    final userId = userProvider.userId;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Gallery'),
+        title: Text('Gallerie'),
       ),
-      body: FutureBuilder<List<String>>(
-        future: futurePhotos,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            List<String> photoPaths = snapshot.data!;
-            return ListView.builder(
-              itemCount: photoPaths.length,
-              itemBuilder: (context, index) {
-                return Image.network(photoPaths[index]);
-              },
-            );
-          }
-        },
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(
+          child: _isLoading
+              ? CircularProgressIndicator()
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: GridView.builder(
+                        itemCount: photos.length,
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 20,
+                          mainAxisSpacing: 3,
+                        ),
+                        itemBuilder: (context, index) {
+                          final imageUrl = 'http://192.168.1.10:8082/images/${photos[index]["image"]}';
+                          return GestureDetector(
+                            onTap: () {
+                              _onPhotoClicked(
+                                photos[index]["id_photos"].toString(),
+                                imageUrl,
+                              );
+                            },
+                            child: AnimatedOpacity(
+                              opacity: _isClicked ? 0.5 : 1.0,
+                              duration: Duration(milliseconds: 300),
+                              child: Container(
+                                margin: EdgeInsets.only(top: 8.0),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  image: DecorationImage(
+                                    image: NetworkImage(imageUrl),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                      ),
+                    ),
+                  ],
+                ),
+        ),
       ),
     );
   }
