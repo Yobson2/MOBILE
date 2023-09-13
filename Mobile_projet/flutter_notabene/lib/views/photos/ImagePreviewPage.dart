@@ -33,7 +33,7 @@ class _ImagePreviewPageState extends State<ImagePreviewPage> {
 
       
 
-  final url = Uri.parse("http://192.168.1.10:8082/apiNotabene/v1/sendPhotoLocalisation/$userId");
+  final url = Uri.parse("http://192.168.1.5:8082/apiNotabene/v1/sendPhotoLocalisation/$userId");
 
   var request = http.MultipartRequest('POST', url);
 

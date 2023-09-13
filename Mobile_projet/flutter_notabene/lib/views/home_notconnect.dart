@@ -53,17 +53,17 @@ class _NotConnectedUserWidgetState extends State<NotConnectedUserWidget> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
+            const Text(
               'Paramètres',
               style: TextStyle(
                 fontSize: 24.0,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Profil'),
+              leading: const Icon(Icons.settings),
+              title: const Text('Profil'),
               onTap: () {
                 // Mettez ici la logique pour l'option 1
                 Navigator.pop(context);
@@ -71,8 +71,8 @@ class _NotConnectedUserWidgetState extends State<NotConnectedUserWidget> {
             ),
             Divider(),
             ListTile(
-              leading: Icon(Icons.notification_add),
-              title: Text('Notifications'),
+              leading: const Icon(Icons.notification_add),
+              title: const Text('Notifications'),
               onTap: () {
                 // Mettez ici la logique pour l'option 2
                 Navigator.pop(context);

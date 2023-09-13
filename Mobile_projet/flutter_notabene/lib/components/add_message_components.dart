@@ -28,7 +28,7 @@ class AddCommentaireComponent extends StatelessWidget {
   };
 
   
-  final url = Uri.parse("http://192.168.1.8:8082/apiNotabene/v1/addPost/$myId");
+  final url = Uri.parse("http://192.168.1.5:8082/apiNotabene/v1/addPost/$myId");
 
   var response = await http.post(
     url,
@@ -137,7 +137,7 @@ class AddCommentaireComponent extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     primary: Colors.blue,
                   ),
-                  child: Text("Ajouter une photo "),
+                  child: const Text("Ajouter une photo "),
                 ),
                 Container(
                   height: 80,

@@ -14,6 +14,7 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../components/add_comm_sms.dart';
 import '../../services/connectEtat.dart';
 
 
@@ -173,6 +174,7 @@ class _ConnectedUserWidgetState extends State<ConnectedUserWidget> {
           CarteGloblale(),
           PhotoViewWithHero(),
           // HomeView(),
+          CommentaireComponent(),
            Text("Bienvenue,"),
         ],
       ),
@@ -181,9 +183,17 @@ class _ConnectedUserWidgetState extends State<ConnectedUserWidget> {
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          AddCommentaireComponent(),
-      //     SizedBox(height: 5), 
-      //     AddDestinationMapComponent()
+          FloatingActionButton(
+          child: Icon(Icons.comment_bank),
+          onPressed: () {
+             Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CommentaireComponent()),
+              );
+          },
+          
+        )
+      
         ],
       ),
       
