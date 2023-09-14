@@ -174,7 +174,7 @@ class _ConnectedUserWidgetState extends State<ConnectedUserWidget> {
           CarteGloblale(),
           PhotoViewWithHero(),
           // HomeView(),
-          CommentaireComponent(),
+          // CommentaireComponent(),
            Text("Bienvenue,"),
         ],
       ),

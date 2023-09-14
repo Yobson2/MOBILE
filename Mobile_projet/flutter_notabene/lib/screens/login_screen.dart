@@ -44,7 +44,7 @@ Future<void> loginUser() async {
       "mot_de_passe": _passwordController.text,
     };
 
-    final url = Uri.parse("http://192.168.1.5:8082/apiNotabene/v1/loginUsers");
+    final url = Uri.parse("http://192.168.1.107:8082/apiNotabene/v1/loginUsers");
 
     var response = await http.post(
       url,

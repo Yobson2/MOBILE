@@ -17,7 +17,7 @@ class UserRegistrationSection extends StatelessWidget {
     "mot_de_passe": _passwordController.text,
   };
   try {
-    await ApiManager("http://192.168.1.5:8082/apiNotabene/v1").postData("registerUsers", userData,"creation terminée", "Error d'envoi");
+    await ApiManager("http://192.168.1.107:8082/apiNotabene/v1").postData("registerUsers", userData,"creation terminée", "Error d'envoi");
     _nameController.clear();
     _emailController.clear();
     _passwordController.clear();

@@ -1,12 +1,17 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart'; 
 import '../services/connectEtat.dart';
 import '../views/photo_view.dart';
 import '../views/photos/galerie_photo.dart';
 import '../views/photos/galerie_tel.dart';
+import 'package:http/http.dart' as http;
 
 class CommentaireComponent extends StatefulWidget {
-  const CommentaireComponent({Key? key}) : super(key: key);
+   final String? imageUrl;
+  const CommentaireComponent({Key? key, this.imageUrl,}) : super(key: key);
   
 
   @override
@@ -20,9 +25,18 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
   final TextEditingController _commentaireController = TextEditingController();
   final TextEditingController _etoilesController = TextEditingController();
 
+  
+
   @override
   void initState() {
     super.initState();
+  }
+
+
+  Future<void> addCommentaire() async {
+ 
+ 
+  
   }
 
   
@@ -39,7 +53,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
           leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            print("bbhbfhbh");
+            Navigator.pop(context);
           },
         ),
           title: const Text('Ajoutez un commentaire'), 
@@ -65,7 +79,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
                       const Icon(Icons.favorite, color: Colors.red),
                       const SizedBox(width: 10),
                       Text(
-                        "Lieux préférés",
+                        "Lieux préférés ",
                         style: TextStyle(color: Colors.grey[700], fontSize: 16),
                       ),
                     ],
@@ -126,7 +140,9 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
                   ),
                   child: Column(
                     children: [
-                      Image.asset("assets/images/pict2.jpg"),
+                      widget.imageUrl != null 
+                      ? Image.file(File(widget.imageUrl!))  
+                      : Text('Aucune image sélectionnée'),
                     ] 
                     ),
                 ),
@@ -219,7 +235,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
                       borderRadius: BorderRadius.circular(20), 
                     ),
                   ),
-                  child: Padding(
+                  child: const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: Row(
                       children: [

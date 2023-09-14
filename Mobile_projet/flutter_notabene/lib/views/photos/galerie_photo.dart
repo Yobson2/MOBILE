@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_notabene/components/add_comm_sms.dart';
 import 'package:flutter_notabene/views/photos/print_photo.dart';
 import 'package:provider/provider.dart';
 import '../../services/connectEtat.dart';
@@ -33,19 +34,19 @@ class _GalleryPageState extends State<GalleryPage> {
   }
 
   Future<List<dynamic>> someAsyncMethod(id) async {
-    final response = await http.get(Uri.parse('http://192.168.1.5:8082/apiNotabene/v1/getAllPhoto/$id'));
+    final response = await http.get(Uri.parse('http://192.168.1.107:8082/apiNotabene/v1/getAllPhoto/$id'));
     final data = json.decode(response.body);
     return data;
   }
 
-   void _onPhotoClicked(String id, String imageUrl) {
+   void _onPhotoClicked( String imageUrl) {
     setState(() {
       _isClicked = true;
     });
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => PhotoDetailPage(id: id, imageUrl: imageUrl),
+        builder: (context) => CommentaireComponent( imageUrl: imageUrl),
       ),
     ).then((value) {
       setState(() {
@@ -91,12 +92,12 @@ class _GalleryPageState extends State<GalleryPage> {
                           mainAxisSpacing: 3,
                         ),
                         itemBuilder: (context, index) {
-                          final imageUrl = 'http://192.168.1.5:8082/images/${photos[index]["image"]}';
+                          final imageUrl = 'http://192.168.1.107:8082/images/${photos[index]["image"]}';
                           return GestureDetector(
                             onTap: () {
                               _onPhotoClicked(
-                                photos[index]["id_photos"].toString(),
-                                imageUrl,
+                                // photos[index]["id_photos"].toString(),
+                                imageUrl
                               );
                             },
                             child: AnimatedOpacity(

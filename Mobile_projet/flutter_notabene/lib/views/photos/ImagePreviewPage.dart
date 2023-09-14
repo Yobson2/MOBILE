@@ -7,12 +7,14 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
+import '../../components/add_comm_sms.dart';
 import '../../services/connectEtat.dart';
 import '../photo_view.dart';
 
 
 class ImagePreviewPage extends StatefulWidget {
   final String imagePath;
+  
 
   const ImagePreviewPage({required this.imagePath});
 
@@ -122,13 +124,20 @@ class _ImagePreviewPageState extends State<ImagePreviewPage> {
                 children: [
                   IconButton(
                     onPressed: () {
-                      savePhoto(userId!);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const  PhotoViewWithHero(),
-                        ),
-                      );
+                      // savePhoto(userId!);
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => const  PhotoViewWithHero(),
+                      //   ),
+                      // );
+                              Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CommentaireComponent(imageUrl:widget.imagePath),
+                      ),
+                    );
+                    
                     },
                     icon: const Icon(
                       Icons.check,
