@@ -4,10 +4,8 @@ import 'dart:convert';
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_notabene/components/add_message_components.dart';
 import 'package:flutter_notabene/screens/login_screen.dart';
 import 'package:flutter_notabene/views/carte_view.dart';
-import 'package:flutter_notabene/views/home_view.dart';
 import 'package:flutter_notabene/views/photo_view.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';

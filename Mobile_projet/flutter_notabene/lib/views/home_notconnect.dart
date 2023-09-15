@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_notabene/components/add_message_components.dart';
 import 'package:flutter_notabene/screens/login_screen.dart';
 import 'package:flutter_notabene/views/photo_view.dart';
+import 'package:flutter_notabene/views/testMap.dart';
 // import 'package:flutter_notabene/views/carte_view.dart';
 // import 'package:flutter_notabene/views/home_view.dart';
 // import 'package:flutter_notabene/views/photo_view.dart';
@@ -42,7 +43,7 @@ class _NotConnectedUserWidgetState extends State<NotConnectedUserWidget> {
  void _showSettingsModal(BuildContext context) {
   showModalBottomSheet(
     context: context,
-    shape: RoundedRectangleBorder(
+    shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(
         top: Radius.circular(20.0),
       ),
@@ -69,7 +70,7 @@ class _NotConnectedUserWidgetState extends State<NotConnectedUserWidget> {
                 Navigator.pop(context);
               },
             ),
-            Divider(),
+            const Divider(),
             ListTile(
               leading: const Icon(Icons.notification_add),
               title: const Text('Notifications'),
@@ -78,10 +79,10 @@ class _NotConnectedUserWidgetState extends State<NotConnectedUserWidget> {
                 Navigator.pop(context);
               },
             ),
-            Divider(),
+            const Divider(),
             ListTile(
-              leading: Icon(Icons.exit_to_app),
-              title: Text('Quitter'),
+              leading: const Icon(Icons.exit_to_app),
+              title: const Text('Quitter'),
               onTap: () {
                 // Mettez ici la logique pour l'option 2
                 Navigator.pop(context);
@@ -141,16 +142,17 @@ class _NotConnectedUserWidgetState extends State<NotConnectedUserWidget> {
           // HomeView(),
           // CarteGloblale(),
           PhotoViewWithHero(),
+          MapSample(),
           // // HomeView(),
           // Center(child: Text("Non connecté"))
         ],
       ),
       //boutton floating
-      floatingActionButton:  Column(
+      floatingActionButton:  const Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          AddCommentaireComponent(),
+          // AddCommentaireComponent(),
       //     SizedBox(height: 5), 
       //     AddDestinationMapComponent()
         ],

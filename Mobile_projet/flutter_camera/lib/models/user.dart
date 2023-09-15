@@ -1,7 +1,7 @@
-import 'package:flutter_camera/models/session.dart';
+// import 'package:flutter_camera/models/session.dart';
 
-class User extends Session {
-  final String username;
+// class User extends Session {
+//   final String username;
 
-  User({required this.username}) : super._();
-}
+//   // User({required this.username}) : super._();
+// }

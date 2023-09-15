@@ -47,5 +47,15 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Requiert la localisation pour afficher la carte</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Requiert la localisation pour afficher la carte</string>
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
+
 </dict>
 </plist>
