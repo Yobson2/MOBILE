@@ -13,6 +13,8 @@ class CommentaireComponent extends StatefulWidget {
    final String? imageUrl;
   const CommentaireComponent({Key? key, this.imageUrl,}) : super(key: key);
   
+  
+  
 
   @override
   _CommentaireComponentState createState() => _CommentaireComponentState();
@@ -25,7 +27,9 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
   final TextEditingController _commentaireController = TextEditingController();
   final TextEditingController _etoilesController = TextEditingController();
 
-  
+  late double commentLatitude;
+  late double commentLongitude ;
+   late final String? image;
 
   @override
   void initState() {
@@ -33,10 +37,75 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
   }
 
 
-  Future<void> addCommentaire() async {
- 
- 
+Future<void> searchPlaces(String query) async {
+  final apiKey = 'AIzaSyCRD-FSgdo6Tcpoj-RTuLQfmERxBagzm04';
+  final url = Uri.parse(
+      'https://maps.googleapis.com/maps/api/place/textsearch/json?query=$query&key=$apiKey');
+
+  final response = await http.get(url);
+
+  if (response.statusCode == 200) {
+    final Map<String, dynamic> data = json.decode(response.body);
+    final Map<String, dynamic> location = data['results'][0]['geometry']['location'];
+    double latitude = location['lat'];
+    double longitude = location['lng'];
+
+    setState(() {
+    commentLatitude = latitude;
+    commentLongitude = longitude;
+  });
+  } else {
+    throw Exception('Erreur lors de la recherche d\'endroits');
+  }
+}
+
+  Future<void> addCommentaire(myId) async {
+     
+     final query = _nomStructureController.text;
+    searchPlaces(query);
+  //    final data = {
+  //   "contenu_commentaire": _commentaireController.text,
+  //   "nom_entreprise": _nomStructureController.text,
+  //   "nombre_etoiles":_etoilesController.text,
+  //   "photo":  widget.imageUrl,
+  //   "Latitude":commentLatitude,
+  //   "Longitude":commentLongitude
+    
+  // };
+
   
+  final url = Uri.parse("http://192.168.1.10:8082/apiNotabene/v1/addPost/$myId");
+  var request = http.MultipartRequest('POST', url);
+  // var response = await http.post(
+  //   url,
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: jsonEncode(data),
+  // );
+  // request.fields['contenu_commentaire'] = _commentaireController.text.toString();
+  // request.fields['nom_entreprise'] = _nomStructureController.text.toString();
+  // request.fields['nombre_etoiles'] = _etoilesController.text;
+  // request.fields['Latitude'] = commentLatitude.toString();
+  // request.fields['Longitude'] = commentLongitude.toString();
+    var image = await http.MultipartFile.fromString("image", widget.imageUrl!);
+    request.files.add(image);
+
+  try {
+    var response = await request.send();
+    if (response.statusCode == 200) {
+     _nomStructureController.clear();
+     _commentaireController.clear();
+     _etoilesController.clear();
+   
+     print("Commentaire envoyée");
+  } else {
+    print("Erreur photoCommentUser: ${response.statusCode}");
+  }
+  
+  } catch (e) {
+    print('Erreur lors de l\'envoi du commentaire: $e');
+  }
   }
 
   
@@ -227,7 +296,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    
+                    addCommentaire(userId);
                   },
                   style: ElevatedButton.styleFrom(
                     primary: Colors.green, 
@@ -239,6 +308,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: Row(
                       children: [
+                        
                         Icon(Icons.check, color: Colors.white), 
                         SizedBox(width: 8), 
                         Text('Valider', style: TextStyle(color: Colors.white)), // Texte

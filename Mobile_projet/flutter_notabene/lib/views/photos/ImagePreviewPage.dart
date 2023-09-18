@@ -11,10 +11,8 @@ import '../../components/add_comm_sms.dart';
 import '../../services/connectEtat.dart';
 import '../photo_view.dart';
 
-
 class ImagePreviewPage extends StatefulWidget {
   final String imagePath;
-  
 
   const ImagePreviewPage({required this.imagePath});
 
@@ -24,59 +22,56 @@ class ImagePreviewPage extends StatefulWidget {
 
 class _ImagePreviewPageState extends State<ImagePreviewPage> {
   bool _isLoading = false;
-  
 
- Future<void> savePhoto(int userId) async {
-  setState(() {
-    _isLoading = true;
-  });
-      await Geolocator.checkPermission();
-      await Geolocator.requestPermission();
+  Future<void> savePhoto(int userId) async {
+    setState(() {
+      _isLoading = true;
+    });
+    await Geolocator.checkPermission();
+    await Geolocator.requestPermission();
 
-      
+    final url = Uri.parse("http://192.168.1.10:8082/apiNotabene/v1/sendPhotoLocalisation/$userId");
 
-  final url = Uri.parse("http://192.168.1.5:8082/apiNotabene/v1/sendPhotoLocalisation/$userId");
+    var request = http.MultipartRequest('POST', url);
 
-  var request = http.MultipartRequest('POST', url);
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
 
-  Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high,
-        );
+    double latitude = position.latitude;
+    double longitude = position.longitude;
 
-  double latitude = position.latitude;
-  double longitude = position.longitude;
+    request.fields['latitude'] = latitude.toString();
+    request.fields['longitude'] = longitude.toString();
+    var image = await http.MultipartFile.fromPath("image", widget.imagePath);
+    print(image);  
+    request.files.add(image);
 
-  request.fields['latitude'] = latitude.toString();
-  request.fields['longitude'] = longitude.toString();
-  var image = await http.MultipartFile.fromPath("image", widget.imagePath);
-  request.files.add(image);
+    try {
+      var response = await request.send();
+      if (response.statusCode == 200) {
+        print('Image envoyée avec succès');
 
-  try {
-    var response = await request.send();
-    if (response.statusCode == 200) {
-      print('Image envoyée avec succès');
-
+        setState(() {
+          _isLoading = false;
+        });
+        redirectToNewPage();
+      } else {
+        print('Erreur lors de l\'envoi de l\'image: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Erreur lors de l\'envoi de l\'image: $e');
       setState(() {
         _isLoading = false;
       });
-      redirectToNewPage();
-    } else {
-      print('Erreur lors de l\'envoi de l\'image: ${response.statusCode}');
     }
-  } catch (e) {
-    print('Erreur lors de l\'envoi de l\'image: $e');
-    setState(() {
-      _isLoading = false;
-    });
   }
-}
-
 
   void redirectToNewPage() {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const PrintCamera(), 
+        builder: (context) => const PrintCamera(),
       ),
     );
   }
@@ -92,7 +87,27 @@ class _ImagePreviewPageState extends State<ImagePreviewPage> {
       appBar: AppBar(
         title: const Text('Mon image '),
         backgroundColor: Colors.black,
-      ),
+        actions: [
+        IconButton(
+          icon: Icon(Icons.edit), 
+          onPressed: () {
+            
+          },
+        ),
+        IconButton(
+          icon: Icon(Icons.share), 
+          onPressed: () {
+             Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CommentaireComponent(imageUrl: widget.imagePath),
+                        ),
+                      );
+          },
+        ),
+      ],
+    ),
+      
       body: Container(
         color: Colors.black,
         child: Column(
@@ -122,30 +137,22 @@ class _ImagePreviewPageState extends State<ImagePreviewPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  IconButton(
+                  ElevatedButton.icon(
                     onPressed: () {
-                      // savePhoto(userId!);
+                      savePhoto(userId!);
                       // Navigator.push(
                       //   context,
                       //   MaterialPageRoute(
-                      //     builder: (context) => const  PhotoViewWithHero(),
+                      //     builder: (context) => CommentaireComponent(imageUrl: widget.imagePath),
                       //   ),
                       // );
-                              Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CommentaireComponent(imageUrl:widget.imagePath),
-                      ),
-                    );
-                    
                     },
-                    icon: const Icon(
-                      Icons.check,
-                      color: Colors.blue,
-                      size: 32.0,
-                    ),
+                    icon: const Icon(Icons.check),
+                    label: const Text('Enregistrer'),
+                    style: ElevatedButton.styleFrom(primary: Colors.blue),
                   ),
-                  IconButton(
+                  const SizedBox(width: 16.0),
+                  ElevatedButton.icon(
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -154,11 +161,9 @@ class _ImagePreviewPageState extends State<ImagePreviewPage> {
                         ),
                       );
                     },
-                    icon: const Icon(
-                      Icons.delete_forever,
-                      color: Colors.red,
-                      size: 32.0,
-                    ),
+                    icon: const Icon(Icons.delete_forever),
+                    label: const Text('Supprimer'),
+                    style: ElevatedButton.styleFrom(primary: Colors.red),
                   ),
                 ],
               ),

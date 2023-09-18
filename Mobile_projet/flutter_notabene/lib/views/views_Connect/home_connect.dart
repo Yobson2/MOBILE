@@ -14,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../components/add_comm_sms.dart';
 import '../../services/connectEtat.dart';
+import '../home_view.dart';
 
 
 class ConnectedUserWidget extends StatefulWidget {
@@ -168,8 +169,8 @@ class _ConnectedUserWidgetState extends State<ConnectedUserWidget> {
         },
         controller: _pageController,
         children: const <Widget>[
-          // HomeView(),
-          CarteGloblale(),
+          HomeView(),
+          MapSample(),
           PhotoViewWithHero(),
           // HomeView(),
           // CommentaireComponent(),

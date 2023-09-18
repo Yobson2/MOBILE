@@ -4,6 +4,8 @@ import 'package:flutter_notabene/components/add_message_components.dart';
 import 'package:flutter_notabene/screens/login_screen.dart';
 import 'package:flutter_notabene/views/photo_view.dart';
 import 'package:flutter_notabene/views/testMap.dart';
+
+import 'carte_view.dart';
 // import 'package:flutter_notabene/views/carte_view.dart';
 // import 'package:flutter_notabene/views/home_view.dart';
 // import 'package:flutter_notabene/views/photo_view.dart';

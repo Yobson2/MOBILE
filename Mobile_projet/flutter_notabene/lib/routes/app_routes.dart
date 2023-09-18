@@ -43,7 +43,7 @@ class AppRoutes {
       case home:
         return MaterialPageRoute(builder: (context) =>  const HomeScreen());
       case carte:
-        return MaterialPageRoute(builder: (context) => const CarteGloblale());
+        return MaterialPageRoute(builder: (context) => const MapSample());
       case photo:
         return MaterialPageRoute(builder: (context) =>  const PhotoViewWithHero());
       case parametres:
