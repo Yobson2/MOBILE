@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_notabene/routes/app_routes.dart';
 import 'package:flutter_notabene/services/connectEtat.dart';
 import 'package:provider/provider.dart';
 
-void main() {
-  
+void main() async {
+   
   runApp(
      ChangeNotifierProvider(
       create: (context) => UserProvider(),
@@ -12,7 +13,6 @@ void main() {
     ),
   );
 }
-
 
 class MyApp extends StatelessWidget {
   @override

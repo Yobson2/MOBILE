@@ -91,28 +91,48 @@ Future<void> searchPlaces(String query) async {
   }
 }
 
-  void _search() {
-    final query = _searchController.text;
+  Future<void> _search() async {
+  final query = _searchController.text;
+  if (query.isEmpty) {
+    // Si le champ de recherche est vide, réinitialiser les coordonnées
+    setState(() {
+      _kUserMarker = Marker(
+        markerId: const MarkerId("position"),
+        infoWindow: const InfoWindow(title: "position"),
+        position: LatLng(0, 0), 
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+      );
+    });
+
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(CameraUpdate.newLatLng(LatLng(0, 0))); 
+  } else {
     searchPlaces(query);
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: TextField(
-          controller: _searchController,
-          decoration: InputDecoration(
-            hintText: 'Search...',
-            border: InputBorder.none,
-            suffixIcon: IconButton(
-              icon: Icon(Icons.search),
-              onPressed: _search,
-            ),
+      backgroundColor: Colors.white, 
+      elevation: 0, 
+      title: TextField(
+        controller: _searchController,
+        style: const TextStyle(color: Colors.black), 
+        decoration: InputDecoration(
+          hintText: 'Search...',
+          hintStyle: const TextStyle(color: Colors.grey), 
+          border: InputBorder.none,
+          suffixIcon: IconButton(
+            icon: const Icon(Icons.search, color: Colors.black),
+            onPressed: _search,
           ),
         ),
       ),
-      body: GoogleMap(
+    ),
+          body: GoogleMap(
         mapType: MapType.normal,
         markers: {
           _kUserMarker,

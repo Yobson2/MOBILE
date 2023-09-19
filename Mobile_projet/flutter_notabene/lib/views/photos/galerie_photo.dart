@@ -34,7 +34,7 @@ class _GalleryPageState extends State<GalleryPage> {
   }
 
   Future<List<dynamic>> someAsyncMethod(id) async {
-    final response = await http.get(Uri.parse('http://192.168.25.202:8082/apiNotabene/v1/getAllPhoto/$id'));
+    final response = await http.get(Uri.parse('http://192.168.1.8:8082/apiNotabene/v1/getAllPhoto/$id'));
     final data = json.decode(response.body);
     return data;
   }
@@ -92,7 +92,7 @@ class _GalleryPageState extends State<GalleryPage> {
                           mainAxisSpacing: 3,
                         ),
                         itemBuilder: (context, index) {
-                          final imageUrl = 'http://192.168.25.202:8082/images/${photos[index]["image"]}';
+                          final imageUrl = 'http://192.168.1.8:8082/images/${photos[index]["image"]}';
                           return GestureDetector(
                             onTap: () {
                               _onPhotoClicked(

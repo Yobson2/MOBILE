@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_notabene/screens/Sign_screen.dart';
 import 'package:flutter_notabene/screens/home_screem.dart';
+import 'package:flutter_notabene/services/api_service.dart';
 import 'package:flutter_notabene/views/views_Connect/home_connect.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -44,7 +45,7 @@ Future<void> loginUser() async {
       "mot_de_passe": _passwordController.text,
     };
 
-    final url = Uri.parse("http://192.168.1.10:8082/apiNotabene/v1/loginUsers");
+    final url = Uri.parse("http://192.168.1.8:8082/apiNotabene/v1/loginUsers");
 
     var response = await http.post(
       url,
@@ -129,7 +130,7 @@ Future<void> loginUser() async {
                       ),
                     ),
                     const SizedBox(height: 10,),
-                    Container(
+                    SizedBox(
                       width: 250,
                       child: TextField(
                         controller: _emailController,
@@ -139,7 +140,7 @@ Future<void> loginUser() async {
                         ),
                       ),
                     ),
-                    Container(
+                    SizedBox(
                       width: 250,
                       child: TextField(
                         obscureText: true,

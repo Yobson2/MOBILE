@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart'; 
 import '../services/connectEtat.dart';
 import '../views/photo_view.dart';
@@ -39,6 +40,8 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
 
 Future<void> searchPlaces(String query) async {
   final apiKey = 'AIzaSyCRD-FSgdo6Tcpoj-RTuLQfmERxBagzm04';
+  // String apiUrl = dotenv.get('API_URL');;
+  
   final url = Uri.parse(
       'https://maps.googleapis.com/maps/api/place/textsearch/json?query=$query&key=$apiKey');
 
@@ -63,42 +66,30 @@ Future<void> searchPlaces(String query) async {
      
      final query = _nomStructureController.text;
     searchPlaces(query);
-  //    final data = {
-  //   "contenu_commentaire": _commentaireController.text,
-  //   "nom_entreprise": _nomStructureController.text,
-  //   "nombre_etoiles":_etoilesController.text,
-  //   "photo":  widget.imageUrl,
-  //   "Latitude":commentLatitude,
-  //   "Longitude":commentLongitude
-    
-  // };
-
   
-  final url = Uri.parse("http://192.168.1.10:8082/apiNotabene/v1/addPost/$myId");
+  final url = Uri.parse("http://192.168.1.8:8082/apiNotabene/v1/addPost/$myId");
   var request = http.MultipartRequest('POST', url);
-  // var response = await http.post(
-  //   url,
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: jsonEncode(data),
-  // );
-  // request.fields['contenu_commentaire'] = _commentaireController.text.toString();
-  // request.fields['nom_entreprise'] = _nomStructureController.text.toString();
-  // request.fields['nombre_etoiles'] = _etoilesController.text;
-  // request.fields['Latitude'] = commentLatitude.toString();
-  // request.fields['Longitude'] = commentLongitude.toString();
-    var image = await http.MultipartFile.fromString("image", widget.imageUrl!);
+  request.fields['contenu_commentaire'] = _commentaireController.text.toString();
+  request.fields['nom_entreprise'] = _nomStructureController.text.toString();
+  request.fields['nombre_etoiles'] = _etoilesController.text;
+  request.fields['latitude'] = commentLatitude.toString();
+  request.fields['longitude'] = commentLongitude.toString();
+     var image = await http.MultipartFile.fromPath("image", widget.imageUrl!);
     request.files.add(image);
 
   try {
     var response = await request.send();
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
      _nomStructureController.clear();
      _commentaireController.clear();
      _etoilesController.clear();
    
      print("Commentaire envoyée");
+      ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Le formulaire a été soumis avec succès!'),
+        ),
+      );
   } else {
     print("Erreur photoCommentUser: ${response.statusCode}");
   }
@@ -180,6 +171,17 @@ Future<void> searchPlaces(String query) async {
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.business),
                 ),
+                 onChanged: (value) {
+               bool isValid = RegExp(r'^[A-Za-z\s]+$').hasMatch(value);
+                if (!isValid) {
+                  // Afficher un message d'erreur à l'écran
+                // ScaffoldMessenger.of(context).showSnackBar(
+                //   const SnackBar(
+                //     content: Text('Le nom de la structure n\'est pas valide.'),
+                //   ),
+                // );
+                }
+              },
               ),
               const Divider(),
               TextField(
@@ -189,7 +191,14 @@ Future<void> searchPlaces(String query) async {
                   labelText: "Votre commentaire",
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.comment),
+                  
                 ),
+                onChanged: (value) {
+                bool isValid = RegExp(r'^[A-Za-z\s]+$').hasMatch(value);
+                if (!isValid) {
+                  //// ////
+                }
+              },
               ),
               const Divider(),
               TextField(

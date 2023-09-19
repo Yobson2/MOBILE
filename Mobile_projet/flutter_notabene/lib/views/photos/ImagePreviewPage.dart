@@ -30,35 +30,35 @@ class _ImagePreviewPageState extends State<ImagePreviewPage> {
     await Geolocator.checkPermission();
     await Geolocator.requestPermission();
 
-    final url = Uri.parse("http://192.168.1.10:8082/apiNotabene/v1/sendPhotoLocalisation/$userId");
+    // final url = Uri.parse("http://192.168.1.8:8082/apiNotabene/v1/sendPhotoLocalisation/$userId");
 
-    var request = http.MultipartRequest('POST', url);
+    // var request = http.MultipartRequest('POST', url);
 
-    Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
+    // Position position = await Geolocator.getCurrentPosition(
+    //   desiredAccuracy: LocationAccuracy.high,
+    // );
 
-    double latitude = position.latitude;
-    double longitude = position.longitude;
+    // double latitude = position.latitude;
+    // double longitude = position.longitude;
 
-    request.fields['latitude'] = latitude.toString();
-    request.fields['longitude'] = longitude.toString();
+    // request.fields['latitude'] = latitude.toString();
+    // request.fields['longitude'] = longitude.toString();
     var image = await http.MultipartFile.fromPath("image", widget.imagePath);
     print(image);  
-    request.files.add(image);
+    // request.files.add(image);
 
     try {
-      var response = await request.send();
-      if (response.statusCode == 200) {
-        print('Image envoyée avec succès');
+      // var response = await request.send();
+      // if (response.statusCode == 200) {
+      //   print('Image envoyée avec succès');
 
-        setState(() {
-          _isLoading = false;
-        });
-        redirectToNewPage();
-      } else {
-        print('Erreur lors de l\'envoi de l\'image: ${response.statusCode}');
-      }
+      //   setState(() {
+      //     _isLoading = false;
+      //   });
+      //   redirectToNewPage();
+      // } else {
+      //   print('Erreur lors de l\'envoi de l\'image: ${response.statusCode}');
+      // }
     } catch (e) {
       print('Erreur lors de l\'envoi de l\'image: $e');
       setState(() {

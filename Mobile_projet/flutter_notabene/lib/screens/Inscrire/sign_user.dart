@@ -17,7 +17,7 @@ class UserRegistrationSection extends StatelessWidget {
     "mot_de_passe": _passwordController.text,
   };
   try {
-    await ApiManager("http://192.168.1.10:8082/apiNotabene/v1").postData("registerUsers", userData,"creation terminée", "Error d'envoi");
+    await ApiManager().postData("registerUsers", userData,"creation terminée", "Error d'envoi");
     _nameController.clear();
     _emailController.clear();
     _passwordController.clear();
@@ -45,7 +45,7 @@ class UserRegistrationSection extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 10,),
+            const SizedBox(height: 10,),
             const Text(
               "Inscrivez-vous en tant qu'utilisateur basique.",
               style: TextStyle(
@@ -55,7 +55,7 @@ class UserRegistrationSection extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10,),
-            Container(
+            SizedBox(
               width: 260,
               child: TextField(
                 controller: _nameController,
@@ -76,18 +76,18 @@ class UserRegistrationSection extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
+            SizedBox(
               width: 260,
               child: TextField(
                 controller: _passwordController, 
                 obscureText: true,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   suffixIcon: Icon(FontAwesomeIcons.eyeSlash, size: 17,),
                   labelText: "Mot de passe",
                 ),
               ),
             ),
-            SizedBox(height: 20,),
+            const SizedBox(height: 20,),
             GestureDetector(
               onTap: registerUser,
               child: Container(

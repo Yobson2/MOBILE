@@ -17,7 +17,6 @@ class EnvoiPage extends StatelessWidget {
         children: [
           Text('ID de la photo : $id'),
           Image.network(imageUrl),
-          // Ajoutez ici votre logique pour envoyer l'ID et l'image
         ],
       ),
     );
