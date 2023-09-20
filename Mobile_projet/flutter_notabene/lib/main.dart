@@ -4,7 +4,7 @@ import 'package:flutter_notabene/routes/app_routes.dart';
 import 'package:flutter_notabene/services/connectEtat.dart';
 import 'package:provider/provider.dart';
 
-void main() async {
+void main() {
    
   runApp(
      ChangeNotifierProvider(

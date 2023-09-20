@@ -3,8 +3,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart'; 
 import '../services/connectEtat.dart';
+import '../views/carte_view.dart';
 import '../views/photo_view.dart';
 import '../views/photos/galerie_photo.dart';
 import '../views/photos/galerie_tel.dart';
@@ -29,12 +31,24 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
   final TextEditingController _etoilesController = TextEditingController();
 
   late double commentLatitude;
-  late double commentLongitude ;
+  late double commentLongitude; 
    late final String? image;
+   final picker = ImagePicker();
+  XFile? _imageFile;
 
   @override
   void initState() {
     super.initState();
+  }
+  
+
+  Future<void> _pickImageFromGallery() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      _imageFile = pickedFile;
+    });
+    print(_imageFile!.path);
   }
 
 
@@ -67,7 +81,7 @@ Future<void> searchPlaces(String query) async {
      final query = _nomStructureController.text;
     searchPlaces(query);
   
-  final url = Uri.parse("http://192.168.1.8:8082/apiNotabene/v1/addPost/$myId");
+  final url = Uri.parse("http://192.168.1.4:8082/apiNotabene/v1/addPost/$myId");
   var request = http.MultipartRequest('POST', url);
   request.fields['contenu_commentaire'] = _commentaireController.text.toString();
   request.fields['nom_entreprise'] = _nomStructureController.text.toString();
@@ -146,43 +160,43 @@ Future<void> searchPlaces(String query) async {
                   ),
                 ),
               ),
-              SizedBox(width: 10),
-              ElevatedButton(
-                onPressed: () { 
-                 
-                },
-                child: const Row(
-                  children: [
-                    Icon(Icons.map, color: Colors.white),
-                    SizedBox(width: 5),
-                    Text("Carte", style: TextStyle(color: Colors.white)),
-                  ],
-                ),
-              ),
             ],
           ),
 
 
                const Divider(),
-              TextField(
+             TextField(
                 controller: _nomStructureController,
-                decoration: const InputDecoration(
-                  labelText: "Nom de la structure",
+                decoration: InputDecoration(
+                  labelText: "Structure ou Lieu",
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.business),
+                  suffixIcon: InkWell(
+                    onTap: () {
+                      print("Clic sur l'icône de suffixe");
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const MapSample()),
+                        );
+                    },
+                    child:  const Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.map),
+                        SizedBox(width: 8.0),
+                        Text("Carte"),
+                      ],
+                    ),
+                  ),
                 ),
-                 onChanged: (value) {
-               bool isValid = RegExp(r'^[A-Za-z\s]+$').hasMatch(value);
-                if (!isValid) {
-                  // Afficher un message d'erreur à l'écran
-                // ScaffoldMessenger.of(context).showSnackBar(
-                //   const SnackBar(
-                //     content: Text('Le nom de la structure n\'est pas valide.'),
-                //   ),
-                // );
-                }
-              },
+                onChanged: (value) {
+                  bool isValid = RegExp(r'^[A-Za-z\s]+$').hasMatch(value);
+                  if (!isValid) {
+
+                  }
+                },
               ),
+
               const Divider(),
               TextField(
                 controller: _commentaireController,
@@ -218,8 +232,9 @@ Future<void> searchPlaces(String query) async {
                   ),
                   child: Column(
                     children: [
+                      // _imageFile.path
                       widget.imageUrl != null 
-                      ? Image.file(File(widget.imageUrl!))  
+                      ? afficherImage( widget.imageUrl!) 
                       : Text('Aucune image sélectionnée'),
                     ] 
                     ),
@@ -259,10 +274,7 @@ Future<void> searchPlaces(String query) async {
                               leading: Icon(Icons.photo),
                               title: Text("Galerie du téléphone"),
                               onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => MyImagePicker()),
-                                );
+                                _pickImageFromGallery();
                               },
                             ),
                           ],
@@ -335,5 +347,20 @@ Future<void> searchPlaces(String query) async {
       ),
     );
   }
+  Widget afficherImage(String url) {
+  if (url.startsWith('http') ) {
+    return Image.network(url);
+   }
+  // else if (url.startsWith('/data')) {
+  //   return Image.file(File(url));
+  // } 
+  else if (File(url).existsSync() ) {
+    return Image.file(File(url));
+  }
+   else {
+    return Text('Erreur: Format d\'image non pris en charge');
+  }
+}
+
 }
 

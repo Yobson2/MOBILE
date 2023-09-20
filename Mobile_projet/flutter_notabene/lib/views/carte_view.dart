@@ -16,16 +16,16 @@ class MapSampleState extends State<MapSample> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
   final TextEditingController _searchController = TextEditingController();
-  LatLng kUserLocation = LatLng(0, 0);
+  LatLng kUserLocation = LatLng(5.3709971, -3.9164684);
 
   Marker _kUserMarker = const Marker(
     markerId: MarkerId("user_marker"),
     infoWindow: InfoWindow(title: "user_marker"),
-    position: LatLng(0, 0),
+    position: LatLng(5.3709971, -3.9164684),
   );
 
   static const CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(0, 0),
+    target: LatLng(5.3709971, -3.9164684),
     zoom: 14.4746,
   );
 
@@ -45,8 +45,9 @@ class MapSampleState extends State<MapSample> {
 
     double latitude = position.latitude;
     double longitude = position.longitude;
-
-    LatLng userLocation = LatLng(latitude, longitude);
+    print(position.latitude);
+    print(position.longitude);
+    LatLng userLocation = LatLng(5.3631109, -3.9077578); //afficher la position actuelle ici
 
     setState(() {
       _kUserMarker = Marker(
@@ -80,7 +81,7 @@ Future<void> searchPlaces(String query) async {
         markerId: const MarkerId("position"),
         infoWindow: const InfoWindow(title: "position"),
         position: userLocation,
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
       );
     });
 
@@ -99,16 +100,17 @@ Future<void> searchPlaces(String query) async {
       _kUserMarker = Marker(
         markerId: const MarkerId("position"),
         infoWindow: const InfoWindow(title: "position"),
-        position: LatLng(0, 0), 
+        position: LatLng(5.3709971, -3.9164684), 
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
       );
     });
 
     final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newLatLng(LatLng(0, 0))); 
+    controller.animateCamera(CameraUpdate.newLatLng(LatLng(5.3709971, -3.9164684))); 
   } else {
     searchPlaces(query);
   }
+  searchPlaces(query);
 }
 
 

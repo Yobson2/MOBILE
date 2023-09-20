@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 class ApiManager {
-  final String baseUrl="http://192.168.1.8:8082/apiNotabene/v1";
+  final String baseUrl="http://192.168.1.4:8082/apiNotabene/v1";
   ApiManager();
 
   Future<Map<String, dynamic>> fetchData(String endpoint, String message, String messageError) async {
@@ -51,6 +51,27 @@ class ApiManager {
       throw Exception(messageError);
     }
   }
+
+
+
+  Future<String> loginUserAndGetToken(String endpoint,Map<String, dynamic> data) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/$endpoint'),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(data),
+    );
+
+    if (response.statusCode == 200) {
+      var jsonResponse = jsonDecode(response.body);
+      var myToken = jsonResponse['token'];
+      return myToken;
+    } else {
+      throw Exception('Erreur lors de la connexion : ${response.statusCode}');
+    }
+  }
+
 
 
   void clearTextControllers(List<TextEditingController> controllers, TextEditingController emailController, TextEditingController passwordController) {

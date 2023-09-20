@@ -21,9 +21,7 @@ class _GalleryPageState extends State<GalleryPage> {
    bool _isLoading = true;
 
   Future<void> getData(id) async {
-    setState(() {
-    _isLoading = true;
-  });
+    print(id);
     final result = await someAsyncMethod(id);
     print("object is loading $result");
     setState(() {
@@ -34,7 +32,7 @@ class _GalleryPageState extends State<GalleryPage> {
   }
 
   Future<List<dynamic>> someAsyncMethod(id) async {
-    final response = await http.get(Uri.parse('http://192.168.1.8:8082/apiNotabene/v1/getAllPhoto/$id'));
+    final response = await http.get(Uri.parse('http://192.168.1.4:8082/apiNotabene/v1/getAllPhoto/$id'));
     final data = json.decode(response.body);
     return data;
   }
@@ -60,6 +58,7 @@ class _GalleryPageState extends State<GalleryPage> {
     super.initState();
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final userId = userProvider.userId;
+    print("object1111: $userId" );
     getData(userId);
     setState(() {
       isLoading = false;
@@ -68,8 +67,8 @@ class _GalleryPageState extends State<GalleryPage> {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context);
-    final userId = userProvider.userId;
+    // final userProvider = Provider.of<UserProvider>(context);
+    // final userId = userProvider.userId;
 
     return Scaffold(
       appBar: AppBar(
@@ -92,7 +91,7 @@ class _GalleryPageState extends State<GalleryPage> {
                           mainAxisSpacing: 3,
                         ),
                         itemBuilder: (context, index) {
-                          final imageUrl = 'http://192.168.1.8:8082/images/${photos[index]["image"]}';
+                          final imageUrl = 'http://192.168.1.4:8082/images/${photos[index]["image"]}';
                           return GestureDetector(
                             onTap: () {
                               _onPhotoClicked(

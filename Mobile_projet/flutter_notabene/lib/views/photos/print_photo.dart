@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../components/add_comm_sms.dart';
 import 'elem.dart';
 
 class PhotoDetailPage extends StatelessWidget {
@@ -28,7 +29,7 @@ class PhotoDetailPage extends StatelessWidget {
                Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => EnvoiPage(id: id, imageUrl: imageUrl),
+                builder: (context) => CommentaireComponent(imageUrl: imageUrl),
               ),
             );
             },

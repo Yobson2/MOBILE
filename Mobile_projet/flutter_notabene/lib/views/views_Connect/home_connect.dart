@@ -7,13 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_notabene/screens/login_screen.dart';
 import 'package:flutter_notabene/views/carte_view.dart';
 import 'package:flutter_notabene/views/photo_view.dart';
-import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../components/add_comm_sms.dart';
-import '../../services/connectEtat.dart';
 import '../home_view.dart';
 
 
@@ -51,13 +48,11 @@ class _ConnectedUserWidgetState extends State<ConnectedUserWidget> {
   }
   Future<void> _saveUserIdToStorage(int? id) async {
     if (id != null) {
-      final prefs = await SharedPreferences.getInstance();
+       final prefs = await SharedPreferences.getInstance();
       await prefs.setInt('user_id', id);
+      print("id enregistré dans le local storage");
     }
   }
-
-
-  
 
 
   //dispose() est utilisé pour libérer les ressources lorsque
@@ -80,7 +75,7 @@ class _ConnectedUserWidgetState extends State<ConnectedUserWidget> {
     ),
     builder: (BuildContext context) {
       return Container(
-        padding: EdgeInsets.all(30.0),
+        padding: const EdgeInsets.all(30.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -96,25 +91,22 @@ class _ConnectedUserWidgetState extends State<ConnectedUserWidget> {
               leading: const Icon(Icons.settings),
               title: const Text('Profil'),
               onTap: () {
-                // Mettez ici la logique pour l'option 1
                 Navigator.pop(context);
               },
             ),
-            Divider(),
+            const Divider(),
             ListTile(
               leading: const Icon(Icons.notification_add),
               title: const Text('Notifications'),
               onTap: () {
-                // Mettez ici la logique pour l'option 2
                 Navigator.pop(context);
               },
             ),
-            Divider(),
+            const Divider(),
             ListTile(
               leading: const Icon(Icons.exit_to_app),
               title: const Text('Quitter'),
               onTap: () {
-                // Mettez ici la logique pour l'option 2
                 Navigator.pop(context);
               },
             ),

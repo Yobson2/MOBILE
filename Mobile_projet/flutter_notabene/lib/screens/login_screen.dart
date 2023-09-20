@@ -39,35 +39,20 @@ Future<void> loginUser() async {
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
       return;
     }
-
     final userLogin = {
       "adresse_email": _emailController.text,
       "mot_de_passe": _passwordController.text,
     };
-
-    final url = Uri.parse("http://192.168.1.8:8082/apiNotabene/v1/loginUsers");
-
-    var response = await http.post(
-      url,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: jsonEncode(userLogin),
-    );
-
-    if (response.statusCode == 200) {
-      _emailController.clear();
-      _passwordController.clear();
-      var jsonResponse = jsonDecode(response.body);
-      var myToken = jsonResponse['token'];
-      print('myToken: ' + myToken);
-      Navigator.pushReplacement(
+    var mytoken= await ApiManager().loginUserAndGetToken('loginUsers', userLogin);
+    print(mytoken);
+     if(mytoken!=null){
+       _emailController.clear();
+       _passwordController.clear();
+       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => ConnectedUserWidget(token: myToken)),
+        MaterialPageRoute(builder: (context) => ConnectedUserWidget(token: mytoken)),
       );
-    } else {
-      print("Erreur loginUser: ${response.statusCode}");
-    }
+     }else{print("token not found");}
   } catch (e) {
     print("Erreur lors de la requête : $e");
   }

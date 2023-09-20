@@ -17,24 +17,24 @@ class CompanyRegistrationSection extends StatelessWidget {
                           fontSize: 20,
                           fontWeight: FontWeight.bold
                         ),),
-                        SizedBox(height: 10,),
+                        const SizedBox(height: 10,),
                       const Text("Inscrivez-vous en tant qu'entreprise."
                        ,style: TextStyle(
                           color: Colors.grey,
                           fontSize: 15,
                           fontWeight: FontWeight.bold
                         ),),
-                        SizedBox(height: 10,),
-                        Container(
+                        const SizedBox(height: 10,),
+                        const SizedBox(
                          width: 260,
-                         child: const TextField(
+                         child: TextField(
                           decoration: InputDecoration(
                             suffixIcon: Icon(FontAwesomeIcons.user, size: 17,),
                             labelText: "Nom de l'entreprise",
                           ),
                          ),
                         ),
-                        SizedBox(height: 10,),
+                        const SizedBox(height: 10,),
                         Container(
                          width: 260,
                          child: const TextField(
