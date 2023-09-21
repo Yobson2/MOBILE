@@ -5,6 +5,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 
+import '../components/add_comm_sms.dart';
+
 class MapSample extends StatefulWidget {
   const MapSample({super.key});
 
@@ -17,6 +19,8 @@ class MapSampleState extends State<MapSample> {
       Completer<GoogleMapController>();
   final TextEditingController _searchController = TextEditingController();
   LatLng kUserLocation = LatLng(5.3709971, -3.9164684);
+  String? placeName;
+  String? placeAddress;
 
   Marker _kUserMarker = const Marker(
     markerId: MarkerId("user_marker"),
@@ -45,9 +49,11 @@ class MapSampleState extends State<MapSample> {
 
     double latitude = position.latitude;
     double longitude = position.longitude;
-    print(position.latitude);
-    print(position.longitude);
-    LatLng userLocation = LatLng(5.3631109, -3.9077578); //afficher la position actuelle ici
+    // print(position.latitude);
+    // print(position.longitude);
+    LatLng userLocation = LatLng(latitude, longitude); //afficher la position actuelle ici
+
+     
 
     setState(() {
       _kUserMarker = Marker(
@@ -71,10 +77,13 @@ Future<void> searchPlaces(String query) async {
   if (response.statusCode == 200) {
     final Map<String, dynamic> data = json.decode(response.body);
     final Map<String, dynamic> location = data['results'][0]['geometry']['location'];
+    
     double latitude = location['lat'];
     double longitude = location['lng'];
-
+    placeName = data['results'][0]['name'];
+    placeAddress = data['results'][0]['formatted_address'];
     LatLng userLocation = LatLng(latitude, longitude);
+    
 
     setState(() {
       _kUserMarker = Marker(
@@ -87,13 +96,14 @@ Future<void> searchPlaces(String query) async {
 
     final GoogleMapController controller = await _controller.future;
     await controller.animateCamera(CameraUpdate.newLatLng(userLocation));
+    
   } else {
     throw Exception('Erreur lors de la recherche d\'endroits');
   }
 }
 
-  Future<void> _search() async {
-  final query = _searchController.text;
+ Future<void> _search() async {
+  final query = _searchController.text.trim(); // Utilisez trim() pour supprimer les espaces vides
   if (query.isEmpty) {
     // Si le champ de recherche est vide, réinitialiser les coordonnées
     setState(() {
@@ -103,6 +113,8 @@ Future<void> searchPlaces(String query) async {
         position: LatLng(5.3709971, -3.9164684), 
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
       );
+      placeName = null; 
+      placeAddress = null; 
     });
 
     final GoogleMapController controller = await _controller.future;
@@ -110,7 +122,6 @@ Future<void> searchPlaces(String query) async {
   } else {
     searchPlaces(query);
   }
-  searchPlaces(query);
 }
 
 
@@ -118,8 +129,9 @@ Future<void> searchPlaces(String query) async {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-      backgroundColor: Colors.white, 
+      backgroundColor: const Color.fromARGB(255, 63, 57, 57), 
       elevation: 0, 
+      // automaticallyImplyLeading: false,
       title: TextField(
         controller: _searchController,
         style: const TextStyle(color: Colors.black), 
@@ -134,16 +146,76 @@ Future<void> searchPlaces(String query) async {
         ),
       ),
     ),
-          body: GoogleMap(
-        mapType: MapType.normal,
-        markers: {
-          _kUserMarker,
-        },
-        initialCameraPosition: _kGooglePlex,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-      ),
+          body: Column(
+            children: [
+              Expanded(
+                child: GoogleMap(
+              mapType: MapType.normal,
+              markers: {
+                    _kUserMarker,
+              },
+              initialCameraPosition: _kGooglePlex,
+              onMapCreated: (GoogleMapController controller) {
+                    _controller.complete(controller);
+              },
+            ),),
+            if (placeName != null && placeAddress != null)
+           Card(
+          elevation: 8, // Ajoute une ombre à la carte
+          margin: const EdgeInsets.all(16.0),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Lieu trouvé :',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Row(
+                  children: [
+                    const Icon(Icons.place),
+                    Text('$placeName'),
+                  ],
+                ),
+                Row(
+                  children: [
+                   const Icon(Icons.location_on),
+                    Text('$placeAddress'),
+                  ],
+                ),
+                const SizedBox(height: 16), 
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                        onPressed: () {
+                        
+                         Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CommentaireComponent(infos:placeName),
+                          ));
+                            },
+                        child: Text('Commenter'),
+                      ),
+                    
+                    const SizedBox(height: 16), 
+                    ElevatedButton(
+                        onPressed: () {
+                         
+                        },
+                        child: Text('Explorer'),
+                      ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        )
+
+            ],
+          ),
     );
   }
 }

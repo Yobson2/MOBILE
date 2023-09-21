@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_notabene/views/sectionBlocs/details_items.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart'; 
 import '../services/connectEtat.dart';
@@ -14,7 +15,8 @@ import 'package:http/http.dart' as http;
 
 class CommentaireComponent extends StatefulWidget {
    final String? imageUrl;
-  const CommentaireComponent({Key? key, this.imageUrl,}) : super(key: key);
+   final String? infos;
+  const CommentaireComponent({Key? key, this.imageUrl,this.infos}) : super(key: key);
   
   
   
@@ -35,10 +37,15 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
    late final String? image;
    final picker = ImagePicker();
   XFile? _imageFile;
+  
+
 
   @override
   void initState() {
     super.initState();
+      if (widget.infos != null) {
+      _nomStructureController.text = widget.infos!;
+    }
   }
   
 
@@ -81,15 +88,22 @@ Future<void> searchPlaces(String query) async {
      final query = _nomStructureController.text;
     searchPlaces(query);
   
-  final url = Uri.parse("http://192.168.1.4:8082/apiNotabene/v1/addPost/$myId");
+  final url = Uri.parse("http://192.168.1.7:8082/apiNotabene/v1/addPost/$myId");
   var request = http.MultipartRequest('POST', url);
   request.fields['contenu_commentaire'] = _commentaireController.text.toString();
   request.fields['nom_entreprise'] = _nomStructureController.text.toString();
   request.fields['nombre_etoiles'] = _etoilesController.text;
   request.fields['latitude'] = commentLatitude.toString();
   request.fields['longitude'] = commentLongitude.toString();
-     var image = await http.MultipartFile.fromPath("image", widget.imageUrl!);
+    //  var image = await http.MultipartFile.fromPath("image", widget.imageUrl!);
+    // request.files.add(image);
+    if (widget.imageUrl != null) {
+    var image = await http.MultipartFile.fromPath("image", widget.imageUrl!);
     request.files.add(image);
+  } else {
+    print("widget.imageUrl est null");
+    return;
+  }
 
   try {
     var response = await request.send();
@@ -130,7 +144,7 @@ Future<void> searchPlaces(String query) async {
             Navigator.pop(context);
           },
         ),
-          title: const Text('Ajoutez un commentaire'), 
+          title: const Text('Ajoutez un commentaire '), 
           backgroundColor: Colors.grey,
            elevation: 0,
         ),
@@ -190,10 +204,10 @@ Future<void> searchPlaces(String query) async {
                   ),
                 ),
                 onChanged: (value) {
-                  bool isValid = RegExp(r'^[A-Za-z\s]+$').hasMatch(value);
-                  if (!isValid) {
+                  // bool isValid = RegExp(r'^[A-Za-z\s]+$').hasMatch(value);
+                  // if (!isValid) {
 
-                  }
+                  // }
                 },
               ),
 
@@ -208,10 +222,10 @@ Future<void> searchPlaces(String query) async {
                   
                 ),
                 onChanged: (value) {
-                bool isValid = RegExp(r'^[A-Za-z\s]+$').hasMatch(value);
-                if (!isValid) {
-                  //// ////
-                }
+                // bool isValid = RegExp(r'^[A-Za-z\s]+$').hasMatch(value);
+                // if (!isValid) {
+                //   //// ////
+                // }
               },
               ),
               const Divider(),

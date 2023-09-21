@@ -1,5 +1,3 @@
-
-
 import 'dart:convert';
 import 'dart:ffi';
 
@@ -25,16 +23,18 @@ class _ConnectedUserWidgetState extends State<ConnectedUserWidget> {
   late int id;
 
   Map<String, dynamic> userData = {};
-  late PageController _pageController;
   int _currentIndex = 0;
+
+  List<Widget> pages = [
+    const HomeView(),
+    const MapSample(),
+    const PhotoViewWithHero(),
+    const Text("Bienvenue,"),
+  ];
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(
-      initialPage: _currentIndex,
-    );
-
     try {
       Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
 
@@ -46,6 +46,7 @@ class _ConnectedUserWidgetState extends State<ConnectedUserWidget> {
       print('Erreur lors du décodage du token : $e');
     }
   }
+
   Future<void> _saveUserIdToStorage(int? id) async {
     if (id != null) {
        final prefs = await SharedPreferences.getInstance();
@@ -54,19 +55,8 @@ class _ConnectedUserWidgetState extends State<ConnectedUserWidget> {
     }
   }
 
-
-  //dispose() est utilisé pour libérer les ressources lorsque
-  // le widget n'est plus nécessaire, afin d'éviter des problèmes
-  // de mémoire et de comportement indésirable.
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  
- void _showSettingsModal(BuildContext context) {
-  showModalBottomSheet(
+  void _showSettingsModal(BuildContext context) {
+    showModalBottomSheet(
     context: context,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(
@@ -115,10 +105,7 @@ class _ConnectedUserWidgetState extends State<ConnectedUserWidget> {
       );
     },
   );
-}
-
-
-  
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -153,53 +140,30 @@ class _ConnectedUserWidgetState extends State<ConnectedUserWidget> {
           ),
         ],
       ),
-      body: PageView(
-        onPageChanged: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        controller: _pageController,
-        children: const <Widget>[
-          HomeView(),
-          MapSample(),
-          PhotoViewWithHero(),
-          // HomeView(),
-          // CommentaireComponent(),
-           Text("Bienvenue,"),
-        ],
+      body: IndexedStack(
+        index: _currentIndex,
+        children: pages,
       ),
-      //boutton floating
       floatingActionButton:  Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           FloatingActionButton(
-          child: Icon(Icons.comment_bank),
-          onPressed: () {
-             Navigator.push(
+            child: Icon(Icons.comment_bank),
+            onPressed: () {
+              Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const CommentaireComponent()),
               );
-          },
-          
-        )
-      
+            },
+          )
         ],
       ),
-      
-      
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) {
           setState(() {
             _currentIndex = index;
-            _pageController.animateToPage(
-              index,
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-            );
-            // Afficher le modal des paramètres lorsque l'élément "Paramètres" est cliqué
             if (index == 3) {
               _showSettingsModal(context);
             }
@@ -207,29 +171,27 @@ class _ConnectedUserWidgetState extends State<ConnectedUserWidget> {
         },
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: "Accueil",
-                
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.map),
-                label: "carte",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.photo_camera),
-                label: "Photo",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.settings),
-                label: "Paramètres",
-                
-              ),
+            icon: Icon(Icons.home),
+            label: "Accueil",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.map),
+            label: "Carte",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.photo_camera),
+            label: "Photo",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: "Paramètres",
+          ),
         ],
-         selectedItemColor: Colors.blue,
-            unselectedItemColor: Colors.grey,
-            selectedFontSize: 12,
-            unselectedFontSize: 12,
-            iconSize: 32,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
+        selectedFontSize: 12,
+        unselectedFontSize: 12,
+        iconSize: 32,
       ),
     );
   }
