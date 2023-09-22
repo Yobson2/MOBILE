@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../components/add_comm_sms.dart';
 import '../home_view.dart';
+import '../testMap.dart';
 
 
 class ConnectedUserWidget extends StatefulWidget {
@@ -30,28 +31,35 @@ class _ConnectedUserWidgetState extends State<ConnectedUserWidget> {
     const MapSample(),
     const PhotoViewWithHero(),
     const Text("Bienvenue,"),
+    
   ];
 
-  @override
-  void initState() {
-    super.initState();
-    try {
-      Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
+@override
+void initState() {
+  super.initState();
+  _initializeUserData();
+}
 
-      id = jwtDecodedToken['userId'];
-      print("object id: " + id.toString());
-     
-      _saveUserIdToStorage(id); 
-    } catch (e) {
-      print('Erreur lors du décodage du token : $e');
-    }
+Future<void> _initializeUserData() async {
+  try {
+    Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
+    id = jwtDecodedToken['userId'];
+    print("object id: " + id.toString());
+   
+    await _saveUserIdToStorage(id); 
+  } catch (e) {
+    print('Erreur lors du décodage du token : $e');
   }
+}
+
 
   Future<void> _saveUserIdToStorage(int? id) async {
     if (id != null) {
        final prefs = await SharedPreferences.getInstance();
       await prefs.setInt('user_id', id);
       print("id enregistré dans le local storage");
+    }else{
+      print("id enregist errreeeee");
     }
   }
 

@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart'; 
 import '../services/connectEtat.dart';
 import '../views/carte_view.dart';
+import '../views/idtest.dart';
 import '../views/photo_view.dart';
 import '../views/photos/galerie_photo.dart';
 import '../views/photos/galerie_tel.dart';
@@ -16,6 +17,7 @@ import 'package:http/http.dart' as http;
 class CommentaireComponent extends StatefulWidget {
    final String? imageUrl;
    final String? infos;
+    // final List<String> allPhotos;
   const CommentaireComponent({Key? key, this.imageUrl,this.infos}) : super(key: key);
   
   
@@ -37,6 +39,8 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
    late final String? image;
    final picker = ImagePicker();
   XFile? _imageFile;
+  int? userId;
+ 
   
 
 
@@ -46,8 +50,18 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
       if (widget.infos != null) {
       _nomStructureController.text = widget.infos!;
     }
+     _fetchAndDisplayUserId();
+    
   }
-  
+  Future<void> _fetchAndDisplayUserId() async {
+    final userData = UserData(); 
+    final userId = await userData.getUserIdFromLocalStorage();
+    if (userId != null) {
+      setState(() {
+        this.userId = userId;
+      });
+    }
+  }
 
   Future<void> _pickImageFromGallery() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -86,24 +100,26 @@ Future<void> searchPlaces(String query) async {
   Future<void> addCommentaire(myId) async {
      
      final query = _nomStructureController.text;
-    searchPlaces(query);
+    await searchPlaces(query);
   
-  final url = Uri.parse("http://192.168.1.7:8082/apiNotabene/v1/addPost/$myId");
+  final url = Uri.parse("http://192.168.1.9:8082/apiNotabene/v1/addPost/$myId");
   var request = http.MultipartRequest('POST', url);
-  request.fields['contenu_commentaire'] = _commentaireController.text.toString();
-  request.fields['nom_entreprise'] = _nomStructureController.text.toString();
+
+  
+  request.fields['contenu_commentaire'] = _commentaireController.text;
+  request.fields['nom_entreprise'] = _nomStructureController.text;
   request.fields['nombre_etoiles'] = _etoilesController.text;
   request.fields['latitude'] = commentLatitude.toString();
   request.fields['longitude'] = commentLongitude.toString();
-    //  var image = await http.MultipartFile.fromPath("image", widget.imageUrl!);
-    // request.files.add(image);
-    if (widget.imageUrl != null) {
-    var image = await http.MultipartFile.fromPath("image", widget.imageUrl!);
+     var image = await http.MultipartFile.fromPath("image", widget.imageUrl!);
     request.files.add(image);
-  } else {
-    print("widget.imageUrl est null");
-    return;
-  }
+  //   if (widget.imageUrl != null) {
+  //   var image = await http.MultipartFile.fromPath("image", widget.imageUrl!);
+  //   request.files.add(image);
+  // } else {
+  //   print("widget.imageUrl est null");
+  //   return;
+  // }
 
   try {
     var response = await request.send();
@@ -111,13 +127,16 @@ Future<void> searchPlaces(String query) async {
      _nomStructureController.clear();
      _commentaireController.clear();
      _etoilesController.clear();
+      // setState(() {
+      //   _imageFile = null; 
+      // });
    
      print("Commentaire envoyée");
-      ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Le formulaire a été soumis avec succès!'),
-        ),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      // const SnackBar(
+      //   content: Text('Le formulaire a été soumis avec succès!'),
+      //   ),
+      // );
   } else {
     print("Erreur photoCommentUser: ${response.statusCode}");
   }
@@ -131,9 +150,9 @@ Future<void> searchPlaces(String query) async {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context);
-    final userId = userProvider.userId;
+    // print('User $userId created');
 
+    
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold( 
@@ -250,7 +269,8 @@ Future<void> searchPlaces(String query) async {
                       widget.imageUrl != null 
                       ? afficherImage( widget.imageUrl!) 
                       : Text('Aucune image sélectionnée'),
-                    ] 
+                     
+                     ] 
                     ),
                 ),
                const Divider(),

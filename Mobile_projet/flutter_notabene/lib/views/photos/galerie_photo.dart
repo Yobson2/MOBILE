@@ -7,6 +7,9 @@ import 'package:provider/provider.dart';
 import '../../services/connectEtat.dart';
 import 'package:http/http.dart' as http;
 
+import '../idtest.dart';
+import '../testMap.dart';
+
 class GalleryPage extends StatefulWidget {
   const GalleryPage({Key? key}) : super(key: key);
 
@@ -19,9 +22,13 @@ class _GalleryPageState extends State<GalleryPage> {
   List<dynamic> photos = []; 
    bool _isClicked = false;
    bool _isLoading = true;
+   int? userId;
+
+  List<String> selectedImageUrls = [];
+
 
   Future<void> getData(id) async {
-    print(id);
+    print("Loading $id");
     final result = await someAsyncMethod(id);
     print("object is loading $result");
     setState(() {
@@ -32,47 +39,83 @@ class _GalleryPageState extends State<GalleryPage> {
   }
 
   Future<List<dynamic>> someAsyncMethod(id) async {
-    final response = await http.get(Uri.parse('http://192.168.1.4:8082/apiNotabene/v1/getAllPhoto/$id'));
+    final response = await http.get(Uri.parse('http://192.168.1.9:8082/apiNotabene/v1/getAllPhoto/$id'));
     final data = json.decode(response.body);
     return data;
   }
 
-   void _onPhotoClicked( String imageUrl) {
-    setState(() {
-      _isClicked = true;
-    });
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => CommentaireComponent( imageUrl: imageUrl),
-      ),
-    ).then((value) {
-      setState(() {
-        _isClicked = false;
-      });
-    });
-  }
+  //  void _onPhotoClicked( String imageUrl) {
+  //   setState(() {
+  //     _isClicked = true;
+  //   });
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (context) => CommentaireComponent( imageUrl: imageUrl),
+  //     ),
+  //   ).then((value) {
+  //     setState(() {
+  //       _isClicked = false;
+  //     });
+  //   });
+  // }
+  void _onPhotoClicked(String imageUrl) {
+  setState(() {
+    if (selectedImageUrls.contains(imageUrl)) {
+      selectedImageUrls.remove(imageUrl);
+    } else {
+      selectedImageUrls.add(imageUrl);
+    }
+  });
+}
+
 
   @override
   void initState() {
     super.initState();
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
-    final userId = userProvider.userId;
-    print("object1111: $userId" );
-    getData(userId);
     setState(() {
       isLoading = false;
     });
+     _fetchAndDisplayUserId();
+  }
+  
+  Future<void> _fetchAndDisplayUserId() async {
+    final userData = UserData(); 
+    final userId = await userData.getUserIdFromLocalStorage();
+    if (userId != null) {
+      setState(() {
+        this.userId = userId;
+        getData(userId);
+      });
+    }
+     
+  }
+  void _sendSelectedPhotos() {
+    if (selectedImageUrls.isNotEmpty) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SelectedPhotosPage(selectedImageUrls),
+        ),
+      );
+      print("object: test $selectedImageUrls" );
+    } else {
+      
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // final userProvider = Provider.of<UserProvider>(context);
-    // final userId = userProvider.userId;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Gallerie'),
+        title: Text('Gallerie' ),
+        actions: [
+          ElevatedButton(
+            onPressed: _sendSelectedPhotos,
+            child: Text('Envoyer les photos sélectionnées'),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -84,38 +127,48 @@ class _GalleryPageState extends State<GalleryPage> {
                   children: [
                     Expanded(
                       child: GridView.builder(
-                        itemCount: photos.length,
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          crossAxisSpacing: 20,
-                          mainAxisSpacing: 3,
-                        ),
-                        itemBuilder: (context, index) {
-                          final imageUrl = 'http://192.168.1.4:8082/images/${photos[index]["image"]}';
-                          return GestureDetector(
-                            onTap: () {
-                              _onPhotoClicked(
-                                // photos[index]["id_photos"].toString(),
-                                imageUrl
-                              );
-                            },
-                            child: AnimatedOpacity(
-                              opacity: _isClicked ? 0.5 : 1.0,
-                              duration: Duration(milliseconds: 300),
-                              child: Container(
-                                margin: EdgeInsets.only(top: 8.0),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  image: DecorationImage(
-                                    image: NetworkImage(imageUrl),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        }
-                      ),
+  itemCount: photos.length,
+  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+    crossAxisCount: 3,
+    crossAxisSpacing: 20,
+    mainAxisSpacing: 3,
+  ),
+  itemBuilder: (context, index) {
+    final imageUrl = 'http://192.168.1.9:8082/images/${photos[index]["image"]}';
+    final isSelected = selectedImageUrls.contains(imageUrl);
+
+    return GestureDetector(
+      onTap: () {
+        _onPhotoClicked(imageUrl);
+      },
+      child: Stack(
+        children: [
+          AnimatedOpacity(
+            opacity: isSelected ? 0.5 : 1.0,
+            duration: Duration(milliseconds: 300),
+            child: Container(
+              margin: EdgeInsets.only(top: 8.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0),
+                image: DecorationImage(
+                  image: NetworkImage(imageUrl),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+          if (isSelected)
+            Positioned(
+              top: 0,
+              right: 0,
+              child: Icon(Icons.check_circle, color: Colors.green, size: 30),
+            ),
+        ],
+      ),
+    );
+  },
+)
+
                     ),
                   ],
                 ),
