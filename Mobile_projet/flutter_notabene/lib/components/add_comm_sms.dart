@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_notabene/main.dart';
 import 'package:flutter_notabene/views/sectionBlocs/details_items.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart'; 
@@ -54,13 +55,10 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
     
   }
   Future<void> _fetchAndDisplayUserId() async {
-    final userData = UserData(); 
-    final userId = await userData.getUserIdFromLocalStorage();
-    if (userId != null) {
-      setState(() {
-        this.userId = userId;
-      });
-    }
+    final id= mainSession.userId;
+     setState(() {
+       this.userId = id;
+     });
   }
 
   Future<void> _pickImageFromGallery() async {
@@ -150,7 +148,7 @@ Future<void> searchPlaces(String query) async {
 
   @override
   Widget build(BuildContext context) {
-    // print('User $userId created');
+    print('User $userId created');
 
     
     return MaterialApp(
@@ -163,7 +161,7 @@ Future<void> searchPlaces(String query) async {
             Navigator.pop(context);
           },
         ),
-          title: const Text('Ajoutez un commentaire '), 
+          title: const Text('Ajoutez un commentaire'), 
           backgroundColor: Colors.grey,
            elevation: 0,
         ),
@@ -171,33 +169,7 @@ Future<void> searchPlaces(String query) async {
           padding: const EdgeInsets.all(8.0),
           child: ListView( 
             children: <Widget>[
-          Row(
-            children: [
-              Expanded(
-                child: Container(
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                  child: Row(
-                    children: [
-                      const SizedBox(width: 10),
-                      const Icon(Icons.favorite, color: Colors.red),
-                      const SizedBox(width: 10),
-                      Text(
-                        "Lieux préférés ",
-                        style: TextStyle(color: Colors.grey[700], fontSize: 16),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-
-
-               const Divider(),
+            const Divider(),
              TextField(
                 controller: _nomStructureController,
                 decoration: InputDecoration(

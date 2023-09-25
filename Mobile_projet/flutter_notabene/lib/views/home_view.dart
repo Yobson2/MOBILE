@@ -5,6 +5,7 @@ import 'home/home_avis_recents.dart';
 import 'home/home_cartegories.dart';
 
 class HomeView extends StatelessWidget {
+  
   const HomeView({Key? key}) : super(key: key);
 
   @override

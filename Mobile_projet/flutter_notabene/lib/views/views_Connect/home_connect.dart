@@ -1,8 +1,7 @@
-import 'dart:convert';
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_notabene/main.dart';
 import 'package:flutter_notabene/screens/login_screen.dart';
+import 'package:flutter_notabene/services/api_service.dart';
 import 'package:flutter_notabene/views/carte_view.dart';
 import 'package:flutter_notabene/views/photo_view.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -10,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../components/add_comm_sms.dart';
 import '../home_view.dart';
-import '../testMap.dart';
+
 
 
 class ConnectedUserWidget extends StatefulWidget {
@@ -22,7 +21,7 @@ class ConnectedUserWidget extends StatefulWidget {
 }
 class _ConnectedUserWidgetState extends State<ConnectedUserWidget> {
   late int id;
-
+  
   Map<String, dynamic> userData = {};
   int _currentIndex = 0;
 
@@ -53,15 +52,29 @@ Future<void> _initializeUserData() async {
 }
 
 
-  Future<void> _saveUserIdToStorage(int? id) async {
-    if (id != null) {
-       final prefs = await SharedPreferences.getInstance();
-      await prefs.setInt('user_id', id);
-      print("id enregistré dans le local storage");
-    }else{
-      print("id enregist errreeeee");
+ Future<void> _saveUserIdToStorage(int? id) async {
+  if (id != null) {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('user_id', id);
+
+    try {
+      final myData = await ApiManager().fetchData("userById/$id","données récupérées","Erreur de récupération des données");
+      if (myData != null && myData.containsKey('users')) {
+        setState(() {
+          mainSession.userId = id;
+          userData = myData['users']; 
+        });
+        print("ID enregistré dans le local storage");
+        print("Mes données $userData");
+      } 
+    } catch (e) {
+      print("Erreur lors de la récupération des données utilisateur : $e");
     }
+  } else {
+    print("Erreur lors de l'enregistrement de l'ID");
   }
+}
+
 
   void _showSettingsModal(BuildContext context) {
     showModalBottomSheet(

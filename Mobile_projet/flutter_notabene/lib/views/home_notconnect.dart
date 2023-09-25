@@ -146,7 +146,7 @@ class _NotConnectedUserWidgetState extends State<NotConnectedUserWidget> {
           PhotoViewWithHero(),
           MapSample(),
           // // HomeView(),
-          // Center(child: Text("Non connecté"))
+          Center(child: Text("Non connecté"))
         ],
       ),
       //boutton floating

@@ -78,11 +78,11 @@ class _ImagePreviewPageState extends State<ImagePreviewPage> {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context);
-    userProvider.getUserIdFromStorage();
+    // final userProvider = Provider.of<UserProvider>(context);
+    // userProvider.getUserIdFromStorage();
 
     // Maintenant vous pouvez accéder à l'ID
-    final userId = userProvider.userId;
+    // final userId = userProvider.userId;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Mon image '),
@@ -139,7 +139,7 @@ class _ImagePreviewPageState extends State<ImagePreviewPage> {
                 children: [
                   ElevatedButton.icon(
                     onPressed: () {
-                      savePhoto(userId!);
+                      // savePhoto(userId!);
                       // Navigator.push(
                       //   context,
                       //   MaterialPageRoute(

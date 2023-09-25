@@ -27,11 +27,11 @@ class _MyImagePickerState extends State<MyImagePicker> {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context);
-    userProvider.getUserIdFromStorage();
+    // final userProvider = Provider.of<UserProvider>(context);
+    // userProvider.getUserIdFromStorage();
 
     // Maintenant vous pouvez accéder à l'ID
-    final userId = userProvider.userId;
+    
     return Scaffold(
       appBar: AppBar(
         title: Text('Image Picker Example'),

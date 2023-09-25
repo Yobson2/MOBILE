@@ -61,11 +61,11 @@ class AddCommentaireComponent extends StatelessWidget {
   // Méthode pour afficher le modal des commentaires
   void _modal(BuildContext context) {
 
-     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    userProvider.getUserIdFromStorage(); 
+    //  final userProvider = Provider.of<UserProvider>(context, listen: false);
+    // userProvider.getUserIdFromStorage(); 
 
     // Maintenant vous pouvez accéder à l'ID
-    final userId = userProvider.userId;
+    // final userId = userProvider.userId;
 
     showModalBottomSheet(
       context: context,
@@ -169,7 +169,7 @@ class AddCommentaireComponent extends StatelessWidget {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                    addCommentaire(userId);
+                    // addCommentaire(userId);
                   },
                   style: ElevatedButton.styleFrom(
                       primary: Colors.blue,
