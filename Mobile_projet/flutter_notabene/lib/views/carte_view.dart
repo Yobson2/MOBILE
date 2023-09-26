@@ -1,14 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 
-import '../components/add_comm_sms.dart';
-
 class MapSample extends StatefulWidget {
-  const MapSample({super.key});
+  const MapSample({Key? key});
 
   @override
   State<MapSample> createState() => MapSampleState();
@@ -18,7 +17,7 @@ class MapSampleState extends State<MapSample> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
   final TextEditingController _searchController = TextEditingController();
-  LatLng kUserLocation = LatLng(5.3709971, -3.9164684);
+  // LatLng kUserLocation = LatLng(5.3709971, -3.9164684);
   String? placeName;
   String? placeAddress;
 
@@ -28,8 +27,13 @@ class MapSampleState extends State<MapSample> {
     position: LatLng(5.3709971, -3.9164684),
   );
 
+  List<String> suggestions = [];
+  LatLng? selectedLocation;
+  bool useManualCursor = true;
+  bool testcard = false;
+
   static const CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(5.3709971, -3.9164684),
+    target: LatLng(5.3709971, 0),
     zoom: 14.4746,
   );
 
@@ -49,173 +53,242 @@ class MapSampleState extends State<MapSample> {
 
     double latitude = position.latitude;
     double longitude = position.longitude;
-    // print(position.latitude);
-    // print(position.longitude);
-    LatLng userLocation = LatLng(latitude, longitude); //afficher la position actuelle ici
-
-     
-
-    setState(() {
-      _kUserMarker = Marker(
-        markerId: const MarkerId("position"),
-        infoWindow: const InfoWindow(title: "position"),
-        position: userLocation,
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-      );
-    });
-
-    final GoogleMapController controller = await _controller.future;
-    await controller.animateCamera(CameraUpdate.newLatLng(userLocation));
-  }
-Future<void> searchPlaces(String query) async {
-  final apiKey = 'AIzaSyCRD-FSgdo6Tcpoj-RTuLQfmERxBagzm04';
-  final url = Uri.parse(
-      'https://maps.googleapis.com/maps/api/place/textsearch/json?query=$query&key=$apiKey');
-
-  final response = await http.get(url);
-
-  if (response.statusCode == 200) {
-    final Map<String, dynamic> data = json.decode(response.body);
-    final Map<String, dynamic> location = data['results'][0]['geometry']['location'];
-    
-    double latitude = location['lat'];
-    double longitude = location['lng'];
-    placeName = data['results'][0]['name'];
-    placeAddress = data['results'][0]['formatted_address'];
     LatLng userLocation = LatLng(latitude, longitude);
-    
 
     setState(() {
       _kUserMarker = Marker(
         markerId: const MarkerId("position"),
-        infoWindow: const InfoWindow(title: "position"),
+        infoWindow: const InfoWindow(title: "position actuelle"),
         position: userLocation,
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
       );
     });
 
     final GoogleMapController controller = await _controller.future;
     await controller.animateCamera(CameraUpdate.newLatLng(userLocation));
-    
-  } else {
-    throw Exception('Erreur lors de la recherche d\'endroits');
   }
-}
 
- Future<void> _search() async {
-  final query = _searchController.text.trim(); // Utilisez trim() pour supprimer les espaces vides
-  if (query.isEmpty) {
-    // Si le champ de recherche est vide, réinitialiser les coordonnées
+  Future<void> searchPlaces(String query) async {
+    final apiKey = 'AIzaSyCRD-FSgdo6Tcpoj-RTuLQfmERxBagzm04';
+    final url = Uri.parse(
+        'https://maps.googleapis.com/maps/api/place/textsearch/json?query=$query&key=$apiKey');
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = json.decode(response.body);
+      final List<dynamic> results = data['results'];
+
+      suggestions = results.map((result) {
+        return result['name'] +' '+ result['formatted_address'] as String;
+      }).toList();
+
+      print("objects: $suggestions");
+      if (suggestions.isNotEmpty) {
+        final Map<String, dynamic> location =
+            results[0]['geometry']['location'];
+
+        double latitude = location['lat'];
+        double longitude = location['lng'];
+        placeName = results[0]['name'];
+        placeAddress = results[0]['formatted_address'];
+        LatLng userLocation = LatLng(latitude, longitude);
+        final TextEditingController _searchController = TextEditingController();
+        
+
+
+        final GoogleMapController controller = await _controller.future;
+        await controller.animateCamera(CameraUpdate.newLatLng(userLocation));
+
+        if (useManualCursor) {
+          setState(() {
+            selectedLocation = userLocation;
+          });
+        }
+        setState(() {
+          useManualCursor = true;
+          //  testcard =true;
+        });
+      } else {
+        // Aucun résultat trouvé
+      }
+    } else {
+      throw Exception('Erreur lors de la recherche d\'endroits');
+    }
+  }
+
+  void onSuggestionSelected(String suggestion) async {
+    await searchPlaces(suggestion);
+
     setState(() {
-      _kUserMarker = Marker(
-        markerId: const MarkerId("position"),
-        infoWindow: const InfoWindow(title: "position"),
-        position: LatLng(5.3709971, -3.9164684), 
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-      );
-      placeName = null; 
-      placeAddress = null; 
+      suggestions = [];
+      useManualCursor = false;
+      _searchController.text = suggestion;
+      testcard = true; 
     });
-
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newLatLng(LatLng(5.3709971, -3.9164684))); 
-  } else {
-    searchPlaces(query);
   }
-}
 
+  void showSelectedLocation() async {
+    if (selectedLocation != null) {
+      final GoogleMapController controller = await _controller.future;
+      await controller.animateCamera(CameraUpdate.newLatLng(selectedLocation!));
+    }
+  }
+
+  void onMapTap(LatLng tappedPoint) {
+    if (useManualCursor) {
+      setState(() {
+        selectedLocation = tappedPoint;
+        testcard =true;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-      backgroundColor: const Color.fromARGB(255, 63, 57, 57), 
-      elevation: 0, 
-      // automaticallyImplyLeading: false,
-      title: TextField(
-        controller: _searchController,
-        style: const TextStyle(color: Colors.black), 
-        decoration: InputDecoration(
-          hintText: 'Search...',
-          hintStyle: const TextStyle(color: Colors.grey), 
-          border: InputBorder.none,
-          suffixIcon: IconButton(
-            icon: const Icon(Icons.search, color: Colors.black),
-            onPressed: _search,
+    
+      body: Stack(
+        children: [
+          GoogleMap(
+            mapType: MapType.normal,
+            markers: {
+              _kUserMarker,
+              if (selectedLocation != null)
+                Marker(
+                  markerId: MarkerId("selected_location"),
+                  position: selectedLocation!,
+                  infoWindow: InfoWindow(title: "Selected Location"),
+                  icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+                ),
+            },
+            initialCameraPosition: _kGooglePlex,
+            onMapCreated: (GoogleMapController controller) {
+              _controller.complete(controller);
+            },
+            onTap: onMapTap,
+            zoomControlsEnabled: false,
           ),
-        ),
-      ),
-    ),
-          body: Column(
-            children: [
-              Expanded(
-                child: GoogleMap(
-              mapType: MapType.normal,
-              markers: {
-                    _kUserMarker,
-              },
-              initialCameraPosition: _kGooglePlex,
-              onMapCreated: (GoogleMapController controller) {
-                    _controller.complete(controller);
-              },
-            ),),
-            if (placeName != null && placeAddress != null)
-           Card(
-          elevation: 8, // Ajoute une ombre à la carte
-          margin: const EdgeInsets.all(16.0),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
+          Positioned(
+            left: 10.0,
+            right: 10.0,
+            top: 40.0,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(16.0),
+              ),
+              child: TextField(
+                 controller: _searchController,
+                onChanged: (query) {
+                  if (query.isNotEmpty) {
+                    searchPlaces(query);
+                  } else {
+                    setState(() {
+                      suggestions = [];
+                      testcard = false; 
+                    });
+                  }
+                },
+                style: TextStyle(color: Colors.black),
+                decoration: const InputDecoration(
+                  
+                  prefix: Icon(
+                    Icons.search_sharp, color: Colors.black
+                  ),
+                  hintText: 'Recherche de Lieu',
+                  hintStyle: TextStyle(color: Colors.grey),
+                  border: InputBorder.none,
+                ),
+              ),
+            ),
+          ),
+          if (suggestions.isNotEmpty)
+            Positioned(
+              left: 10.0,
+              right: 10.0,
+              top: 85.0,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 5.0,
+                    ),
+                  ],
+                ),
+                child: ListView.builder(
+                  itemCount: suggestions.length,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(suggestions[index]),
+                      onTap: () {
+                        onSuggestionSelected(suggestions[index]);
+                      },
+                    );
+                  },
+                ),
+              ),
+            ),
+              if (testcard )
+             Positioned(
+            left: 10.0,
+            right: 10.0,
+            bottom: 10.0, 
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Lieu trouvé :',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                Center(
+                  child: Container(
+                    width: 300,
+                    padding: EdgeInsets.all(16.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 5.0,
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(16.0),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Nom de l'endroit: $placeName",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 8.0),
+                        Text("Adresse: $placeAddress"),
+                        SizedBox(height: 10.0), 
+                        Center(
+                          child: Row(
+                            children: [
+                               ElevatedButton(
+                                  onPressed: showSelectedLocation,
+                                  child: Text('Terminé'),
+                                ),
+                               IconButton(
+                                color: Colors.blue,
+                                onPressed: showSelectedLocation,
+                                 icon: Icon(Icons.gps_fixed)
+                                )  
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-                Row(
-                  children: [
-                    const Icon(Icons.place),
-                    Text('$placeName'),
-                  ],
-                ),
-                Row(
-                  children: [
-                   const Icon(Icons.location_on),
-                    Text('$placeAddress'),
-                  ],
-                ),
-                const SizedBox(height: 16), 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    ElevatedButton(
-                        onPressed: () {
-                        
-                         Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CommentaireComponent(infos:placeName),
-                          ));
-                            },
-                        child: Text('Commenter'),
-                      ),
-                    
-                    const SizedBox(height: 16), 
-                    ElevatedButton(
-                        onPressed: () {
-                         
-                        },
-                        child: Text('Explorer'),
-                      ),
-                  ],
-                ),
+
               ],
             ),
           ),
-        )
-
-            ],
-          ),
+        ],
+      ),
     );
   }
 }

@@ -8,6 +8,7 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../components/add_comm_sms.dart';
+import '../home_notconnect.dart';
 import '../home_view.dart';
 
 
@@ -58,15 +59,15 @@ Future<void> _initializeUserData() async {
     await prefs.setInt('user_id', id);
 
     try {
-      final myData = await ApiManager().fetchData("userById/$id","données récupérées","Erreur de récupération des données");
-      if (myData != null && myData.containsKey('users')) {
+      // final myData = await ApiManager().fetchData("userById/$id","données récupérées","Erreur de récupération des données");
+      // if (myData != null && myData.containsKey('users')) {
         setState(() {
           mainSession.userId = id;
-          userData = myData['users']; 
+          // userData = myData['users']; 
         });
         print("ID enregistré dans le local storage");
-        print("Mes données $userData");
-      } 
+        // print("Mes données $userData");
+      // } 
     } catch (e) {
       print("Erreur lors de la récupération des données utilisateur : $e");
     }
@@ -118,7 +119,10 @@ Future<void> _initializeUserData() async {
               leading: const Icon(Icons.exit_to_app),
               title: const Text('Quitter'),
               onTap: () {
-                Navigator.pop(context);
+                 Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const NotConnectedUserWidget()),
+              );
               },
             ),
           ],
@@ -132,6 +136,7 @@ Future<void> _initializeUserData() async {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+         automaticallyImplyLeading: false,
         title: const Row(
           children: [
             Icon(Icons.note),

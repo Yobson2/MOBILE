@@ -2,9 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 
-import '../../services/connectEtat.dart';
 
 class MyImagePicker extends StatefulWidget {
   @override

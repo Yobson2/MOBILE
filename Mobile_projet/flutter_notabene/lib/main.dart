@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_notabene/gestion/session.dart';
 import 'package:flutter_notabene/routes/app_routes.dart';
-// import 'package:flutter_notabene/services/connectEtat.dart';
-// import 'package:provider/provider.dart';
+import 'package:flutter_notabene/sqlite_bd/config.dart';
 
 
 SessionManager mainSession= SessionManager();
+DatabaseLocal database = DatabaseLocal();
 
 
-void main() { 
+void main() async { 
     mainSession.init();
+    //  WidgetsFlutterBinding.ensureInitialized();
+
+    // Initialisation de la base de données
+    // await database.initDatabase();
   runApp(
     MyApp(),
   );

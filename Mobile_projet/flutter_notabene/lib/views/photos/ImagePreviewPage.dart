@@ -1,15 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_notabene/views/photos/galerie_photo.dart';
 import 'package:flutter_notabene/views/photos/print_camera.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
+
 
 import '../../components/add_comm_sms.dart';
-import '../../services/connectEtat.dart';
-import '../photo_view.dart';
+
 
 class ImagePreviewPage extends StatefulWidget {
   final String imagePath;
@@ -78,11 +76,7 @@ class _ImagePreviewPageState extends State<ImagePreviewPage> {
 
   @override
   Widget build(BuildContext context) {
-    // final userProvider = Provider.of<UserProvider>(context);
-    // userProvider.getUserIdFromStorage();
 
-    // Maintenant vous pouvez accéder à l'ID
-    // final userId = userProvider.userId;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Mon image '),

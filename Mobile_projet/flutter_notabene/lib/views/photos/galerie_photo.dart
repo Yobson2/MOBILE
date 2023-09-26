@@ -1,10 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_notabene/components/add_comm_sms.dart';
-import 'package:flutter_notabene/views/photos/print_photo.dart';
-import 'package:provider/provider.dart';
-import '../../services/connectEtat.dart';
 import 'package:http/http.dart' as http;
 
 import '../idtest.dart';
@@ -39,7 +35,7 @@ class _GalleryPageState extends State<GalleryPage> {
   }
 
   Future<List<dynamic>> someAsyncMethod(id) async {
-    final response = await http.get(Uri.parse('http://192.168.1.9:8082/apiNotabene/v1/getAllPhoto/$id'));
+    final response = await http.get(Uri.parse('http://192.168.1.107:8082/apiNotabene/v1/getAllPhoto/$id'));
     final data = json.decode(response.body);
     return data;
   }
@@ -134,7 +130,7 @@ class _GalleryPageState extends State<GalleryPage> {
     mainAxisSpacing: 3,
   ),
   itemBuilder: (context, index) {
-    final imageUrl = 'http://192.168.1.9:8082/images/${photos[index]["image"]}';
+    final imageUrl = 'http://192.168.1.107:8082/images/${photos[index]["image"]}';
     final isSelected = selectedImageUrls.contains(imageUrl);
 
     return GestureDetector(

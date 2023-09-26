@@ -1,14 +1,12 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_notabene/components/add_message_components.dart';
 import 'package:flutter_notabene/screens/login_screen.dart';
 import 'package:flutter_notabene/views/photo_view.dart';
-import 'package:flutter_notabene/views/testMap.dart';
 
+import '../services/localisation_search.dart';
 import 'carte_view.dart';
-// import 'package:flutter_notabene/views/carte_view.dart';
-// import 'package:flutter_notabene/views/home_view.dart';
-// import 'package:flutter_notabene/views/photo_view.dart';
+import 'home_view.dart';
+
 
 
 class NotConnectedUserWidget extends StatefulWidget {
@@ -19,17 +17,20 @@ class NotConnectedUserWidget extends StatefulWidget {
 }
 
 class _NotConnectedUserWidgetState extends State<NotConnectedUserWidget> {
-  late PageController _pageController;
-  int _currentIndex = 0; // Initialize the current index to 0
+  int _currentIndex = 0; 
 
-  //initState() est utilisé pour les initialisations 
-  //nécessaires lors de l'ajout du widget à l'interface utilisateur
+   List<Widget> pages = [
+    const HomeView(),
+    const MapSample(),
+    const PhotoViewWithHero(),
+    MessageConnexion(),
+    
+  ];
+
+ 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(
-      initialPage: _currentIndex,
-    );
   } 
 
   //dispose() est utilisé pour libérer les ressources lorsque
@@ -37,73 +38,19 @@ class _NotConnectedUserWidgetState extends State<NotConnectedUserWidget> {
   // de mémoire et de comportement indésirable.
   @override
   void dispose() {
-    _pageController.dispose();
     super.dispose();
   }
 
   
- void _showSettingsModal(BuildContext context) {
-  showModalBottomSheet(
-    context: context,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(
-        top: Radius.circular(20.0),
-      ),
-    ),
-    builder: (BuildContext context) {
-      return Container(
-        padding: EdgeInsets.all(30.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text(
-              'Paramètres',
-              style: TextStyle(
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 20.0),
-            ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text('Profil'),
-              onTap: () {
-                // Mettez ici la logique pour l'option 1
-                Navigator.pop(context);
-              },
-            ),
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.notification_add),
-              title: const Text('Notifications'),
-              onTap: () {
-                // Mettez ici la logique pour l'option 2
-                Navigator.pop(context);
-              },
-            ),
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.exit_to_app),
-              title: const Text('Quitter'),
-              onTap: () {
-                // Mettez ici la logique pour l'option 2
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
-      );
-    },
-  );
-}
+ 
 
-
-  
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
       appBar: AppBar(
+         automaticallyImplyLeading: false,
         title: const Row(
           children: [
             Icon(Icons.note),
@@ -133,23 +80,11 @@ class _NotConnectedUserWidgetState extends State<NotConnectedUserWidget> {
           ),
         ],
       ),
-      body: PageView(
-        onPageChanged: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        controller: _pageController,
-        children: const <Widget>[
-          // HomeView(),
-          // CarteGloblale(),
-          PhotoViewWithHero(),
-          MapSample(),
-          // // HomeView(),
-          Center(child: Text("Non connecté"))
-        ],
+      body:IndexedStack(
+        index: _currentIndex,
+        children: pages,
       ),
-      //boutton floating
+      
       floatingActionButton:  const Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -166,15 +101,9 @@ class _NotConnectedUserWidgetState extends State<NotConnectedUserWidget> {
         onTap: (index) {
           setState(() {
             _currentIndex = index;
-            _pageController.animateToPage(
-              index,
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-            );
-            // Afficher le modal des paramètres lorsque l'élément "Paramètres" est cliqué
-            if (index == 3) {
-              _showSettingsModal(context);
-            }
+            // if (index == 3) {
+             
+            // }
           });
         },
         items: const <BottomNavigationBarItem>[
@@ -205,4 +134,64 @@ class _NotConnectedUserWidgetState extends State<NotConnectedUserWidget> {
       ),
     );
   }
+  
 }
+
+
+
+
+class MessageConnexion extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.blue,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(
+              Icons.error,
+              color: Colors.white,
+              size: 40,
+            ),
+            const SizedBox(height: 10),
+            const Text(
+              "Vous n'êtes pas connecté",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 10),
+            const Text(
+              "Pour accéder à cette fonctionnalité, veuillez vous connecter avec votre compte. Si vous n'avez pas encore de compte, vous pouvez en créer un en quelques étapes simples. Connectez-vous dès maintenant pour profiter de l'expérience complète de notre application !",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+              ),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                 Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                );
+              },
+              child: const Text("Se connecter"),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+

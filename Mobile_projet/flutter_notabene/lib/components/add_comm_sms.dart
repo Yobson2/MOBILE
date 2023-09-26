@@ -2,17 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_notabene/main.dart';
-import 'package:flutter_notabene/views/sectionBlocs/details_items.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart'; 
-import '../services/connectEtat.dart';
 import '../views/carte_view.dart';
-import '../views/idtest.dart';
 import '../views/photo_view.dart';
 import '../views/photos/galerie_photo.dart';
-import '../views/photos/galerie_tel.dart';
+
 import 'package:http/http.dart' as http;
 
 class CommentaireComponent extends StatefulWidget {

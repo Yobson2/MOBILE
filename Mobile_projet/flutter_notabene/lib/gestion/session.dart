@@ -1,6 +1,7 @@
 
 
 import 'package:flutter_notabene/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/user_model.dart';
@@ -17,9 +18,14 @@ class SessionManager {
   }
 
   setuserId(int userId_){
-    mainUser.getUserIdFromLocalStorage(userId_);
+    // mainUser.getUserIdFromLocalStorage(userId_);
     userId = userId_;  
   }
   
+
+   Future<int?> getUserIdFromLocalStorage() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt('user_id');
+  }
 
 }
