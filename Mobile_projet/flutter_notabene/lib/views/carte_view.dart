@@ -17,7 +17,6 @@ class MapSampleState extends State<MapSample> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
   final TextEditingController _searchController = TextEditingController();
-  // LatLng kUserLocation = LatLng(5.3709971, -3.9164684);
   String? placeName;
   String? placeAddress;
 
@@ -83,7 +82,6 @@ class MapSampleState extends State<MapSample> {
         return result['name'] +' '+ result['formatted_address'] as String;
       }).toList();
 
-      print("objects: $suggestions");
       if (suggestions.isNotEmpty) {
         final Map<String, dynamic> location =
             results[0]['geometry']['location'];
@@ -93,9 +91,6 @@ class MapSampleState extends State<MapSample> {
         placeName = results[0]['name'];
         placeAddress = results[0]['formatted_address'];
         LatLng userLocation = LatLng(latitude, longitude);
-        final TextEditingController _searchController = TextEditingController();
-        
-
 
         final GoogleMapController controller = await _controller.future;
         await controller.animateCamera(CameraUpdate.newLatLng(userLocation));
@@ -107,7 +102,6 @@ class MapSampleState extends State<MapSample> {
         }
         setState(() {
           useManualCursor = true;
-          //  testcard =true;
         });
       } else {
         // Aucun résultat trouvé
@@ -141,6 +135,30 @@ class MapSampleState extends State<MapSample> {
         selectedLocation = tappedPoint;
         testcard =true;
       });
+
+      searchPlaceInfo(tappedPoint.latitude, tappedPoint.longitude);
+    }
+  }
+
+  Future<void> searchPlaceInfo(double latitude, double longitude) async {
+    final apiKey = 'AIzaSyCRD-FSgdo6Tcpoj-RTuLQfmERxBagzm04';
+    final url = Uri.parse(
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=$apiKey');
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = json.decode(response.body);
+      final List<dynamic> results = data['results'];
+
+      if (results.isNotEmpty) {
+        setState(() {
+          placeAddress= results[0]['formatted_address'];
+          placeName = "test address";
+        });
+      }
+    } else {
+      throw Exception('Erreur lors de la recherche d\'endroits');
     }
   }
 
@@ -242,8 +260,8 @@ class MapSampleState extends State<MapSample> {
               children: [
                 Center(
                   child: Container(
-                    width: 300,
-                    padding: EdgeInsets.all(16.0),
+                    width: 400,
+                    padding: EdgeInsets.all(10.0),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       boxShadow: [
@@ -259,18 +277,24 @@ class MapSampleState extends State<MapSample> {
                       children: [
                         Text(
                           "Nom de l'endroit: $placeName",
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        SizedBox(height: 8.0),
+                        const SizedBox(height: 8.0),
                         Text("Adresse: $placeAddress"),
-                        SizedBox(height: 10.0), 
+                        const SizedBox(height: 10.0), 
                         Center(
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                               ElevatedButton(
-                                  onPressed: showSelectedLocation,
-                                  child: Text('Terminé'),
-                                ),
+                              
+                              SizedBox(
+                                  width: 310,
+                                  height: 40,
+                                   child: ElevatedButton(
+                                      onPressed: _showModal,
+                                      child: const Text('Terminé'),
+                                    ),
+                                 ),
                                IconButton(
                                 color: Colors.blue,
                                 onPressed: showSelectedLocation,
@@ -291,4 +315,81 @@ class MapSampleState extends State<MapSample> {
       ),
     );
   }
+
+
+void _showModal() {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Center(
+        child: Container(
+          width: 350,
+          height: 300,
+          padding: EdgeInsets.all(16.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Icon(
+                Icons.check_circle,
+                color: Colors.blue,
+                size: 48.0,
+              ),
+              const SizedBox(height: 16.0),
+              const Text(
+                "Que voulez-vous faire  ?",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18.0,
+                ),
+              ),
+        
+              const SizedBox(height: 20.0), 
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                   ElevatedButton.icon(
+                onPressed: () {
+                 
+                  Navigator.of(context).pop();
+                },
+                icon: const Icon(Icons.comment, size: 24),
+                label: const Text('commenter '),
+              ),
+                  const SizedBox(width: 16.0),
+                   ElevatedButton.icon(
+                onPressed: () {
+                 
+                  Navigator.of(context).pop();
+                },
+                icon: const Icon(Icons.explore, size: 24),
+                label: const Text('Explorer'),
+              ),
+                  
+                ],
+              ),
+              const SizedBox(height: 10.0),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); 
+                },
+                child: Text(
+                  'Annuler',
+                  style: TextStyle(color: Colors.blue),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
 }
+
+
+}
+
+
