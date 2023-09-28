@@ -11,10 +11,15 @@ import '../views/photos/galerie_photo.dart';
 import 'package:http/http.dart' as http;
 
 class CommentaireComponent extends StatefulWidget {
+   final List<String>? allPhotos;
    final String? imageUrl;
    final String? infos;
-    // final List<String> allPhotos;
-  const CommentaireComponent({Key? key, this.imageUrl,this.infos}) : super(key: key);
+   final String? placeAddress;
+   final String? placeName;
+   final double? latitude;
+   final double? longitude;
+  
+  const CommentaireComponent({Key? key, this.imageUrl,this.infos, this.placeAddress, this.placeName, this.latitude, this.longitude,this.allPhotos}) : super(key: key);
   
   
   
@@ -29,6 +34,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
   final TextEditingController _nomStructureController = TextEditingController();
   final TextEditingController _commentaireController = TextEditingController();
   final TextEditingController _etoilesController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
 
   late double commentLatitude;
   late double commentLongitude; 
@@ -36,15 +42,19 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
    final picker = ImagePicker();
   XFile? _imageFile;
   int? userId;
+  late final dynamic mesPhotos;
+  final apiKey = 'AIzaSyCRD-FSgdo6Tcpoj-RTuLQfmERxBagzm04';
+ static const apiUrl='https://maps.googleapis.com/maps/api/place/textsearch/json?query';
  
-  
+   int nombreEtoiles = 0;
 
 
   @override
   void initState() {
     super.initState();
-      if (widget.infos != null) {
-      _nomStructureController.text = widget.infos!;
+      if (widget.placeName != null && widget.placeAddress != null) {
+      _nomStructureController.text = widget.placeName!;
+      _addressController.text = widget.placeAddress!;
     }
      _fetchAndDisplayUserId();
     
@@ -53,6 +63,9 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
     final id= mainSession.userId;
      setState(() {
        this.userId = id;
+       this.mesPhotos = widget.allPhotos;
+       commentLatitude=widget.latitude!;
+       commentLongitude=widget.longitude!;
      });
   }
 
@@ -65,37 +78,15 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
     print(_imageFile!.path);
   }
 
-
-Future<void> searchPlaces(String query) async {
-  final apiKey = 'AIzaSyCRD-FSgdo6Tcpoj-RTuLQfmERxBagzm04';
-  // String apiUrl = dotenv.get('API_URL');;
   
-  final url = Uri.parse(
-      'https://maps.googleapis.com/maps/api/place/textsearch/json?query=$query&key=$apiKey');
 
-  final response = await http.get(url);
-
-  if (response.statusCode == 200) {
-    final Map<String, dynamic> data = json.decode(response.body);
-    final Map<String, dynamic> location = data['results'][0]['geometry']['location'];
-    double latitude = location['lat'];
-    double longitude = location['lng'];
-
-    setState(() {
-    commentLatitude = latitude;
-    commentLongitude = longitude;
-  });
-  } else {
-    throw Exception('Erreur lors de la recherche d\'endroits');
-  }
-}
 
   Future<void> addCommentaire(myId) async {
      
-     final query = _nomStructureController.text;
-    await searchPlaces(query);
+    //  final query = _nomStructureController.text;
+    print("idddddddddddd $userId");
   
-  final url = Uri.parse("http://192.168.1.9:8082/apiNotabene/v1/addPost/$myId");
+  final url = Uri.parse("http://192.168.1.14:8082/apiNotabene/v1/addPost/$myId");
   var request = http.MultipartRequest('POST', url);
 
   
@@ -104,15 +95,8 @@ Future<void> searchPlaces(String query) async {
   request.fields['nombre_etoiles'] = _etoilesController.text;
   request.fields['latitude'] = commentLatitude.toString();
   request.fields['longitude'] = commentLongitude.toString();
-     var image = await http.MultipartFile.fromPath("image", widget.imageUrl!);
-    request.files.add(image);
-  //   if (widget.imageUrl != null) {
-  //   var image = await http.MultipartFile.fromPath("image", widget.imageUrl!);
-  //   request.files.add(image);
-  // } else {
-  //   print("widget.imageUrl est null");
-  //   return;
-  // }
+    //  var image = await http.MultipartFile.fromPath("image", widget.imageUrl!);
+    // request.files.add(image);
 
   try {
     var response = await request.send();
@@ -120,20 +104,11 @@ Future<void> searchPlaces(String query) async {
      _nomStructureController.clear();
      _commentaireController.clear();
      _etoilesController.clear();
-      // setState(() {
-      //   _imageFile = null; 
-      // });
    
      print("Commentaire envoyée");
-      // ScaffoldMessenger.of(context).showSnackBar(
-      // const SnackBar(
-      //   content: Text('Le formulaire a été soumis avec succès!'),
-      //   ),
-      // );
   } else {
     print("Erreur photoCommentUser: ${response.statusCode}");
   }
-  
   } catch (e) {
     print('Erreur lors de l\'envoi du commentaire: $e');
   }
@@ -143,7 +118,7 @@ Future<void> searchPlaces(String query) async {
 
   @override
   Widget build(BuildContext context) {
-    print('User $userId created');
+    print('User $userId created ');
 
     
     return MaterialApp(
@@ -156,87 +131,126 @@ Future<void> searchPlaces(String query) async {
             Navigator.pop(context);
           },
         ),
-          title: const Text('Ajoutez un commentaire'), 
+          title: const Text('Ajoutez un commentaire '), 
           backgroundColor: Colors.grey,
            elevation: 0,
         ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: ListView( 
+          
+          child: 
+          ListView( 
             children: <Widget>[
             const Divider(),
-             TextField(
-                controller: _nomStructureController,
-                decoration: InputDecoration(
-                  labelText: "Structure ou Lieu",
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.business),
-                  suffixIcon: InkWell(
-                    onTap: () {
-                      print("Clic sur l'icône de suffixe");
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const MapSample()),
-                        );
-                    },
-                    child:  const Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.map),
-                        SizedBox(width: 8.0),
-                        Text("Carte"),
-                      ],
-                    ),
-                  ),
-                ),
-                onChanged: (value) {
-                  // bool isValid = RegExp(r'^[A-Za-z\s]+$').hasMatch(value);
-                  // if (!isValid) {
-
-                  // }
-                },
-              ),
-
-              const Divider(),
-              TextField(
-                controller: _commentaireController,
-                maxLines: 5,
-                decoration: const InputDecoration(
-                  labelText: "Votre commentaire",
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.comment),
-                  
-                ),
-                onChanged: (value) {
-                // bool isValid = RegExp(r'^[A-Za-z\s]+$').hasMatch(value);
-                // if (!isValid) {
-                //   //// ////
-                // }
+           TextField(
+          controller: _nomStructureController,
+          decoration: InputDecoration(
+            labelText: "Structure ou Lieu",
+            border: OutlineInputBorder(),
+            prefixIcon: Icon(Icons.business),
+            suffixIcon: InkWell(
+              onTap: () {
+                print("Clic sur l'icône de suffixe");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MapSample()),
+                );
               },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.map),
+                  SizedBox(width: 8.0),
+                  Text("Carte"),
+                ],
               ),
-              const Divider(),
-              TextField(
-                maxLines: 1, 
-                maxLength: 1, 
-                controller: _etoilesController,
-                decoration: const InputDecoration(
-                  labelText: "Etoiles",
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.star),
-                ),
-              ),
+            ),
+          ),
+          onChanged: (value) {},
+        ),
+        const Divider(),
+        TextField(
+          controller: _addressController,
+          decoration: const InputDecoration(
+            labelText: "Adresse du lieu",
+            border: OutlineInputBorder(),
+            prefixIcon: Icon(Icons.place),
+          ),
+          onChanged: (value) {
+            
+          },
+        ),
+
+        const Divider(),
+
+        TextField(
+          controller: _commentaireController,
+          maxLines: 5,
+          decoration: const InputDecoration(
+            labelText: "Votre commentaire",
+            border: OutlineInputBorder(),
+            prefixIcon: Icon(Icons.comment),
+          ),
+          onChanged: (value) {},
+        ),
+         const Divider(),
+              Row(
+                
+                mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(5, (index) {
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      nombreEtoiles = index + 1; 
+                    });
+                  },
+                  child: Icon(
+                    index < nombreEtoiles ? Icons.star : Icons.star_border,
+                    color: Colors.yellow,
+                    size: 30.0,
+                  ),
+                );
+              }),
+            ),
+
+
               const Divider(),
                Container(
                   decoration:const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10.0))
+                    borderRadius: BorderRadius.all(Radius.circular(0.0))
                   ),
                   child: Column(
                     children: [
-                      // _imageFile.path
-                      widget.imageUrl != null 
-                      ? afficherImage( widget.imageUrl!) 
-                      : Text('Aucune image sélectionnée'),
-                     
+                      Container(
+                        color: Colors.black12,
+                        height: 200,
+                        child: ListView.builder(
+                    scrollDirection: Axis.horizontal, 
+                    itemCount: mesPhotos?.length ?? 0,
+                    itemBuilder: (context, index) {
+                      if (mesPhotos != null && mesPhotos!.isNotEmpty) {
+                         
+                      final imageUrl = mesPhotos![index];
+                      return Padding(
+                        padding: const EdgeInsets.all(1.0),
+                        child: Container(
+                          width: 150,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5.0),
+                            image: DecorationImage(
+                              image: NetworkImage(imageUrl),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      );
+                      }else {
+                      return const Text("Aucune image disponible");
+                    }
+                },  
+                         ),
+                      ),
                      ] 
                     ),
                 ),
@@ -339,8 +353,8 @@ Future<void> searchPlaces(String query) async {
                   ),
                 ),
               ],
-            )
-
+            ),
+           
             ],
           ),
         ),

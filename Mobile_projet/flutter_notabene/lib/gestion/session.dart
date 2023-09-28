@@ -11,6 +11,7 @@ class SessionManager {
   late String sessionId;
   late User mainUser;
   int userId=0;
+  bool isConnect=false;
 
   void init(){
     this.sessionId = Uuid().v4();

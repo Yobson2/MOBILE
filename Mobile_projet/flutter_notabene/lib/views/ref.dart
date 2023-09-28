@@ -1,43 +1,33 @@
-// import 'package:flutter/material.dart';
-// import 'package:provider/provider.dart'; 
-// import '../services/connectEtat.dart';
+import 'package:flutter/material.dart';
 
-// class CarteGloblale extends StatefulWidget {
-//   const CarteGloblale({Key? key}) : super(key: key);
+class PlaceDetailsPage extends StatelessWidget {
+  final String placeName;
+  final String placeAddress;
+   final double latitude;
+  final double longitude;
 
-//   @override
-//   _CarteGloblaleState createState() => _CarteGloblaleState();
-// }
+  PlaceDetailsPage({required this.placeName, required this.placeAddress, required this.latitude, required this.longitude});
 
-// class _CarteGloblaleState extends State<CarteGloblale> {
-//   bool isLoading = true;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     final userProvider = Provider.of<UserProvider>(context, listen: false);
-//     userProvider.getUserIdFromStorage(); 
-
-//     setState(() {
-//       isLoading = false;
-//     });
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final userProvider = Provider.of<UserProvider>(context);
-//     final userId = userProvider.userId;
-
-//     return Center(
-//       child: isLoading
-//           ? CircularProgressIndicator() 
-//           : Column(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 Text('Carte Globale'),
-//                 Text('ID de l\'utilisateur : $userId'),
-//               ],
-//             ), 
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Détails de l\'endroit'),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Nom de l'endroit: $placeName $latitude $longitude",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8.0),
+            Text("Adresse: $placeAddress"),
+          ],
+        ),
+      ),
+    );
+  }
+}

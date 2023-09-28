@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import '../../components/add_comm_sms.dart';
 import '../idtest.dart';
 import '../testMap.dart';
 
@@ -35,7 +36,7 @@ class _GalleryPageState extends State<GalleryPage> {
   }
 
   Future<List<dynamic>> someAsyncMethod(id) async {
-    final response = await http.get(Uri.parse('http://192.168.1.107:8082/apiNotabene/v1/getAllPhoto/$id'));
+    final response = await http.get(Uri.parse('http://192.168.1.14:8082/apiNotabene/v1/getAllPhoto/$id'));
     final data = json.decode(response.body);
     return data;
   }
@@ -91,10 +92,9 @@ class _GalleryPageState extends State<GalleryPage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => SelectedPhotosPage(selectedImageUrls),
+          builder: (context) => CommentaireComponent(allPhotos: selectedImageUrls),
         ),
       );
-      print("object: test $selectedImageUrls" );
     } else {
       
     }
@@ -130,7 +130,7 @@ class _GalleryPageState extends State<GalleryPage> {
     mainAxisSpacing: 3,
   ),
   itemBuilder: (context, index) {
-    final imageUrl = 'http://192.168.1.107:8082/images/${photos[index]["image"]}';
+    final imageUrl = 'http://192.168.1.14:8082/images/${photos[index]["image"]}';
     final isSelected = selectedImageUrls.contains(imageUrl);
 
     return GestureDetector(

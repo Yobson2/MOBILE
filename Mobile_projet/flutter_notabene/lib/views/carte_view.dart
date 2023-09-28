@@ -2,9 +2,14 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:ffi';
 import 'package:flutter/material.dart';
+import 'package:flutter_notabene/screens/login_screen.dart';
+import 'package:flutter_notabene/views/ref.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
+
+import '../components/add_comm_sms.dart';
+import '../main.dart';
 
 class MapSample extends StatefulWidget {
   const MapSample({Key? key});
@@ -19,6 +24,8 @@ class MapSampleState extends State<MapSample> {
   final TextEditingController _searchController = TextEditingController();
   String? placeName;
   String? placeAddress;
+  static const apiKey = 'AIzaSyCRD-FSgdo6Tcpoj-RTuLQfmERxBagzm04';
+  static const apiUrl='https://maps.googleapis.com/maps/api/place/textsearch/json?query';
 
   Marker _kUserMarker = const Marker(
     markerId: MarkerId("user_marker"),
@@ -30,6 +37,11 @@ class MapSampleState extends State<MapSample> {
   LatLng? selectedLocation;
   bool useManualCursor = true;
   bool testcard = false;
+  bool isLoading = false;
+  
+  
+
+
 
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(5.3709971, 0),
@@ -41,6 +53,8 @@ class MapSampleState extends State<MapSample> {
     super.initState();
     _getUserLocation();
   }
+
+ 
 
   Future<void> _getUserLocation() async {
     await Geolocator.checkPermission();
@@ -68,9 +82,10 @@ class MapSampleState extends State<MapSample> {
   }
 
   Future<void> searchPlaces(String query) async {
-    final apiKey = 'AIzaSyCRD-FSgdo6Tcpoj-RTuLQfmERxBagzm04';
+    
+  
     final url = Uri.parse(
-        'https://maps.googleapis.com/maps/api/place/textsearch/json?query=$query&key=$apiKey');
+        '$apiUrl=$query&key=$apiKey');
 
     final response = await http.get(url);
 
@@ -123,6 +138,7 @@ class MapSampleState extends State<MapSample> {
   }
 
   void showSelectedLocation() async {
+ 
     if (selectedLocation != null) {
       final GoogleMapController controller = await _controller.future;
       await controller.animateCamera(CameraUpdate.newLatLng(selectedLocation!));
@@ -141,9 +157,9 @@ class MapSampleState extends State<MapSample> {
   }
 
   Future<void> searchPlaceInfo(double latitude, double longitude) async {
-    final apiKey = 'AIzaSyCRD-FSgdo6Tcpoj-RTuLQfmERxBagzm04';
-    final url = Uri.parse(
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=$apiKey');
+  
+    
+    final url = Uri.parse('$apiUrl=$latitude,$longitude&key=$apiKey');
 
     final response = await http.get(url);
 
@@ -164,6 +180,8 @@ class MapSampleState extends State<MapSample> {
 
   @override
   Widget build(BuildContext context) {
+    final isLoggedIn = mainSession.userId != 0;
+
     return Scaffold(
     
       body: Stack(
@@ -174,9 +192,9 @@ class MapSampleState extends State<MapSample> {
               _kUserMarker,
               if (selectedLocation != null)
                 Marker(
-                  markerId: MarkerId("selected_location"),
+                  markerId: MarkerId("selected_location "),
                   position: selectedLocation!,
-                  infoWindow: InfoWindow(title: "Selected Location"),
+                  infoWindow: InfoWindow(title: "Selected Location "),
                   icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
                 ),
             },
@@ -215,7 +233,7 @@ class MapSampleState extends State<MapSample> {
                   prefix: Icon(
                     Icons.search_sharp, color: Colors.black
                   ),
-                  hintText: 'Recherche de Lieu',
+                  hintText: 'Recherche de Lieu ',
                   hintStyle: TextStyle(color: Colors.grey),
                   border: InputBorder.none,
                 ),
@@ -251,7 +269,8 @@ class MapSampleState extends State<MapSample> {
                 ),
               ),
             ),
-              if (testcard )
+
+            if (testcard  )
              Positioned(
             left: 10.0,
             right: 10.0,
@@ -288,18 +307,31 @@ class MapSampleState extends State<MapSample> {
                             children: [
                               
                               SizedBox(
-                                  width: 310,
+                                  width: 200,
                                   height: 40,
                                    child: ElevatedButton(
-                                      onPressed: _showModal,
+                                     onPressed: () {
+                                  if (isLoggedIn) {
+                                    _showModal();
+                                  } else {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => LoginScreen(),
+                                      ),
+                                    );
+                                  }
+                                },
                                       child: const Text('Terminé'),
                                     ),
                                  ),
-                               IconButton(
+                                IconButton(
                                 color: Colors.blue,
-                                onPressed: showSelectedLocation,
-                                 icon: Icon(Icons.gps_fixed)
-                                )  
+                                onPressed:showSelectedLocation,
+                                icon: Icon(Icons.gps_fixed),
+                              )
+
+
                             ],
                           ),
                         ),
@@ -318,6 +350,13 @@ class MapSampleState extends State<MapSample> {
 
 
 void _showModal() {
+  double? latitude;
+  double? longitude;
+
+  if (selectedLocation != null) {
+    latitude = selectedLocation!.latitude;
+    longitude = selectedLocation!.longitude;
+  }
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -353,8 +392,16 @@ void _showModal() {
                 children: [
                    ElevatedButton.icon(
                 onPressed: () {
-                 
-                  Navigator.of(context).pop();
+                   Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CommentaireComponent(
+                    placeName: placeName ?? "",
+                    placeAddress: placeAddress ?? "",
+                    latitude: latitude ?? 0.0,
+                    longitude: longitude ?? 0.0,
+                  ),
+                ),);
                 },
                 icon: const Icon(Icons.comment, size: 24),
                 label: const Text('commenter '),
@@ -362,8 +409,8 @@ void _showModal() {
                   const SizedBox(width: 16.0),
                    ElevatedButton.icon(
                 onPressed: () {
+                
                  
-                  Navigator.of(context).pop();
                 },
                 icon: const Icon(Icons.explore, size: 24),
                 label: const Text('Explorer'),
