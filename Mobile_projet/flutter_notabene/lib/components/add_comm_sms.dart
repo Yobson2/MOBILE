@@ -84,9 +84,9 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
   Future<void> addCommentaire(myId) async {
      
     //  final query = _nomStructureController.text;
-    print("idddddddddddd $userId");
+    // print("idddddddddddd $userId");
   
-  final url = Uri.parse("http://192.168.1.14:8082/apiNotabene/v1/addPost/$myId");
+  final url = Uri.parse("http://192.168.1.7:8082/apiNotabene/v1/addPost/$myId");
   var request = http.MultipartRequest('POST', url);
 
   
@@ -233,7 +233,11 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
                       final imageUrl = mesPhotos![index];
                       return Padding(
                         padding: const EdgeInsets.all(1.0),
-                        child: Container(
+                        child: GestureDetector(
+                          onTap: () {
+                            _showImageModal(imageUrl);
+                          },
+                          child: Container(
                           width: 150,
                           height: 100,
                           decoration: BoxDecoration(
@@ -244,6 +248,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
                             ),
                           ),
                         ),
+                        )
                       );
                       }else {
                       return const Text("Aucune image disponible");
@@ -376,6 +381,45 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
     return Text('Erreur: Format d\'image non pris en charge');
   }
 }
+
+
+void _showImageModal(String imageUrl) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Dialog(
+        
+        child: Container(
+          width: 800,
+          height: 400,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: NetworkImage(imageUrl),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
 
 }
 
