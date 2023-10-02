@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_notabene/main.dart';
+import 'package:flutter_notabene/services/api_service.dart';
 import 'package:image_picker/image_picker.dart';
 import '../views/carte_view.dart';
 import '../views/photo_view.dart';
@@ -35,6 +36,8 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
   final TextEditingController _commentaireController = TextEditingController();
   final TextEditingController _etoilesController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
+   String texteAfficheLieu = "Structure ou Lieu"; 
+   String texteAfficheAddresse = "Adresse du lieu"; 
 
   late double commentLatitude;
   late double commentLongitude; 
@@ -43,9 +46,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
   XFile? _imageFile;
   int? userId;
   late final dynamic mesPhotos;
-  final apiKey = 'AIzaSyCRD-FSgdo6Tcpoj-RTuLQfmERxBagzm04';
- static const apiUrl='https://maps.googleapis.com/maps/api/place/textsearch/json?query';
- 
+  
    int nombreEtoiles = 0;
 
 
@@ -53,8 +54,8 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
   void initState() {
     super.initState();
       if (widget.placeName != null && widget.placeAddress != null) {
-      _nomStructureController.text = widget.placeName!;
-      _addressController.text = widget.placeAddress!;
+      texteAfficheLieu = widget.placeName!;
+      texteAfficheAddresse = widget.placeAddress!;
     }
      _fetchAndDisplayUserId();
     
@@ -82,36 +83,22 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
 
 
   Future<void> addCommentaire(myId) async {
-     
-    //  final query = _nomStructureController.text;
-    // print("idddddddddddd $userId");
-  
-  final url = Uri.parse("http://192.168.1.7:8082/apiNotabene/v1/addPost/$myId");
-  var request = http.MultipartRequest('POST', url);
+    final comm={
+      "contenu_commentaire":_commentaireController.text,
+      "nom_entreprise":texteAfficheLieu,
+      "addresse_entreprise":texteAfficheAddresse,
+      "nombre_etoiles":nombreEtoiles,
+      "photo_":mesPhotos
+    };
+ 
 
+     try {
+        await ApiManager().postData("addPost/$myId", comm, "message ook", "messageError ok");
+      
+     } catch (e) {
+        print("object not found");
+     }
   
-  request.fields['contenu_commentaire'] = _commentaireController.text;
-  request.fields['nom_entreprise'] = _nomStructureController.text;
-  request.fields['nombre_etoiles'] = _etoilesController.text;
-  request.fields['latitude'] = commentLatitude.toString();
-  request.fields['longitude'] = commentLongitude.toString();
-    //  var image = await http.MultipartFile.fromPath("image", widget.imageUrl!);
-    // request.files.add(image);
-
-  try {
-    var response = await request.send();
-    if (response.statusCode == 201) {
-     _nomStructureController.clear();
-     _commentaireController.clear();
-     _etoilesController.clear();
-   
-     print("Commentaire envoyée");
-  } else {
-    print("Erreur photoCommentUser: ${response.statusCode}");
-  }
-  } catch (e) {
-    print('Erreur lors de l\'envoi du commentaire: $e');
-  }
   }
 
   
@@ -142,47 +129,56 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
           ListView( 
             children: <Widget>[
             const Divider(),
-           TextField(
-          controller: _nomStructureController,
-          decoration: InputDecoration(
-            labelText: "Structure ou Lieu",
-            border: OutlineInputBorder(),
-            prefixIcon: Icon(Icons.business),
-            suffixIcon: InkWell(
-              onTap: () {
-                print("Clic sur l'icône de suffixe");
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const MapSample()),
-                );
-              },
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.map),
-                  SizedBox(width: 8.0),
-                  Text("Carte"),
-                ],
-              ),
+           InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const MapSample()),
+            );
+          },
+          child: Container(
+            padding: EdgeInsets.all(10.0), 
+            decoration: BoxDecoration(
+              border: Border.all(),
+              borderRadius: BorderRadius.circular(5.0),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.business),
+                const SizedBox(width: 8.0),
+                Text(texteAfficheLieu),
+                const Spacer(), 
+                const Icon(Icons.map),
+              ],
             ),
           ),
-          onChanged: (value) {},
         ),
-        const Divider(),
-        TextField(
-          controller: _addressController,
-          decoration: const InputDecoration(
-            labelText: "Adresse du lieu",
-            border: OutlineInputBorder(),
-            prefixIcon: Icon(Icons.place),
-          ),
-          onChanged: (value) {
-            
+          const Divider(),
+          InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const MapSample()),
+            );
           },
+          child: Container(
+            padding: EdgeInsets.all(10.0), 
+            decoration: BoxDecoration(
+              border: Border.all(),
+              borderRadius: BorderRadius.circular(5.0),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.place),
+                const SizedBox(width: 8.0),
+                Text(texteAfficheAddresse),
+                const Spacer(), 
+                const Icon(Icons.map),
+              ],
+            ),
+          ),
         ),
-
         const Divider(),
-
         TextField(
           controller: _commentaireController,
           maxLines: 5,
