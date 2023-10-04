@@ -1,31 +1,120 @@
-import 'package:path/path.dart';
+// import 'package:path/path.dart';
+// import 'package:sqflite/sqflite.dart';
+
+
+// class DatabaseLocal {
+//   // static Database _database;
+//   late Database _database;
+  
+//   Future<Database> get database async {
+//     if (_database != null) return _database;
+    
+//     // Si la base de données n'a pas été initialisée, on la crée
+//     _database = await initDatabase();
+//     return _database;
+//   }
+
+//   Future<Database> initDatabase() async {
+//     String path = join(await getDatabasesPath(), 'my_database.db');
+    
+//     // Ouvrir la base de données (elle sera créée s'il n'existe pas)
+//     return await openDatabase(
+//       path,
+//       version: 1,
+//       onCreate: (Database db, int version) async {
+//         // Créer les tables ici
+//         await db.execute(
+//           'CREATE TABLE galeries(id_photos INTEGER PRIMARY KEY, images TEXT)',
+//         );
+//       },
+      
+//     );
+    
+//   }
+
+
+
+
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
 
 class DatabaseLocal {
-  
-  late Database _database;
+  DatabaseLocal._privateConstructor();
+  static final DatabaseLocal instance = DatabaseLocal._privateConstructor();
 
-  Future<void> initDatabase() async {
-    if (_database != null) return;
-    _database = await openDatabase(
-      join(await getDatabasesPath(), 'notabene_database.db'),
+  static Database? _database;
+
+  Future<Database> get database async {
+    if (_database != null) return _database!;
+
+    // Si la base de données n'a pas été initialisée, on la crée
+    _database = await initDatabase();
+    return _database!;
+  }
+
+  Future<Database> initDatabase() async {
+    String path = join(await getDatabasesPath(), 'local_database.db');
+    return await openDatabase(
+      path,
       version: 1,
-      // onCreate: (db, version) {
-      //   db.execute(
-      //     'CREATE TABLE utilisateurs(id INTEGER PRIMARY KEY,id_session TEXT,id_utilisateur int, nom_utilisateur TEXT,mot_de_passe TEXT,adresse_email TEXT,photo_user TEXT,id_Localisation INTEGER,)',
-      //   );
-      //   // db.execute(
-      //   //   'CREATE TABLE entreprises(id INTEGER PRIMARY KEY, autre_colonne TEXT)',
-      //   // );
-      // },
+      onCreate: (Database db, int version) async {
+        await db.execute(
+          'CREATE TABLE galeries(id_image INTEGER PRIMARY KEY,user_id INTEGER, image_data TEXT)',
+        );
+        // await db.execute('DROP TABLE IF EXISTS galeries');
+      },
+      
     );
   }
 
-  Future<void> insertData(Map<String, dynamic> data, String tableName) async {
-    await _database.insert(tableName, data);
+
+
+
+  Future<void> insertData(int userId, String imagePath) async {
+    try {
+      Database db = await database;
+      await db.insert(
+          'galeries',
+          {'user_id': userId, 'image_data': imagePath},
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+    } catch (e) {
+      print('Erreur lors de l\'insertion du chemin d\'image : $e');
+    }
   }
 
-  Future<List<Map<String, dynamic>>> getData(String tableName) async {
-    return await _database.query(tableName);
+  Future<List<Map<String, dynamic>>> getUserImages(int userId) async {
+    try {
+      Database db = await database;
+        List<Map<String, dynamic>> images = await db.query(
+          'galeries',
+          where: 'user_id = ?',
+          whereArgs: [userId],
+        );
+        return images;
+    } catch (e) {
+      print('Erreur lors de la récupération des images : $e');
+      return [];
+    }
+  }
+
+  Future<void> deleteImage(int id) async {
+  try {
+    Database db = await database;
+    await db.delete(
+      'galeries',
+      where: 'id_image = ?',
+      whereArgs: [id],
+    );
+    print('Image supprimée avec succès');
+  } catch (e) {
+    print('Erreur lors de la suppression de l\'image : $e');
   }
 }
+
+}
+
+

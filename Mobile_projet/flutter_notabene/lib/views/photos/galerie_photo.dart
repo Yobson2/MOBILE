@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_notabene/main.dart';
 import 'package:http/http.dart' as http;
 
 import '../../components/add_comm_sms.dart';
@@ -14,9 +16,9 @@ class GalleryPage extends StatefulWidget {
 }
 
 class _GalleryPageState extends State<GalleryPage> {
+
   bool isLoading = true;
   List<dynamic> photos = []; 
-   bool _isClicked = false;
    bool _isLoading = true;
    int? userId;
 
@@ -24,39 +26,22 @@ class _GalleryPageState extends State<GalleryPage> {
 
 
   Future<void> getData(id) async {
-    print("Loading $id");
+   
     final result = await someAsyncMethod(id);
-    print("object is loading $result");
     setState(() {
-      photos = result; 
-      print("object $photos");
+      photos = result;
        _isLoading = false; 
     });
-      print("object is loading $photos");
+    
+      // print("-------------object--------------- $photos");
   }
 
   Future<List<dynamic>> someAsyncMethod(id) async {
-    final response = await http.get(Uri.parse('http://192.168.1.15:8082/apiNotabene/v1/getPicture/$id'));
-    final data = json.decode(response.body);
-  
-    return data;
+    final response = await database.getUserImages(id);
+    return response;
   }
 
-  //  void _onPhotoClicked( String imageUrl) {
-  //   setState(() {
-  //     _isClicked = true;
-  //   });
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (context) => CommentaireComponent( imageUrl: imageUrl),
-  //     ),
-  //   ).then((value) {
-  //     setState(() {
-  //       _isClicked = false;
-  //     });
-  //   });
-  // }
+  
   void _onPhotoClicked(String imageUrl) {
   setState(() {
     if (selectedImageUrls.contains(imageUrl)) {
@@ -71,33 +56,21 @@ class _GalleryPageState extends State<GalleryPage> {
   @override
   void initState() {
     super.initState();
+     final id = mainSession.userId;
     setState(() {
       isLoading = false;
+       this.userId = id;
+        getData(userId);
     });
-     _fetchAndDisplayUserId();
   }
   
-  Future<void> _fetchAndDisplayUserId() async {
-    final userData = UserData(); 
-    final userId = await userData.getUserIdFromLocalStorage();
-    if (userId != null) {
-      setState(() {
-        this.userId = userId;
-        getData(userId);
-      });
-    }
-     
-  }
   void _sendSelectedPhotos() {
     if (selectedImageUrls.isNotEmpty) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => CommentaireComponent(allPhotos: selectedImageUrls),
-        ),
-      );
+       mainSession.selectedImageUrl_=selectedImageUrls;
+       print("selelelelelell ${mainSession.selectedImageUrl_}");
+        Navigator.pop(context);
     } else {
-      
+      print("Please select a new image");
     }
   }
 
@@ -106,11 +79,11 @@ class _GalleryPageState extends State<GalleryPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Gallerie' ),
+        title: const Text('Gallerie ' ),
         actions: [
           ElevatedButton(
             onPressed: _sendSelectedPhotos,
-            child: Text('Envoyer les photos sélectionnées'),
+            child: const Text('Envoyer les photos sélectionnées'),
           ),
         ],
       ),
@@ -129,9 +102,11 @@ class _GalleryPageState extends State<GalleryPage> {
     crossAxisCount: 3,
     crossAxisSpacing: 20,
     mainAxisSpacing: 3,
+
   ),
   itemBuilder: (context, index) {
-    final imageUrl = 'http://192.168.1.15:8082/images/${photos[index]["photosName"]}';
+    final imageUrl = '${photos[index]["image_data"]}';
+    
     final isSelected = selectedImageUrls.contains(imageUrl);
 
     return GestureDetector(
@@ -148,14 +123,14 @@ class _GalleryPageState extends State<GalleryPage> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10.0),
                 image: DecorationImage(
-                  image: NetworkImage(imageUrl),
+                  image: FileImage(File(imageUrl)),
                   fit: BoxFit.cover,
                 ),
               ),
             ),
           ),
           if (isSelected)
-            Positioned(
+            const Positioned(
               top: 0,
               right: 0,
               child: Icon(Icons.check_circle, color: Colors.green, size: 30),

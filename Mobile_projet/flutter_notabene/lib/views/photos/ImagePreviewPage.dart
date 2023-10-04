@@ -29,25 +29,10 @@ class _ImagePreviewPageState extends State<ImagePreviewPage> {
       _isLoading = true;
     });
 
-    final url = Uri.parse("http://192.168.1.15:8082/apiNotabene/v1/sendPicture/$userId");
-
-    var request = http.MultipartRequest('POST', url);
-    var image = await http.MultipartFile.fromPath("image", widget.imagePath);
-    print(image);  
-    request.files.add(image);
-
     try {
-      var response = await request.send();
-      if (response.statusCode == 200) {
-        print('Image envoyée avec succès');
-
-        setState(() {
-          _isLoading = false;
-        });
-        redirectToNewPage();
-      } else {
-        print('Erreur lors de l\'envoi de l\'image: ${response.statusCode}');
-      }
+      await database.insertData(userId, widget.imagePath);
+      Navigator.pop(context);
+     print("Success image loaded in database sqlite");
     } catch (e) {
       print('Erreur lors de l\'envoi de l\'image: $e');
       setState(() {
@@ -56,14 +41,7 @@ class _ImagePreviewPageState extends State<ImagePreviewPage> {
     }
   }
 
-  void redirectToNewPage() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const PrintCamera(),
-      ),
-    );
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -82,12 +60,12 @@ class _ImagePreviewPageState extends State<ImagePreviewPage> {
         IconButton(
           icon: Icon(Icons.share), 
           onPressed: () {
-             Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CommentaireComponent(imageUrl: widget.imagePath),
-                        ),
-                      );
+            //  Navigator.push(
+            //             context,
+            //             MaterialPageRoute(
+            //               builder: (context) => CommentaireComponent(imageUrl: widget.imagePath),
+            //             ),
+            //           );
           },
         ),
       ],

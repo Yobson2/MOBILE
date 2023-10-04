@@ -32,10 +32,7 @@ class CommentaireComponent extends StatefulWidget {
 
 class _CommentaireComponentState extends State<CommentaireComponent> {
   bool isLoading = true;
-  final TextEditingController _nomStructureController = TextEditingController();
   final TextEditingController _commentaireController = TextEditingController();
-  final TextEditingController _etoilesController = TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
    String texteAfficheLieu = "Structure ou Lieu"; 
    String texteAfficheAddresse = "Adresse du lieu"; 
 
@@ -50,6 +47,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
    int nombreEtoiles = 0;
 
 
+ 
   @override
   void initState() {
     super.initState();
@@ -60,14 +58,18 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
      _fetchAndDisplayUserId();
     
   }
+  
   Future<void> _fetchAndDisplayUserId() async {
     final id= mainSession.userId;
+    final data=mainSession.selectedImageUrl_;
+   
      setState(() {
        this.userId = id;
-       this.mesPhotos = widget.allPhotos;
+       this.mesPhotos = data;
        commentLatitude=widget.latitude!;
        commentLongitude=widget.longitude!;
-     });
+     }); 
+      
   }
 
   Future<void> _pickImageFromGallery() async {
@@ -79,8 +81,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
     print(_imageFile!.path);
   }
 
-  
-
+ 
 
   Future<void> addCommentaire(myId) async {
     final comm={
@@ -88,7 +89,9 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
       "nom_entreprise":texteAfficheLieu,
       "addresse_entreprise":texteAfficheAddresse,
       "nombre_etoiles":nombreEtoiles,
-      "photo_":mesPhotos
+      "photo_":mesPhotos,
+      "longitude_":commentLongitude,
+      "latitude_":commentLatitude
     };
  
 
@@ -100,12 +103,14 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
      }
   
   }
+  
 
   
 
   @override
   Widget build(BuildContext context) {
     print('User $userId created ');
+    print(" ddadaddaadadd   $mesPhotos");
 
     
     return MaterialApp(
@@ -239,7 +244,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5.0),
                             image: DecorationImage(
-                              image: NetworkImage(imageUrl),
+                              image: FileImage(File(imageUrl)),
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -390,7 +395,7 @@ void _showImageModal(String imageUrl) {
           height: 400,
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: NetworkImage(imageUrl),
+              image: FileImage(File(imageUrl)),
               fit: BoxFit.cover,
             ),
           ),

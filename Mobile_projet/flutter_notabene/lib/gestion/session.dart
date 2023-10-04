@@ -7,6 +7,7 @@ import 'package:uuid/uuid.dart';
 import '../models/user_model.dart';
 
 class SessionManager {
+    List<dynamic> selectedImageUrl_=[];
 
   late String sessionId;
   late User mainUser;
@@ -19,7 +20,6 @@ class SessionManager {
   }
 
   setuserId(int userId_){
-    // mainUser.getUserIdFromLocalStorage(userId_);
     userId = userId_;  
   }
   

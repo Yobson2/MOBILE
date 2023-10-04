@@ -19,7 +19,6 @@ class PhotoDetailPage extends StatelessWidget {
   child: Column(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      // Text('ID de la photo : $id'),
       Image.network(imageUrl),
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -39,7 +38,7 @@ class PhotoDetailPage extends StatelessWidget {
           ElevatedButton(
             onPressed: () {
             },
-            child: Text('Supprimer'),
+            child: const Text('Supprimer'),
           ),
         ],
       ),
