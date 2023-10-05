@@ -82,27 +82,37 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
   }
 
  
+  Future<void> addCommentaire(int myId) async {
+  for (var imagePath in mesPhotos!) {
+    var request = http.MultipartRequest(
+      'POST',
+      Uri.parse('http://192.168.1.5:8082/apiNotabene/v1/addPost/$myId'),
+    );
 
-  Future<void> addCommentaire(myId) async {
-    final comm={
-      "contenu_commentaire":_commentaireController.text,
-      "nom_entreprise":texteAfficheLieu,
-      "addresse_entreprise":texteAfficheAddresse,
-      "nombre_etoiles":nombreEtoiles,
-      "photo_":mesPhotos,
-      "longitude_":commentLongitude,
-      "latitude_":commentLatitude
-    };
- 
+    request.fields['contenu_commentaire'] = _commentaireController.text;
+    request.fields['nom_entreprise'] = texteAfficheLieu;
+    request.fields['addresse_entreprise'] = texteAfficheAddresse;
+    request.fields['nombre_etoiles'] = nombreEtoiles.toString();
+    request.fields['longitude_'] = commentLongitude.toString();
+    request.fields['latitude_'] = commentLatitude.toString();
 
-     try {
-        await ApiManager().postData("addPost/$myId", comm, "message ook", "messageError ok");
-      
-     } catch (e) {
-        print("object not found");
-     }
-  
+    var multipartFile = await http.MultipartFile.fromPath('images', imagePath);
+    request.files.add(multipartFile);
+
+    try {
+      var response = await request.send();
+      if (response.statusCode == 200) {
+        print('Image envoyée avec succès');
+        mesPhotos = null;
+      } else {
+        print('Erreur lors de l\'envoi de l\'image. Statut ${response.statusCode}');
+      }
+    } catch (e) {
+      print("Erreur lors de l'envoi de l'image: $e");
+    }
   }
+}
+
   
 
   
@@ -338,7 +348,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    addCommentaire(userId);
+                    addCommentaire(userId!);
                   },
                   style: ElevatedButton.styleFrom(
                     primary: Colors.green, 
