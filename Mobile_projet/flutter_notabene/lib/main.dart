@@ -24,7 +24,6 @@ void main() async {
       print('Il y a eu un problème lors de la création ou de la connexion à la base de données.');
       return; 
     }
-
     mainSession.init();
 
     runApp(

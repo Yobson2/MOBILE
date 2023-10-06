@@ -86,7 +86,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
   for (var imagePath in mesPhotos!) {
     var request = http.MultipartRequest(
       'POST',
-      Uri.parse('http://192.168.1.5:8082/apiNotabene/v1/addPost/$myId'),
+      Uri.parse('http://192.168.1.14:8082/apiNotabene/v1/addPost/$myId'),
     );
 
     request.fields['contenu_commentaire'] = _commentaireController.text;

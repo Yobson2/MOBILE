@@ -182,6 +182,63 @@ class MapSampleState extends State<MapSample> {
     final isLoggedIn = mainSession.userId != 0;
 
     return Scaffold(
+      
+      appBar: AppBar(
+          elevation: 0.0, 
+          // leading: IconButton(
+          // icon: Icon(Icons.arrow_back),
+          // onPressed: () {
+          //   Navigator.pop(context);
+          // },
+          //   ),
+        title: Container(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          width: 600,
+          decoration: BoxDecoration(
+            color: Colors.white, 
+            borderRadius: BorderRadius.circular(16.0),
+            boxShadow: [ 
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 1,
+                blurRadius: 2,
+                offset: Offset(0, 1),
+              ),
+            ],
+          ),
+          child: TextField(
+            controller: _searchController,
+            onChanged: (query) {
+              if (query.isNotEmpty) {
+                searchPlaces(query);
+              } else {
+                setState(() {
+                  suggestions = [];
+                  testcard = false; 
+                });
+              }
+            },
+            style: TextStyle(color: Colors.black),
+            decoration: const InputDecoration(
+              prefixIcon: Icon(
+                Icons.search,
+                color: Colors.black,
+              ),
+              hintText: 'Recherche....',
+              hintStyle: TextStyle(color: Colors.grey),
+              border: InputBorder.none,
+            ),
+          ),
+        ),
+        actions: <Widget>[
+          IconButton(
+            color: Colors.black,
+            onPressed: showSelectedLocation,
+            icon: Icon(Icons.gps_fixed),
+          )
+        ],
+      ),
+
     
       body: Stack(
         children: [
@@ -204,46 +261,11 @@ class MapSampleState extends State<MapSample> {
             onTap: onMapTap,
             zoomControlsEnabled: false,
           ),
-          Positioned(
-            left: 10.0,
-            right: 10.0,
-            top: 40.0,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(16.0),
-              ),
-              child: TextField(
-                 controller: _searchController,
-                onChanged: (query) {
-                  if (query.isNotEmpty) {
-                    searchPlaces(query);
-                  } else {
-                    setState(() {
-                      suggestions = [];
-                      testcard = false; 
-                    });
-                  }
-                },
-                style: TextStyle(color: Colors.black),
-                decoration: const InputDecoration(
-                  
-                  prefix: Icon(
-                    Icons.search_sharp, color: Colors.black
-                  ),
-                  hintText: 'Recherche de Lieu ',
-                  hintStyle: TextStyle(color: Colors.grey),
-                  border: InputBorder.none,
-                ),
-              ),
-            ),
-          ),
           if (suggestions.isNotEmpty)
             Positioned(
               left: 10.0,
               right: 10.0,
-              top: 85.0,
+              top: 0.0,
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -324,11 +346,11 @@ class MapSampleState extends State<MapSample> {
                                       child: const Text('Terminé'),
                                     ),
                                  ),
-                                IconButton(
-                                color: Colors.blue,
-                                onPressed:showSelectedLocation,
-                                icon: Icon(Icons.gps_fixed),
-                              )
+                              //   IconButton(
+                              //   color: Colors.blue,
+                              //   onPressed:showSelectedLocation,
+                              //   icon: Icon(Icons.gps_fixed),
+                              // )
 
 
                             ],
