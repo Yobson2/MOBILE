@@ -3,10 +3,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_notabene/main.dart';
-import 'package:http/http.dart' as http;
 
-import '../../components/add_comm_sms.dart';
-import '../idtest.dart';
+
 
 class GalleryPage extends StatefulWidget {
   const GalleryPage({Key? key}) : super(key: key);

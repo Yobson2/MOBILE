@@ -50,4 +50,5 @@ class User {
     id = prefs.getInt('user_id');
     return id;
   }
+  
 }

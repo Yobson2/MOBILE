@@ -59,6 +59,16 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
     
   }
   
+  Future<void> _pickImageFromGallery() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      _imageFile = pickedFile;
+    });
+    print(_imageFile!.path);
+  }
+
+  
   Future<void> _fetchAndDisplayUserId() async {
     final id= mainSession.userId;
     final data=mainSession.selectedImageUrl_;
@@ -72,44 +82,35 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
       
   }
 
-  Future<void> _pickImageFromGallery() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-    setState(() {
-      _imageFile = pickedFile;
-    });
-    print(_imageFile!.path);
-  }
-
  
-  Future<void> addCommentaire(int myId) async {
+ Future<void> addCommentaire(int myId) async {
+  var request = http.MultipartRequest(
+    'POST',
+    Uri.parse('http://192.168.1.9:8082/apiNotabene/v1/addPost/$myId'),
+  );
+
   for (var imagePath in mesPhotos!) {
-    var request = http.MultipartRequest(
-      'POST',
-      Uri.parse('http://192.168.1.14:8082/apiNotabene/v1/addPost/$myId'),
-    );
-
-    request.fields['contenu_commentaire'] = _commentaireController.text;
-    request.fields['nom_entreprise'] = texteAfficheLieu;
-    request.fields['addresse_entreprise'] = texteAfficheAddresse;
-    request.fields['nombre_etoiles'] = nombreEtoiles.toString();
-    request.fields['longitude_'] = commentLongitude.toString();
-    request.fields['latitude_'] = commentLatitude.toString();
-
     var multipartFile = await http.MultipartFile.fromPath('images', imagePath);
     request.files.add(multipartFile);
+  }
 
-    try {
-      var response = await request.send();
-      if (response.statusCode == 200) {
-        print('Image envoyée avec succès');
-        mesPhotos = null;
-      } else {
-        print('Erreur lors de l\'envoi de l\'image. Statut ${response.statusCode}');
-      }
-    } catch (e) {
-      print("Erreur lors de l'envoi de l'image: $e");
+  request.fields['contenu_commentaire'] = _commentaireController.text;
+  request.fields['nom_entreprise'] = texteAfficheLieu;
+  request.fields['addresse_entreprise'] = texteAfficheAddresse;
+  request.fields['nombre_etoiles'] = nombreEtoiles.toString();
+  request.fields['longitude_'] = commentLongitude.toString();
+  request.fields['latitude_'] = commentLatitude.toString();
+
+  try {
+    var response = await request.send();
+    if (response.statusCode == 200) {
+      print('Images envoyées avec succès');
+      mesPhotos = null;
+    } else {
+      print('Erreur lors de l\'envoi des images. Statut ${response.statusCode}');
     }
+  } catch (e) {
+    print("Erreur lors de l'envoi des images: $e");
   }
 }
 
@@ -133,7 +134,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
             Navigator.pop(context);
           },
         ),
-          title: const Text('Ajoutez un commentaire '), 
+          title: const Text('Ajoutez un avis '), 
           backgroundColor: Colors.grey,
            elevation: 0,
         ),
