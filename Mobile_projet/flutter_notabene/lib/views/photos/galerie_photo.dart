@@ -31,7 +31,6 @@ class _GalleryPageState extends State<GalleryPage> {
        _isLoading = false; 
     });
     
-      // print("-------------object--------------- $photos");
   }
 
   Future<List<dynamic>> someAsyncMethod(id) async {
@@ -65,7 +64,6 @@ class _GalleryPageState extends State<GalleryPage> {
   void _sendSelectedPhotos() {
     if (selectedImageUrls.isNotEmpty) {
        mainSession.selectedImageUrl_=selectedImageUrls;
-       print("selelelelelell ${mainSession.selectedImageUrl_}");
         Navigator.pop(context);
     } else {
       print("Please select a new image");

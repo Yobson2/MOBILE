@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../components/add_comm_sms.dart';
-import 'elem.dart';
+
 
 class PhotoDetailPage extends StatelessWidget {
   final String id;

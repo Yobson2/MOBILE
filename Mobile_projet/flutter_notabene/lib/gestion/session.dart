@@ -7,7 +7,9 @@ import 'package:uuid/uuid.dart';
 import '../models/user_model.dart';
 
 class SessionManager {
+    List<dynamic> dataCarte_=[];
     List<dynamic> selectedImageUrl_=[];
+    
 
   late String sessionId;
   late User mainUser;

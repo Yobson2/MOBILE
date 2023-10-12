@@ -38,7 +38,6 @@ class MapSampleState extends State<MapSample> {
   bool testcard = false;
   bool isLoading = false;
   
-  
 
 
 
@@ -50,7 +49,7 @@ class MapSampleState extends State<MapSample> {
   @override
   void initState() {
     super.initState();
-    _getUserLocation();
+    // _getUserLocation();
   }
 
  
@@ -185,18 +184,12 @@ class MapSampleState extends State<MapSample> {
       
       appBar: AppBar(
           elevation: 0.0, 
-          // leading: IconButton(
-          // icon: Icon(Icons.arrow_back),
-          // onPressed: () {
-          //   Navigator.pop(context);
-          // },
-          //   ),
         title: Container(
           padding: EdgeInsets.symmetric(horizontal: 10),
           width: 600,
           decoration: BoxDecoration(
             color: Colors.white, 
-            borderRadius: BorderRadius.circular(16.0),
+            borderRadius: BorderRadius.circular(10.0),
             boxShadow: [ 
               BoxShadow(
                 color: Colors.grey.withOpacity(0.5),
@@ -267,7 +260,10 @@ class MapSampleState extends State<MapSample> {
               right: 10.0,
               top: 0.0,
               child: Container(
+                 width: 200,
+                  height: 400,
                 decoration: BoxDecoration(
+                  
                   color: Colors.white,
                   boxShadow: [
                     BoxShadow(
@@ -276,22 +272,50 @@ class MapSampleState extends State<MapSample> {
                     ),
                   ],
                 ),
-                child: ListView.builder(
-                  itemCount: suggestions.length,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(suggestions[index]),
-                      onTap: () {
-                        onSuggestionSelected(suggestions[index]);
-                      },
-                    );
-                  },
-                ),
+                child:
+                  ListView.builder(
+                    itemCount: suggestions.length,
+                    shrinkWrap: true,
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Container(
+                          height: 40,
+                          // color: Colors.amber,
+                          padding: EdgeInsets.symmetric(horizontal: 3),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                blurRadius: 2.0,
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(Icons.place),
+                              SizedBox(width: 10,),
+                              Flexible( 
+                                child: Text(
+                                  suggestions[index],
+                                  softWrap: true,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        onTap: () {
+                          onSuggestionSelected(suggestions[index]);
+                        },
+                      );
+                    },
+                  ),
               ),
-            ),
 
-            if (testcard  )
+              ),
+
+            // if (testcard  )
              Positioned(
             left: 10.0,
             right: 10.0,
@@ -346,11 +370,6 @@ class MapSampleState extends State<MapSample> {
                                       child: const Text('Terminé'),
                                     ),
                                  ),
-                              //   IconButton(
-                              //   color: Colors.blue,
-                              //   onPressed:showSelectedLocation,
-                              //   icon: Icon(Icons.gps_fixed),
-                              // )
 
 
                             ],

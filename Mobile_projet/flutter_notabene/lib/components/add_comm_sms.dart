@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -10,6 +11,8 @@ import '../views/photo_view.dart';
 import '../views/photos/galerie_photo.dart';
 
 import 'package:http/http.dart' as http;
+
+import 'message_component.dart';
 
 class CommentaireComponent extends StatefulWidget {
    final List<String>? allPhotos;
@@ -41,10 +44,15 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
    late final String? image;
    final picker = ImagePicker();
   XFile? _imageFile;
+  // List<XFile?>? _imageFiles;
+  //  List<XFile> _images = [];
+    
+ 
+ 
+
   int? userId;
-  late final dynamic mesPhotos;
-  
-   int nombreEtoiles = 0;
+  final dynamic mesPhotos=mainSession.selectedImageUrl_;
+  int nombreEtoiles = 0;
 
 
  
@@ -67,15 +75,13 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
     });
     print(_imageFile!.path);
   }
-
+ 
   
   Future<void> _fetchAndDisplayUserId() async {
     final id= mainSession.userId;
-    final data=mainSession.selectedImageUrl_;
    
      setState(() {
        this.userId = id;
-       this.mesPhotos = data;
        commentLatitude=widget.latitude!;
        commentLongitude=widget.longitude!;
      }); 
@@ -86,7 +92,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
  Future<void> addCommentaire(int myId) async {
   var request = http.MultipartRequest(
     'POST',
-    Uri.parse('http://192.168.1.9:8082/apiNotabene/v1/addPost/$myId'),
+    Uri.parse('http://192.168.1.10:8082/apiNotabene/v1/addPost/$myId'),
   );
 
   for (var imagePath in mesPhotos!) {
@@ -102,15 +108,51 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
   request.fields['latitude_'] = commentLatitude.toString();
 
   try {
+      // Afficher le loader
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    },
+    barrierDismissible: false, // L'utilisateur ne peut pas fermer la boîte de dialogue
+  );
     var response = await request.send();
     if (response.statusCode == 200) {
+    
       print('Images envoyées avec succès');
-      mesPhotos = null;
+       _commentaireController.clear();
+      setState(() {
+         nombreEtoiles = 0;
+         mainSession.selectedImageUrl_ = [];
+         texteAfficheLieu = "Structure ou Lieu";
+         texteAfficheAddresse = "Adresse du lieu";
+       
+      });
+
+      // Fermer le loader
+      Navigator.of(context, rootNavigator: true).pop();
+       showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SuccessModal();
+        },
+      );
+      
+
+      Timer(const Duration(seconds: 1), () {
+        Navigator.of(context).pop(); 
+      });
     } else {
       print('Erreur lors de l\'envoi des images. Statut ${response.statusCode}');
+      // Fermer le loader
+      Navigator.of(context, rootNavigator: true).pop();
     }
   } catch (e) {
     print("Erreur lors de l'envoi des images: $e");
+    // Fermer le loader
+    Navigator.of(context, rootNavigator: true).pop();
   }
 }
 
@@ -121,7 +163,6 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
   @override
   Widget build(BuildContext context) {
     print('User $userId created ');
-    print(" ddadaddaadadd   $mesPhotos");
 
     
     return MaterialApp(

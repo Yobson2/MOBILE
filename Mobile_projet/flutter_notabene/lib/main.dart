@@ -27,7 +27,7 @@ void main() async {
     mainSession.init();
 
     runApp(
-      MyApp(),
+      MyApp(), 
     );
   } catch (e) {
     print('Erreur lors de l\'initialisation : $e');
