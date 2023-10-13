@@ -188,6 +188,8 @@ class MapSampleState extends State<MapSample> {
     });
   }
 
+
+
   void showSelectedLocation() async {
  
     if (selectedLocation != null) {
@@ -297,7 +299,7 @@ class MapSampleState extends State<MapSample> {
       body: Stack(
         children: [
           if (isLoading) 
-          Center(
+          const Center(
             child: CircularProgressIndicator(), 
           ),
           GoogleMap(

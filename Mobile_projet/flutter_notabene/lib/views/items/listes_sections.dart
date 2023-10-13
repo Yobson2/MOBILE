@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// ignore: must_be_immutable
 class ListesBlocItems extends StatelessWidget {
-  const ListesBlocItems({Key? key});
+  var id;
+  final String? title;
+
+  ListesBlocItems({super.key, this.id, this.title });
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +15,7 @@ class ListesBlocItems extends StatelessWidget {
         // backgroundColor: Colors.green,
         
         title: Text(
-          "BANQUE",
+          "$title ",
           style: GoogleFonts.quicksand(
             textStyle: const TextStyle(
               color: Colors.black,

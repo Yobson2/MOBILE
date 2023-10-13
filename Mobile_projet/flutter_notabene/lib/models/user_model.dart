@@ -27,14 +27,14 @@ class User {
   }
 
   // Méthode pour créer un utilisateur à partir des données du serveur
-  // factory User.fromServerData(Map<String, dynamic> data) {
-  //   return User(
-  //     id_utilisateur: data['id_utilisateur'],
-  //     nom_utilisateur: data['nom_utilisateur'],
-  //     adresse_email: data['adresse_email'],
-  //     mot_de_passe: data['mot_de_passe'],
-  //   );
-  // }
+  factory User.fromServerData(Map<String, dynamic> data) {
+    return User(
+      id_utilisateur: data['id_utilisateur'],
+      nom_utilisateur: data['nom_utilisateur'],
+      adresse_email: data['adresse_email'],
+      mot_de_passe: data['mot_de_passe'],
+    );
+  }
 
   Map<String, dynamic> toMap() {
     return {

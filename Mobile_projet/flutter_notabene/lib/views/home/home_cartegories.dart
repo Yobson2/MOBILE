@@ -1,43 +1,15 @@
 import 'package:flutter/material.dart';
 
+import '../../models/categories_model.dart';
+import '../items/listes_sections.dart';
+
 
 
 
 class CategorySection extends StatelessWidget {
-  CategorySection({Key? key}) : super(key: key);
+  const CategorySection({Key? key}) : super(key: key);
 
-  final List<Map<String, dynamic>> categories = [
-    {
-      "icon": Icons.security,
-      "color": Color(0xFF1E3C72),
-      "title": "BANQUE",
-      "id_category":1
-    },
-    {
-      "icon": Icons.read_more,
-      "color": Color(0xFFD32F2F),
-      "title": "RESTAURAUT",
-      "id_category":2
-    },
-    {
-      "icon": Icons.hotel_class,
-      "color": Color(0xFF757575),
-      "title": "HOTEL",
-      "id_category":3
-    },
-    {
-      "icon": Icons.shopping_basket,
-      "color": Color(0xFFF57C00),
-      "title": "SUPERMARCHE",
-      "id_category":4
-    },
-    {
-      "icon": Icons.diversity_2,
-      "color": Color(0xFF4CAF50),
-      "title": "DIVERS",
-      "id_category":5
-    },
-  ];
+    
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +21,7 @@ class CategorySection extends StatelessWidget {
           topRight: Radius.circular(20),
         ),
       ),
-      child: Padding(
+        child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
@@ -67,82 +39,75 @@ class CategorySection extends StatelessWidget {
                   ),
                   IconButton(
                     onPressed: () {
-                    
+                      // ...
                     },
-                    icon: Icon(Icons.arrow_forward_ios),
+                    icon: const Icon(Icons.arrow_forward_ios),
                   ),
                 ],
               ),
             ),
-            Container(
+            SizedBox(
               height: 100,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 25),
                 itemBuilder: (context, index) {
+                  final category = CategoriesData.categories[index];
                   return GestureDetector(
-                  onTap: () {
-                    switch (categories[index]['id_category']) {
-                      case 1:
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => const BanquePage(),
-                        //   ),
-                        // );
-                        print("object is one of the");
-                        break;
-                      case 2:
-                        //  Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => const RestaurantPage(),
-                        //   ),
-                        // );
-                         print("object is one of the 22");
-                        break;
-                      case 3:
-                        // Navigator.push(
+                    onTap: () {
+                      final idCarte=category.idCategory;
+                      switch (idCarte) {
+                        case 1:
                           
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => const HotelPage(),
-                        //   ),
-                        // );
-                         print("object is one of the 33");
-                        break;
-                      case 4:
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => const SpermarchePage(),
-                        //   ),
-                        // );
-                         print("object is one of the 44");
-                      case 5:
-                        //  Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => const DiversPage(),
-                        //   ),
-                        // );
-                         print("object is one of the 55");
-                        break;
-                      
-                    }
-                  },
-                  child: Column(
-              children: [
-                Hero(
-                  tag: 'category_${categories[index]['id_category']}', // Utilisez une balise unique
-                  child: Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: categories[index]['color'],
+                          Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                          builder: (context) => ListesBlocItems(id:idCarte,title: category.title),
+                          ),
+                          );
+                          break;
+                        case 2:
+                          Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                          builder: (context) =>  ListesBlocItems(id:idCarte,title: category.title),)
+                          );
+                          break;
+                        case 3:
+                         Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                          builder: (context) => ListesBlocItems(id:idCarte,title: category.title),
+                          ));
+                          break;
+                        case 4:
+                          Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                          builder: (context) => ListesBlocItems(id:idCarte,title: category.title),
+                          ));
+                          break;
+                        case 5:
+                          Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                          builder: (context) => ListesBlocItems(id:idCarte,title: category.title),
+                          ));
+                          break;
+                      }
+                    },
+                    child: Column(
+                      children: [
+                        Hero(
+                          tag: 'category_${category.idCategory}',
+                          child: Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: category.color,
                             ),
                             child: Icon(
-                              categories[index]['icon'],
+                              category.icon,
                               color: Colors.white,
                               size: 40,
                             ),
@@ -150,7 +115,7 @@ class CategorySection extends StatelessWidget {
                         ),
                         const SizedBox(height: 5),
                         Text(
-                          categories[index]['title'],
+                          category.title,
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.black.withOpacity(0.7),
@@ -163,13 +128,17 @@ class CategorySection extends StatelessWidget {
                 },
                 separatorBuilder: (context, index) =>
                     const SizedBox(width: 10),
-                itemCount: categories.length,
+                itemCount: CategoriesData.categories.length,
               ),
-            ), 
-          ],  
-        ),  
-      ),  
-    ); 
+            ),
+          ],
+        ),
+      ),
+    );
   }
-  
 }
+
+
+
+
+

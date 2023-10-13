@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_notabene/screens/login_screen.dart';
 import 'package:flutter_notabene/views/photo_view.dart';
 
-import '../services/localisation_search.dart';
 import 'carte_view.dart';
 import 'home_view.dart';
 
