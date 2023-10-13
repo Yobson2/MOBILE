@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_notabene/models/user_model.dart';
 import 'package:flutter_notabene/screens/Sign_screen.dart';
 import 'package:flutter_notabene/screens/home_screem.dart';
 import 'package:flutter_notabene/services/api_service.dart';
@@ -39,12 +40,8 @@ Future<void> loginUser() async {
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
       return;
     }
-    final userLogin = {
-      "adresse_email": _emailController.text,
-      "mot_de_passe": _passwordController.text,
-    };
-    var mytoken= await ApiManager().loginUserAndGetToken('loginUsers', userLogin);
-    print(mytoken);
+    User userLogin= User(adresse_email:_emailController.text, mot_de_passe:_passwordController.text);
+    var mytoken= await ApiManager().loginUserAndGetToken('loginUsers', userLogin.toMap());
      if(mytoken!=null){
        _emailController.clear();
        _passwordController.clear();

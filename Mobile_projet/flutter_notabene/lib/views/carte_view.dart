@@ -23,6 +23,8 @@ class MapSampleState extends State<MapSample> {
   final TextEditingController _searchController = TextEditingController();
   String? placeName;
   String? placeAddress;
+
+  String? place1;
   static const apiKey = 'AIzaSyCRD-FSgdo6Tcpoj-RTuLQfmERxBagzm04';
   static const apiUrl='https://maps.googleapis.com/maps/api/place/textsearch/json?query';
 
@@ -37,7 +39,12 @@ class MapSampleState extends State<MapSample> {
   bool useManualCursor = true;
   bool testcard = false;
   bool isLoading = false;
-  
+
+  bool showCurrentUserLocation = true;
+  bool isLoadingCarte=false;
+
+  late double latitude2 ;
+  late double longitude2;
 
 
 
@@ -49,12 +56,17 @@ class MapSampleState extends State<MapSample> {
   @override
   void initState() {
     super.initState();
-    // _getUserLocation();
+    _getUserLocation();
+    latitude2 = 0.0; 
+    longitude2 = 0.0; 
   }
 
  
-
+//Afficher la position actuelle de l'utilisateur
   Future<void> _getUserLocation() async {
+    setState(() {
+    isLoading = true; 
+  });
     await Geolocator.checkPermission();
     await Geolocator.requestPermission();
 
@@ -67,9 +79,10 @@ class MapSampleState extends State<MapSample> {
     LatLng userLocation = LatLng(latitude, longitude);
 
     setState(() {
+      
       _kUserMarker = Marker(
         markerId: const MarkerId("position"),
-        infoWindow: const InfoWindow(title: "position actuelle"),
+        infoWindow: const InfoWindow(title: "Votre position actuelle"),
         position: userLocation,
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
       );
@@ -77,11 +90,47 @@ class MapSampleState extends State<MapSample> {
 
     final GoogleMapController controller = await _controller.future;
     await controller.animateCamera(CameraUpdate.newLatLng(userLocation));
+    await getPlaceInfo(latitude, longitude);
+
+  Timer(Duration(seconds: 1), () {
+    setState(() {
+      isLoading = false; // Cacher l'indicateur de chargement
+      // isLoadingCarte=true;
+    });
+     latitude2 = latitude; 
+    longitude2 = longitude; 
+  });
+
+ 
   }
+
+
+//Recuperer des infos sur la position actuelle de l'utilisateur
+  Future<void> getPlaceInfo(double latitude, double longitude) async {
+  final url = Uri.parse('$apiUrl=$latitude,$longitude&key=$apiKey');
+
+  final response = await http.get(url);
+
+  if (response.statusCode == 200) {
+    final Map<String, dynamic> data = json.decode(response.body);
+    final List<dynamic> results = data['results'];
+
+    if (results.isNotEmpty) {
+      setState(() {
+         if (showCurrentUserLocation) {
+            placeAddress = results[0]['formatted_address'];
+            placeName = results[0]['name'];
+         }
+      });
+    }
+  } else {
+    throw Exception('Erreur lors de la recherche d\'endroits');
+  }
+}
+
 
   Future<void> searchPlaces(String query) async {
     
-  
     final url = Uri.parse(
         '$apiUrl=$query&key=$apiKey');
 
@@ -107,7 +156,11 @@ class MapSampleState extends State<MapSample> {
 
         final GoogleMapController controller = await _controller.future;
         await controller.animateCamera(CameraUpdate.newLatLng(userLocation));
-
+        setState(() {
+          
+          latitude2=latitude ;
+          longitude2=longitude;
+        });
         if (useManualCursor) {
           setState(() {
             selectedLocation = userLocation;
@@ -147,10 +200,18 @@ class MapSampleState extends State<MapSample> {
     if (useManualCursor) {
       setState(() {
         selectedLocation = tappedPoint;
-        testcard =true;
+        // testcard =true;
+          showCurrentUserLocation=false; 
       });
+      
+
 
       searchPlaceInfo(tappedPoint.latitude, tappedPoint.longitude);
+       setState(() {
+          
+          latitude2=tappedPoint.latitude ;
+          longitude2=tappedPoint.longitude;
+        });
     }
   }
 
@@ -168,7 +229,7 @@ class MapSampleState extends State<MapSample> {
       if (results.isNotEmpty) {
         setState(() {
           placeAddress= results[0]['formatted_address'];
-          placeName = "test address";
+          placeName = results[0]['name'];
         });
       }
     } else {
@@ -235,15 +296,20 @@ class MapSampleState extends State<MapSample> {
     
       body: Stack(
         children: [
+          if (isLoading) 
+          Center(
+            child: CircularProgressIndicator(), 
+          ),
           GoogleMap(
             mapType: MapType.normal,
             markers: {
-              _kUserMarker,
+              if (showCurrentUserLocation) 
+                    _kUserMarker,
               if (selectedLocation != null)
                 Marker(
                   markerId: MarkerId("selected_location "),
                   position: selectedLocation!,
-                  infoWindow: InfoWindow(title: "Selected Location "),
+                  infoWindow: InfoWindow(title: "Endroit sélectionné"),
                   icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
                 ),
             },
@@ -315,7 +381,7 @@ class MapSampleState extends State<MapSample> {
 
               ),
 
-            // if (testcard  )
+            //  if (isLoadingCarte) 
              Positioned(
             left: 10.0,
             right: 10.0,
@@ -350,14 +416,23 @@ class MapSampleState extends State<MapSample> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              
                               SizedBox(
                                   width: 200,
                                   height: 40,
                                    child: ElevatedButton(
                                      onPressed: () {
                                   if (isLoggedIn) {
-                                    _showModal();
+                                    
+                                     Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => CommentaireComponent(
+                                        placeName: placeName ?? "",
+                                        placeAddress: placeAddress ?? "",
+                                        latitude: latitude2,
+                                        longitude: longitude2 ,
+                                      ),
+                                    ),);
                                   } else {
                                     Navigator.push(
                                       context,
@@ -388,95 +463,4 @@ class MapSampleState extends State<MapSample> {
     );
   }
 
-
-void _showModal() {
-  double? latitude;
-  double? longitude;
-
-  if (selectedLocation != null) {
-    latitude = selectedLocation!.latitude;
-    longitude = selectedLocation!.longitude;
-  }
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return Center(
-        child: Container(
-          width: 350,
-          height: 300,
-          padding: EdgeInsets.all(16.0),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16.0),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Icon(
-                Icons.check_circle,
-                color: Colors.blue,
-                size: 48.0,
-              ),
-              const SizedBox(height: 16.0),
-              const Text(
-                "Que voulez-vous faire  ?",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18.0,
-                ),
-              ),
-        
-              const SizedBox(height: 20.0), 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                   ElevatedButton.icon(
-                onPressed: () {
-                   Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CommentaireComponent(
-                    placeName: placeName ?? "",
-                    placeAddress: placeAddress ?? "",
-                    latitude: latitude ?? 0.0,
-                    longitude: longitude ?? 0.0,
-                  ),
-                ),);
-                },
-                icon: const Icon(Icons.comment, size: 24),
-                label: const Text('commenter '),
-              ),
-                  const SizedBox(width: 16.0),
-                   ElevatedButton.icon(
-                onPressed: () {
-                
-                 
-                },
-                icon: const Icon(Icons.explore, size: 24),
-                label: const Text('Explorer'),
-              ),
-                  
-                ],
-              ),
-              const SizedBox(height: 10.0),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(); 
-                },
-                child: Text(
-                  'Annuler',
-                  style: TextStyle(color: Colors.blue),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    },
-  );
 }
-
-
-}
-
-

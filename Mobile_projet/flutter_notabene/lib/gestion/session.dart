@@ -7,7 +7,7 @@ import 'package:uuid/uuid.dart';
 import '../models/user_model.dart';
 
 class SessionManager {
-    List<dynamic> dataCarte_=[];
+  //Receperer les images de la galerie
     List<dynamic> selectedImageUrl_=[];
     
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_notabene/models/user_model.dart';
 import 'package:flutter_notabene/services/api_service.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -11,13 +12,10 @@ class UserRegistrationSection extends StatelessWidget {
   final TextEditingController _passwordController = TextEditingController();
 
   Future<void> registerUser() async {
-  final userData = {
-    "nom_utilisateur": _nameController.text,
-    "adresse_email": _emailController.text,
-    "mot_de_passe": _passwordController.text,
-  };
+
+   User userData = User( nom_utilisateur: _nameController.text, adresse_email:_emailController.text, mot_de_passe: _passwordController.text);
   try {
-    await ApiManager().postData("registerUsers", userData,"creation terminée", "Error d'envoi");
+    await ApiManager().postData("registerUsers",  userData.toMap(),"creation terminée", "Error d'envoi");
     _nameController.clear();
     _emailController.clear();
     _passwordController.clear();

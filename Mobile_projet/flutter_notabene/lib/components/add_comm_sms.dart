@@ -44,8 +44,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
    late final String? image;
    final picker = ImagePicker();
   XFile? _imageFile;
-  // List<XFile?>? _imageFiles;
-  //  List<XFile> _images = [];
+
     
  
  

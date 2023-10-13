@@ -170,11 +170,15 @@ Future<void> _initializeUserData() async {
         index: _currentIndex,
         children: pages,
       ),
-      floatingActionButton:  Column(
+    floatingActionButton: _currentIndex == 0
+    ? Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           FloatingActionButton(
+             backgroundColor: Colors.black12,
+            shape: const CircleBorder(),
+             elevation: 5,
             child: Icon(Icons.comment_bank),
             onPressed: () {
               Navigator.push(
@@ -184,7 +188,8 @@ Future<void> _initializeUserData() async {
             },
           )
         ],
-      ),
+      )
+    : null,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) {
