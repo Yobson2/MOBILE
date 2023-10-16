@@ -29,7 +29,7 @@ class ListesBlocItems extends StatelessWidget {
         elevation: 0.0,
       ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           // color: Color.fromARGB(255, 160, 152, 152),
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20.0),
@@ -48,13 +48,6 @@ class ListesBlocItems extends StatelessWidget {
               Expanded(
                 child: ListView(
                   children: <Widget>[
-                    MyItems(),
-                    MyItems(),
-                    MyItems(),
-                    MyItems(),
-                    MyItems(),
-                    MyItems(),
-                    MyItems(),
                     MyItems(),
                     MyItems(),
                   ],
@@ -77,7 +70,7 @@ class MyItems extends StatefulWidget {
 class _MyWidgetState extends State<MyItems> {
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return const Card(
        color: Colors.white,
       child: ListTile(
         leading: CircleAvatar(

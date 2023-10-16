@@ -1,5 +1,6 @@
 
 
+import 'package:flutter/material.dart';
 import 'package:flutter_notabene/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
@@ -21,9 +22,17 @@ class SessionManager {
     mainUser = User.createDefault();
   }
 
+  // Setter pour mettre à jour la liste et notifier les auditeurs
+  // selectedImageUrl(value) {
+  //   selectedImageUrl_ = value;
+  //   notifyListeners();
+  // }
+
   setuserId(int userId_){
     userId = userId_;  
   }
+
+ 
   
 
    Future<int?> getUserIdFromLocalStorage() async {

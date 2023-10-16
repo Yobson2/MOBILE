@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_notabene/main.dart';
 import 'package:flutter_notabene/services/api_service.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import '../gestion/session.dart';
+import '../models/categories_model.dart';
 import '../views/carte_view.dart';
 import '../views/photo_view.dart';
 import '../views/photos/galerie_photo.dart';
@@ -36,6 +39,7 @@ class CommentaireComponent extends StatefulWidget {
 class _CommentaireComponentState extends State<CommentaireComponent> {
   bool isLoading = true;
   final TextEditingController _commentaireController = TextEditingController();
+  final TextEditingController _nameEntrepriseController = TextEditingController();
    String texteAfficheLieu = "Structure ou Lieu"; 
    String texteAfficheAddresse = "Adresse du lieu"; 
 
@@ -52,6 +56,9 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
   int? userId;
   final dynamic mesPhotos=mainSession.selectedImageUrl_;
   int nombreEtoiles = 0;
+
+  String? selectedCategory;
+  String selectedOption = '';
 
 
  
@@ -91,7 +98,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
  Future<void> addCommentaire(int myId) async {
   var request = http.MultipartRequest(
     'POST',
-    Uri.parse('http://192.168.1.10:8082/apiNotabene/v1/addPost/$myId'),
+    Uri.parse('http://192.168.1.11:8082/apiNotabene/v1/addPost/$myId'),
   );
 
   for (var imagePath in mesPhotos!) {
@@ -100,11 +107,12 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
   }
 
   request.fields['contenu_commentaire'] = _commentaireController.text;
-  request.fields['nom_entreprise'] = texteAfficheLieu;
+  request.fields['nom_entreprise'] = _nameEntrepriseController.text;
   request.fields['addresse_entreprise'] = texteAfficheAddresse;
   request.fields['nombre_etoiles'] = nombreEtoiles.toString();
   request.fields['longitude_'] = commentLongitude.toString();
   request.fields['latitude_'] = commentLatitude.toString();
+  request.fields['categorie'] = selectedCategory.toString();
 
   try {
       // Afficher le loader
@@ -122,10 +130,11 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
     
       print('Images envoyées avec succès');
        _commentaireController.clear();
+       _nameEntrepriseController.clear;
       setState(() {
          nombreEtoiles = 0;
          mainSession.selectedImageUrl_ = [];
-         texteAfficheLieu = "Structure ou Lieu";
+        //  texteAfficheLieu = "Structure ou Lieu";
          texteAfficheAddresse = "Adresse du lieu";
        
       });
@@ -185,29 +194,14 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
           ListView( 
             children: <Widget>[
             const Divider(),
-           InkWell(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const MapSample()),
-            );
-          },
-          child: Container(
-            padding: EdgeInsets.all(10.0), 
-            decoration: BoxDecoration(
-              border: Border.all(),
-              borderRadius: BorderRadius.circular(5.0),
-            ),
-            child: Row(
-              children: [
-                const Icon(Icons.business),
-                const SizedBox(width: 8.0),
-                Text(texteAfficheLieu),
-                const Spacer(), 
-                const Icon(Icons.map),
-              ],
-            ),
+           TextField(
+          controller: _nameEntrepriseController,
+          decoration: const InputDecoration(
+            labelText: "Entreprise",
+            border: OutlineInputBorder(),
+            prefixIcon: Icon(Icons.comment),
           ),
+          onChanged: (value) {},
         ),
           const Divider(),
           InkWell(
@@ -263,6 +257,39 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
                   ),
                 );
               }),
+            ),
+  
+              const Divider(),
+              Column(
+              children: [
+                const Text(
+                  'Choisissez une catégorie',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                DropdownButton<String>(
+                  value: selectedCategory,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedCategory = newValue;
+                    });
+                  },
+                  items: CategoriesData.categories.map((Category category) {
+                    return DropdownMenuItem<String>(
+                      value: category.title,
+                      child: Row(
+                        children: <Widget>[
+                          Icon(category.icon, color: category.color),
+                          const SizedBox(width: 10.0),
+                          Text(category.title),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ],
             ),
 
 
