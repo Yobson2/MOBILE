@@ -1,21 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_notabene/services/api_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-// ignore: must_be_immutable
-class ListesBlocItems extends StatelessWidget {
-  var id;
+class ListesBlocItems extends StatefulWidget {
   final String? title;
+  final int? id;
 
-  ListesBlocItems({super.key, this.id, this.title });
+  ListesBlocItems({Key? key, this.id, this.title }) : super(key: key);
+
+  @override
+  _ListesBlocItemsState createState() => _ListesBlocItemsState();
+}
+
+class _ListesBlocItemsState extends State<ListesBlocItems> {
+   Map<String, dynamic> myItemsData = {}; 
+  //  List<dynamic> myItemsData = [];
+  
+  @override
+  void initState() {
+    super.initState();
+    myCustomFunction();
+  }
+
+  Future<void> myCustomFunction() async {
+    final requete= await ApiManager().fetchData("getAllEntreprise/${widget.title}", "Les données des entreprises ont été recuperer", "Error lors de la recuperation");
+    final res= requete['allEntreprises'];
+
+    print("mes données $res");
+   try {
+      setState(() {
+      myItemsData =res;
+
+    });
+    
+   } catch (e) {
+      print("Erreur : Les données n'ont pas été recuperer");
+   }
+
+   
+  }
 
   @override
   Widget build(BuildContext context) {
+     print("my données : $myItemsData");
     return Scaffold(
       appBar: AppBar(
-        // backgroundColor: Colors.green,
-        
         title: Text(
-          "$title ",
+          "${widget.title ?? ""}",
           style: GoogleFonts.quicksand(
             textStyle: const TextStyle(
               color: Colors.black,
@@ -30,15 +61,11 @@ class ListesBlocItems extends StatelessWidget {
       ),
       body: Container(
         decoration: const BoxDecoration(
-          // color: Color.fromARGB(255, 160, 152, 152),
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20.0),
             topRight: Radius.circular(20.0),
-            // bottomLeft: Radius.circular(10.0),
-            // bottomRight: Radius.circular(10.0),
           ),
         ),
-        
         child: Padding(
           padding: const EdgeInsets.only(bottom: 0.0, top: 0.0, right: 10.0,left: 10.0),
           child: Column(
@@ -46,13 +73,20 @@ class ListesBlocItems extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Expanded(
-                child: ListView(
-                  children: <Widget>[
-                    MyItems(),
-                    MyItems(),
-                  ],
+            child: myItemsData != null
+              ? ListView.builder(
+                  itemCount: myItemsData.length,
+                  itemBuilder: (context, index) {
+                    Map<String, dynamic> item = myItemsData[index];
+                    return MyItems(item: item);
+                  },
+                )
+              : Center(
+                  child: CircularProgressIndicator(), 
                 ),
-              ),
+          ),
+
+
             ],
           ),
         ),
@@ -62,15 +96,14 @@ class ListesBlocItems extends StatelessWidget {
 }
 
 
-class MyItems extends StatefulWidget {
-  @override
-  State<MyItems> createState() => _MyWidgetState();
-}
+class MyItems extends StatelessWidget {
+   final Map<String, dynamic> item;
 
-class _MyWidgetState extends State<MyItems> {
+  MyItems({ required this.item,});
+
   @override
   Widget build(BuildContext context) {
-    return const Card(
+    return Card(
        color: Colors.white,
       child: ListTile(
         leading: CircleAvatar(
@@ -89,7 +122,7 @@ class _MyWidgetState extends State<MyItems> {
               children: [
                 Icon(Icons.location_on, size: 14),
                 SizedBox(width: 4),
-                Text("Abidjan"),
+                Text( item['nom_entreprise'],), 
               ],
             ),
           ],

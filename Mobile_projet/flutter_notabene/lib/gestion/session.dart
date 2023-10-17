@@ -10,6 +10,8 @@ import '../models/user_model.dart';
 class SessionManager {
   //Receperer les images de la galerie
     List<dynamic> selectedImageUrl_=[];
+    String entreprise="";
+    String motCommentaire="";
     
 
   late String sessionId;
@@ -22,14 +24,18 @@ class SessionManager {
     mainUser = User.createDefault();
   }
 
-  // Setter pour mettre à jour la liste et notifier les auditeurs
-  // selectedImageUrl(value) {
-  //   selectedImageUrl_ = value;
-  //   notifyListeners();
-  // }
 
   setuserId(int userId_){
     userId = userId_;  
+  }
+
+  setEntrepriseName(String name){
+    entreprise=name;
+  }
+  
+   setCommentaire(String name){
+    motCommentaire=name;
+    print("objects selected $motCommentaire");
   }
 
  

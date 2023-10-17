@@ -48,13 +48,16 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
    late final String? image;
    final picker = ImagePicker();
   XFile? _imageFile;
+ List<File> _images = [];
 
+ bool testImage1=false;
+ bool testImage2=false;
     
  
  
 
   int? userId;
-  final dynamic mesPhotos=mainSession.selectedImageUrl_;
+  late final dynamic mesPhotos=mainSession.selectedImageUrl_;
   int nombreEtoiles = 0;
 
   String? selectedCategory;
@@ -73,13 +76,18 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
     
   }
   
-  Future<void> _pickImageFromGallery() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+  
+  
 
-    setState(() {
-      _imageFile = pickedFile;
-    });
-    print(_imageFile!.path);
+  Future<void> _pickImages() async {
+    List<XFile> images = await ImagePicker().pickMultiImage();
+    if (images != null) {
+      setState(() {
+        _images = images.map((XFile file) => File(file.path)).toList();
+        testImage1=true;
+        testImage2=false;
+      });
+    }
   }
  
   
@@ -88,6 +96,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
    
      setState(() {
        this.userId = id;
+       testImage2=true;
        commentLatitude=widget.latitude!;
        commentLongitude=widget.longitude!;
      }); 
@@ -98,16 +107,25 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
  Future<void> addCommentaire(int myId) async {
   var request = http.MultipartRequest(
     'POST',
-    Uri.parse('http://192.168.1.11:8082/apiNotabene/v1/addPost/$myId'),
+    Uri.parse('http://192.168.1.8:8082/apiNotabene/v1/addPost/$myId'),
   );
 
-  for (var imagePath in mesPhotos!) {
-    var multipartFile = await http.MultipartFile.fromPath('images', imagePath);
-    request.files.add(multipartFile);
+  if (_images.isNotEmpty) {
+    for (var imageFile in _images) {
+      var multipartFile = await http.MultipartFile.fromPath('images', imageFile.path);
+      request.files.add(multipartFile);
+    }
+  }
+
+  if (mesPhotos != null && mesPhotos.isNotEmpty) {
+    for (var imagePath in mesPhotos) {
+      var multipartFile = await http.MultipartFile.fromPath('images', imagePath);
+      request.files.add(multipartFile);
+    }
   }
 
   request.fields['contenu_commentaire'] = _commentaireController.text;
-  request.fields['nom_entreprise'] = _nameEntrepriseController.text;
+  request.fields['nom_entreprise'] = _nameEntrepriseController.text ;
   request.fields['addresse_entreprise'] = texteAfficheAddresse;
   request.fields['nombre_etoiles'] = nombreEtoiles.toString();
   request.fields['longitude_'] = commentLongitude.toString();
@@ -130,11 +148,15 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
     
       print('Images envoyées avec succès');
        _commentaireController.clear();
-       _nameEntrepriseController.clear;
+       _nameEntrepriseController.clear();
       setState(() {
          nombreEtoiles = 0;
-         mainSession.selectedImageUrl_ = [];
-        //  texteAfficheLieu = "Structure ou Lieu";
+        //  mesPhotos=null;
+        mainSession.selectedImageUrl_=[];
+        mainSession.entreprise="";
+        mainSession.motCommentaire="";
+         testImage1=false;
+         testImage2=false;
          texteAfficheAddresse = "Adresse du lieu";
        
       });
@@ -171,8 +193,9 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
   @override
   Widget build(BuildContext context) {
     print('User $userId created ');
+      // _nameEntrepriseController.text = mainSession.entreprise;
+      // _commentaireController.text = mainSession.motCommentaire;
 
-    
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold( 
@@ -195,18 +218,24 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
             children: <Widget>[
             const Divider(),
            TextField(
+             textDirection: TextDirection.ltr,
+             enabled: true,
           controller: _nameEntrepriseController,
           decoration: const InputDecoration(
             labelText: "Entreprise",
             border: OutlineInputBorder(),
             prefixIcon: Icon(Icons.comment),
           ),
-          onChanged: (value) {},
+          onChanged: (value) {
+            setState(() {
+            mainSession.setEntrepriseName(_nameEntrepriseController.text);
+          });
+          },
         ),
           const Divider(),
           InkWell(
           onTap: () {
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => const MapSample()),
             );
@@ -231,13 +260,18 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
         const Divider(),
         TextField(
           controller: _commentaireController,
+          textDirection: TextDirection.ltr,
           maxLines: 5,
           decoration: const InputDecoration(
             labelText: "Votre commentaire",
             border: OutlineInputBorder(),
             prefixIcon: Icon(Icons.comment),
           ),
-          onChanged: (value) {},
+          onChanged: (value) {
+             setState(() {
+            mainSession.setCommentaire(_commentaireController.text);
+          });
+          },
         ),
          const Divider(),
               Row(
@@ -291,53 +325,54 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
                 ),
               ],
             ),
-
-
-              const Divider(),
-               Container(
-                  decoration:const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(0.0))
-                  ),
-                  child: Column(
-                    children: [
+               const Divider(),
+              Container(
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(0.0)),
+                ),
+                child: Column(
+                  children: [
+                    if (testImage1 || testImage2)
                       Container(
-                        color: Colors.black12,
+                        color: testImage1 ? Colors.orange : Colors.red,
                         height: 200,
                         child: ListView.builder(
-                    scrollDirection: Axis.horizontal, 
-                    itemCount: mesPhotos?.length ?? 0,
-                    itemBuilder: (context, index) {
-                      if (mesPhotos != null && mesPhotos!.isNotEmpty) {
-                         
-                      final imageUrl = mesPhotos![index];
-                      return Padding(
-                        padding: const EdgeInsets.all(1.0),
-                        child: GestureDetector(
-                          onTap: () {
-                            _showImageModal(imageUrl);
+                          scrollDirection: Axis.horizontal,
+                          itemCount: testImage1 ? _images.length : mesPhotos?.length ?? 0,
+                          itemBuilder: (BuildContext context, int index) {
+                            final imageUrl = testImage1 ? _images[index] : mesPhotos![index];
+                            return Padding(
+                              padding: const EdgeInsets.all(1.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  if (testImage1) {
+                                    _showImageModal(imageUrl.path); 
+                                  } else {
+                                    _showImageModal(imageUrl);
+                                  }
+                                },
+                                child: Container(
+                                  width: 150,
+                                  height: 100,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    image: DecorationImage(
+                                      image: testImage1
+                                          ? FileImage(_images[index])
+                                          : FileImage(File(imageUrl)),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
                           },
-                          child: Container(
-                          width: 150,
-                          height: 100,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5.0),
-                            image: DecorationImage(
-                              image: FileImage(File(imageUrl)),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
                         ),
-                        )
-                      );
-                      }else {
-                      return const Text("Aucune image disponible");
-                    }
-                },  
-                         ),
                       ),
-                     ] 
-                    ),
+                  ],
                 ),
+              ),
+
                const Divider(),
               ElevatedButton(
                 onPressed: () {
@@ -363,17 +398,23 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
                               leading: Icon(Icons.photo_album),
                               title: Text("Galerie de notabene"),
                               onTap: () {
+                                Navigator.pop(context); 
+                                Navigator.pop(context); 
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(builder: (context) => const GalleryPage()),
                                 );
+                                setState(() {
+                                   testImage2=true;
+                                   testImage1=false;
+                                });
                               },
                             ),
                             ListTile(
                               leading: Icon(Icons.photo),
                               title: Text("Galerie du téléphone"),
                               onTap: () {
-                                _pickImageFromGallery();
+                               _pickImages();
                               },
                             ),
                           ],
@@ -446,20 +487,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
       ),
     );
   }
-  Widget afficherImage(String url) {
-  if (url.startsWith('http') ) {
-    return Image.network(url);
-   }
-  // else if (url.startsWith('/data')) {
-  //   return Image.file(File(url));
-  // } 
-  else if (File(url).existsSync() ) {
-    return Image.file(File(url));
-  }
-   else {
-    return Text('Erreur: Format d\'image non pris en charge');
-  }
-}
+ 
 
 
 void _showImageModal(String imageUrl) {

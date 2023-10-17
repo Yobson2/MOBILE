@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_notabene/components/add_comm_sms.dart';
 import 'package:flutter_notabene/main.dart';
 
 
@@ -65,7 +66,12 @@ class _GalleryPageState extends State<GalleryPage> {
     if (selectedImageUrls.isNotEmpty) {
       // selectedImageUrl_=selectedImageUrls
        mainSession.selectedImageUrl_=selectedImageUrls;
-        Navigator.pop(context);
+        // Navigator.pop(context);
+        //  Navigator.pop(context);
+        Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const CommentaireComponent()),
+            );
     } else {
       print("Please select a new image");
     }

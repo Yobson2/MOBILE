@@ -425,7 +425,7 @@ class MapSampleState extends State<MapSample> {
                                      onPressed: () {
                                   if (isLoggedIn) {
                                     
-                                     Navigator.push(
+                                     Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => CommentaireComponent(
