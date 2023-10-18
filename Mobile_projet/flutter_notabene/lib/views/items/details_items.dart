@@ -6,16 +6,19 @@ class MyDetailsItems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return Scaffold(
+      appBar: AppBar(),
+      body: SingleChildScrollView(
       child: Column(
         children: [
           DetailsHeader(),
           MyChangeInfos(),
           Infos1Description(),
           infos1Avis(),
-          // SizedBox(height: 20), 
+          SizedBox(height: 20), 
         ],
       ),
+    ),
     );
 
   }
@@ -25,7 +28,7 @@ class DetailsHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: EdgeInsets.all(9),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
