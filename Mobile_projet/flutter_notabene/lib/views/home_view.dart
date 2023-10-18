@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_notabene/services/api_service.dart';
 
 import 'home/home_avis_recents.dart';
 import 'home/home_cartegories.dart';
+import 'items/details_items.dart';
+
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -13,17 +16,42 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   TextEditingController _searchController = TextEditingController();
-  List<String> _allItems = ['Item 1', 'Item 2', 'Item 3']; 
-  List<String> _searchResults = [];
-
-  void _search() {
-    String query = _searchController.text.toLowerCase();
-    setState(() {
-      _searchResults = _allItems
-          .where((item) => item.toLowerCase().contains(query))
-          .toList();
-    });
+  List<dynamic> searchResults = [];
+  List<dynamic> searchResultsFinal = [];
+  @override
+  void initState() {
+    super.initState();
   }
+
+  Future<void> getAllData() async {
+    final response = await ApiManager().fetchData("getAllEntreprise", "message ok", "messageError barre de recherche");
+    
+    if (response != null) {
+      final allItems = response['allEntreprises'];
+      // print("resultat recherche $allItems");
+      setState(() {
+        searchResults = allItems;
+      });
+    }
+  }
+   
+    Future<void> _search() async {
+      getAllData();
+      String query = _searchController.text;
+      List<dynamic> filteredResults = [];
+
+      if (query.isNotEmpty) {
+    for (var item in searchResults) {
+      if (item['nom_entreprise'].toLowerCase().contains(query)) {
+        filteredResults.add(item);
+      }
+    }
+             
+      }
+        setState(() {
+          searchResultsFinal=filteredResults;
+        });
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +63,7 @@ class _HomeViewState extends State<HomeView> {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
               width: 380,
+              
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10.0),
                 border: Border.all(
@@ -43,18 +72,18 @@ class _HomeViewState extends State<HomeView> {
               ),
               child: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.search,
                     color: Colors.grey,
                   ),
-                  SizedBox(width: 8.0),
+                  const SizedBox(width: 8.0),
                   Expanded(
                     child: TextField(
                       controller: _searchController,
                       onChanged: (value) {
-                        _search();
+                        _search();  
                       },
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: 'Rechercher...',
                         border: InputBorder.none,
                       ),
@@ -63,71 +92,108 @@ class _HomeViewState extends State<HomeView> {
                 ],
               ),
             ),
-            // Afficher la liste des résultats si elle n'est pas vide
-            // if (_searchResults.isNotEmpty) 
-            //   ListView.builder(
-            //     shrinkWrap: true,
-            //     itemCount: _searchResults.length,
-            //     itemBuilder: (BuildContext context, int index) {
-            //       return ListTile(
-            //         title: Text(_searchResults[index]),
-            //       );
-            //     },
-            //   ),
-            // CarouselSlider(
-            //   options: CarouselOptions(
-            //     height: 155.0,
-            //     enlargeCenterPage: true,
-            //     autoPlay: true,
-            //     aspectRatio: 16 / 9,
-            //     autoPlayCurve: Curves.fastOutSlowIn,
-            //     enableInfiniteScroll: true,
-            //     autoPlayAnimationDuration: Duration(milliseconds: 800),
-            //     viewportFraction: 0.9,
-            //   ),
-            //   items: [1, 2, 3].map((i) {
-            //     return Builder(
-            //       builder: (BuildContext context) {
-            //         return Container(
-            //           width: MediaQuery.of(context).size.width,
-            //           margin: EdgeInsets.symmetric(horizontal: 5.0),
-            //           decoration: BoxDecoration(
-            //             color: Colors.amber,
-            //             borderRadius: BorderRadius.circular(10.0),
-            //           ),
-            //           child: Center(
-            //             child: Text(
-            //               'Image $i',
-            //               style: TextStyle(fontSize: 16.0),
-            //             ),
-            //           ),
-            //         );
-            //       },
-            //     );
-            //   }).toList(),
-            // ),
+             // Afficher les résultats ici
+            if (searchResultsFinal.isNotEmpty)
+             Padding(
+               padding: const EdgeInsets.only(right: 30.0,left: 30.0),
+                child: Container(
+                  // height: 150,
+                   decoration: BoxDecoration(
+                    
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 5.0,
+                      ),
+                    ],
+                  ),
+                  child:ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: searchResultsFinal.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Container(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                           Row(
+                            children: [
+                               Text(searchResultsFinal[index]['nom_entreprise'],
+                               style: const TextStyle(
+                                    fontSize: 18, 
+                                    color: Colors.black54
+                                    
+                                  ),
+                               ),
+                            ],
+                           ),
+                            
+                            Row(
+                              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                 const Icon(Icons.location_on, size: 14),
+                              const SizedBox(width: 4),
+                              Flexible(
+                                
+                                child: Text(
+                                 searchResultsFinal[index]['adresse_entreprise']  ,
+                                  softWrap: true, 
+                                  style: const TextStyle(
+                                    fontSize: 13, 
+                                    
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 70,),
+                               Text(
+                                searchResultsFinal[index]['categories'],
+                                style: const TextStyle(
+                                    fontSize: 10, 
+                                    color: Colors.blue, 
+                                    
+                                  ),
+                                
+                                ),
+                               
+                              ],
+                            ),
+                          ],
+                        )
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                             context,
+                            MaterialPageRoute(builder: (context) => MyDetailsItems()),
+                          );
+                         print("Search id  ${searchResultsFinal[index]}");
+                        },
+                    );
+                  },
+                ), 
+                ),
+             ),
+             
             const CategorySection(),
           ],
+         
+          
         ),
       ),
     );
   }
 }
 
-
-
-class MySecondeBloc extends StatelessWidget {
+class MySecondBloc extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-              height: 300,
-              child: Column(
-                children: [
-                  Expanded(child: MyComment())
-                ],  
-              ),  
-            );
+      height: 300,
+      child: Column(
+        children: [
+          Expanded(child: MyComment()),
+        ],  
+      ),  
+    );
   }
 }
-
-

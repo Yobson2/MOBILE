@@ -153,7 +153,7 @@ class MyItems extends StatelessWidget {
 
           ],
         ),
-        subtitle: Text("Informations sur l'endroit"),
+        subtitle: Text("Informations supplementaire"),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
