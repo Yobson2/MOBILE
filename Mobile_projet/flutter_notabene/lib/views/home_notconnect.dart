@@ -24,6 +24,7 @@ class _NotConnectedUserWidgetState extends State<NotConnectedUserWidget> {
     const PhotoViewWithHero(),
     MessageConnexion(),
     
+    
   ];
 
  

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_notabene/services/api_service.dart';
 
+import '../services/localisation_search.dart';
 import 'home/home_avis_recents.dart';
 import 'home/home_cartegories.dart';
 import 'items/details_items.dart';
@@ -173,7 +174,6 @@ class _HomeViewState extends State<HomeView> {
                 ), 
                 ),
              ),
-             
             const CategorySection(),
           ],
          

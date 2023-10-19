@@ -112,11 +112,15 @@ class MyItems extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
+          final name= item['nom_entreprise'];
+          final idEntreprise=item['id_entreprise'];
+          final adresseEntreprise=item['adresse_entreprise'];
            Navigator.push(
               context,
-               MaterialPageRoute(builder: (context) => MyDetailsItems()),
+               MaterialPageRoute(builder: (context) => MyDetailsItems(nomEntreprise:name, idEntreprise:idEntreprise,adresseEntreprise:adresseEntreprise)),
               );
-        print("Vous avez cliqué sur l'élément ${item['nom_entreprise']}");
+
+             
       },
       child: SingleChildScrollView(
         child:Card(
@@ -161,11 +165,8 @@ class MyItems extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.star, color: Colors.yellow, size: 12),
-                    Icon(Icons.star, color: Colors.yellow, size: 12),
-                    Icon(Icons.star, color: Colors.yellow, size: 12),
-                    Icon(Icons.star, color: Colors.yellow, size: 12),
-                    Icon(Icons.star, color: Colors.yellow, size: 12),
+                   for (int i = 0; i < 5; i++)
+                      Icon(Icons.star, color: Colors.yellow, size: 10),
                   ],
                 ),
               ],

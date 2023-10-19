@@ -1,116 +1,72 @@
 import 'package:flutter/material.dart';
 
-class SearchLocalisationScreem extends StatefulWidget {
-  const SearchLocalisationScreem({Key? key}) : super(key: key);
+
+class SearchBarApp extends StatefulWidget {
+  const SearchBarApp({super.key});
 
   @override
-  _SearchLocalisationScreemState createState() => _SearchLocalisationScreemState();
+  State<SearchBarApp> createState() => _SearchBarAppState();
 }
 
-class _SearchLocalisationScreemState extends State<SearchLocalisationScreem> {
-  List<String> suggestions = [];
-  TextEditingController _searchController = TextEditingController();
-
-  void _onSearchChanged(String query) {
-    if (query.isNotEmpty) {
-      // Mettez à jour les suggestions ici en fonction de la requête
-      setState(() {
-        suggestions = [
-          'Paris',
-          'New York',
-          'London',
-          'Tokyo',
-          'Tokyo',
-          'Tokyo',
-          'Tokyo',
-          'Tokyo',
-        ];
-      });
-    } else {
-      setState(() {
-        suggestions.clear(); // Effacer les suggestions si le champ est vide
-      });
-    }
-  }
+class _SearchBarAppState extends State<SearchBarApp> {
+  bool isDark = false;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // appBar: AppBar(
-      //   elevation: 0.0,
-      //   backgroundColor: Colors.white,
-      //   leading: const Padding(
-      //     padding: EdgeInsets.only(left: 10.0),
-      //     child:CircleAvatar(
-      //       backgroundColor: Colors.grey,
-      //       child: Icon(
-      //         Icons.send
-      //       ),
-      //       ) ,
-          
-      //     ),
-      //     title: const Text(
-      //       "data",
-      //       style: TextStyle(color: Colors.grey),
-            
-      //       ),
-           
-      // ),
-      body: Column(
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.all(10.0),
-            child: TextField(
-              controller: _searchController,
-              onChanged: _onSearchChanged,
-              style: TextStyle(fontSize: 18.0, color: Colors.black),
-              decoration: InputDecoration(
-                labelText: 'Chercher un lieu ',
-                labelStyle: TextStyle(fontSize: 18.0),
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: suggestions.length,
-              itemBuilder: (context, index) {
-                return Card(
-                  elevation: 2.0,
-                  margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-                  child: ListTile(
-                    title: Text(
-                      suggestions[index],
-                      style: TextStyle(fontSize: 18.0),
-                    ),
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text('Suggestion sélectionnée'),
-                            content: Text('Vous avez sélectionné : ${suggestions[index]}'),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text('OK'),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                  ),
-                );
+    final ThemeData themeData = ThemeData(
+        useMaterial3: true,
+        brightness: isDark ? Brightness.dark : Brightness.light);
+
+    return MaterialApp(
+      theme: themeData,
+      home: Scaffold(
+        appBar: AppBar(title: const Text('Search Bar Sample')),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SearchAnchor(
+              builder: (BuildContext context, SearchController controller) {
+            return SearchBar(
+              controller: controller,
+              padding: const MaterialStatePropertyAll<EdgeInsets>(
+                  EdgeInsets.symmetric(horizontal: 16.0)),
+              onTap: () {
+                controller.openView();
               },
-            ),
-          ),
-        ],
+              onChanged: (_) {
+                controller.openView();
+              },
+              leading: const Icon(Icons.search),
+              trailing: <Widget>[
+                Tooltip(
+                  message: 'Change brightness mode',
+                  child: IconButton(
+                    isSelected: isDark,
+                    onPressed: () {
+                      setState(() {
+                        isDark = !isDark;
+                      });
+                    },
+                    icon: const Icon(Icons.wb_sunny_outlined),
+                    selectedIcon: const Icon(Icons.brightness_2_outlined),
+                  ),
+                )
+              ],
+            );
+          }, suggestionsBuilder:
+                  (BuildContext context, SearchController controller) {
+            return List<ListTile>.generate(5, (int index) {
+              final String item = 'item $index';
+              return ListTile(
+                title: Text(item),
+                onTap: () {
+                  setState(() {
+                    controller.closeView(item);
+                  });
+                },
+              );
+            });
+          }),
+        ),
       ),
     );
   }

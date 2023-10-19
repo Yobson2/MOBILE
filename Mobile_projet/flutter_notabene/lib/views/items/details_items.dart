@@ -1,34 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
+import '../carte_view.dart';
+
 class MyDetailsItems extends StatelessWidget {
-  const MyDetailsItems({Key? key}) : super(key: key);
+  final String? nomEntreprise;
+  final int? idEntreprise;
+  final String? adresseEntreprise;
+  const MyDetailsItems({Key? key, this.nomEntreprise, this.idEntreprise, this.adresseEntreprise, }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
       body: SingleChildScrollView(
-      child: Column(
-        children: [
-          DetailsHeader(),
-          MyChangeInfos(),
-          Infos1Description(),
-          infos1Avis(),
-          SizedBox(height: 20), 
-        ],
+        child: Column(
+          children: [
+            DetailsHeader(nom: nomEntreprise, idCompagny:idEntreprise), // Correction ici : Passer nomEntreprise
+            MyChangeInfos(adresseEntreprise:adresseEntreprise),
+            const Infos1Description(),
+            InfosAvis(),
+            SizedBox(height: 20), 
+          ],
+        ),
       ),
-    ),
     );
-
   }
 }
 
 class DetailsHeader extends StatelessWidget {
+  final String? nom;
+   final int? idCompagny; 
+
+  const DetailsHeader({Key? key, this.nom, this.idCompagny}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(9),
+      padding: const EdgeInsets.all(0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -45,27 +53,28 @@ class DetailsHeader extends StatelessWidget {
               Image.asset('assets/images/pict2.jpg'),
             ],
           ),
-          SizedBox(height: 18),
-          Text(
-            "Hotel 3 stars",
-            style: TextStyle(color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+          const SizedBox(height: 18),
+          Padding(
+            padding: const EdgeInsets.only(left: 18.0),
+            child: Text(
+              "$nom $idCompagny", 
+              style: const TextStyle(color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+            ),
           ),
-          Row(
-            children: [
-              Icon(Icons.star, color: Colors.yellow, size: 20),
-              Icon(Icons.star, color: Colors.yellow, size: 20),
-              Icon(Icons.star, color: Colors.yellow, size: 20),
-              Icon(Icons.star, color: Colors.yellow, size: 20),
-              Icon(Icons.star, color: Colors.yellow, size: 20),
-              SizedBox(width: 10),
-              Text(
-                "(100) Avis",
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
-            ],
+          Padding(
+            padding: const EdgeInsets.only(left: 18.0),
+            child: Row(
+              children: [
+                for (int i = 0; i < 3; i++)
+                  const Icon(Icons.star, color: Colors.yellow, size: 20),
+                const SizedBox(width: 10),
+                const Text(
+                  "(100) Avis",
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+              ],
+            ),
           ),
-          
-           
         ],
       ),
     );
@@ -73,11 +82,17 @@ class DetailsHeader extends StatelessWidget {
 }
 
 
+
 class MyChangeInfos extends StatelessWidget {
+  
+  
+  final String? adresseEntreprise;
+
+  const MyChangeInfos({Key? key, this.adresseEntreprise,}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 20.0, right: 20.0, top:0),
+    return  Padding(
+      padding: EdgeInsets.only(left: 20.0, right: 20.0, top:0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -93,8 +108,8 @@ class MyChangeInfos extends StatelessWidget {
                   ],
                 ),
                 SizedBox(
-                  height: 200,
-                  child: MyTables(),
+                  height: 130,
+                  child: MyTables(adresseEntreprise:adresseEntreprise),
                 ),
               ],
             ),
@@ -105,18 +120,19 @@ class MyChangeInfos extends StatelessWidget {
   }
 }
 class MyTables extends StatelessWidget {
-  const MyTables({Key? key}) : super(key: key);
+  final String ? adresseEntreprise;
+  const MyTables({Key? key, this.adresseEntreprise}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       child: Container(
         height: 300,
-        color: Colors.amber,
-        child: TabBarView(
+        color: const Color.fromRGBO(238,232,244,1),
+        child:  TabBarView(
           children: <Widget>[
             Center(
-              child: Infos1Blocs(),
+              child: Infos1Blocs(adresseEntreprise:adresseEntreprise),
             ),
             Center(
               child: Infos2(),
@@ -134,65 +150,81 @@ class MyTables extends StatelessWidget {
 //-------------------------MES INFORMATIONS---------------------------------------
 
 class Infos2 extends StatelessWidget {
-  const Infos2({super.key});
+  const Infos2({Key? key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // color: Colors.amber,
-      padding: EdgeInsets.all(16),
-      child: Column(
+    return GestureDetector(
+      onTap: () {
+       
+         Navigator.push(
+            context,
+            MaterialPageRoute(
+            builder: (context) =>  MapSample(),
+            ),
+        );
+      },
+      child: SingleChildScrollView(
+        child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Text("Ma carte")
-            ]),])
+          Image.asset("assets/images/map.png"),
+        ],
+      ), ),
     );
   }
 }
+
 
 
 
 //////Infos 1-------------------------------
 
 class Infos1Blocs extends StatelessWidget {
-  const Infos1Blocs({super.key});
+  final String? adresseEntreprise;
+
+  Infos1Blocs({Key? key, this.adresseEntreprise}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
-       children: [
-        Infos1(),
-       ],
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Infos1(adresseEntreprise: adresseEntreprise),
+        ],
+      ),
     );
   }
 }
 
 
 
+
 class Infos1 extends StatelessWidget {
-  const Infos1({Key? key}) : super(key: key);
+  final String?  adresseEntreprise;
+  const Infos1({Key? key, this.adresseEntreprise}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    print("Building tests : $adresseEntreprise");
+
     return Container(
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-         const Text(
-            "Horaires",
+          const Text(
+            "Horaires ",
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: Colors.black,
             ),
           ),
-          SizedBox(height: 18),
+          const SizedBox(height: 18),
           Container(
             margin: EdgeInsets.only(left: 10),
-            child: const Row(
+            child:  Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Row(
@@ -200,8 +232,8 @@ class Infos1 extends StatelessWidget {
                     Icon(Icons.location_on, color: Colors.red, size: 20),
                     SizedBox(width: 6),
                     Text(
-                      "Cocody, Abidjan",
-                      style: TextStyle(
+                      adresseEntreprise!,
+                      style: const TextStyle(
                         fontSize: 16,
                         color: Colors.black,
                       ),
@@ -211,7 +243,7 @@ class Infos1 extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 18),
+          const SizedBox(height: 18),
           Container(
             // color: Colors.amber,
             margin: EdgeInsets.only(left: 10), 
@@ -289,124 +321,176 @@ class Infos1Description extends StatelessWidget {
     return Text(
       description,
       style: TextStyle(
-        fontSize: 16,
+        fontSize: 15,
       ),
     );
   }
 }
+class InfosAvis extends StatelessWidget {
+  const InfosAvis({Key? key});
 
-
-
-
-class infos1Avis extends StatelessWidget {
-  const infos1Avis({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Container(
+        color: Colors.transparent,
+        padding: EdgeInsets.all(10),
+        margin: EdgeInsets.only(left: 20.0, right: 20.0),
+        child: const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Notes et avis',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              'Notes et avis validés par des utilisateurs ayant bénéficié du même service.',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AvisListe(),
+                AvisListe(),
+                 AvisListe(),
+                 AvisListe(),
+                  AvisListe(),
+               
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+class AvisListe extends StatelessWidget {
+  const AvisListe({Key? key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.blue,
-      height: 200,
-      padding: EdgeInsets.all(10),
-      margin: EdgeInsets.only(left: 20.0, right: 20.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      padding: EdgeInsets.only(top: 20.0),
+      child: Row(
         children: [
-          const Text(
-            'Notes  et avis',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+          CircleAvatar(
+            radius: 30,
+            backgroundImage: NetworkImage("https://images.unsplash.com/photo-1524499982521-1ffd58dd89ea?auto=format&fit=crop&q=80&w=1571&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
           ),
-          const Text(
-            'Notes et avis validés par des utilisateurs ayant bénéficié du même service.',
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w300,
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(left: 10,top: 10.0),
-            child: const Column(
+          SizedBox(width: 10),
+          Expanded(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AvisListes(),
-                //  AvisListes(),
+                Row(
+                  children: [
+                     const Flexible(
+                      child: Text(
+                  "Name surname cbjsbjbcj ",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
+                  ),
+                ),
+                     ),
+                      const Spacer(),
+              
+                  Container(
+                    
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                           
+                          },
+                          child: Column(
+                            children: [
+                              const Icon(Icons.photo_album_outlined, color: Colors.grey,),
+                              Text(
+                              "Photos ",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 8,
+                              ),
+                            ),
+                            ]),
+                        ),
+                        const SizedBox(width: 5),
+                        InkWell(
+                          onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                builder: (context) =>  MapSample(),
+                                ),
+                            );
+                          },
+                          child:const Column(
+                            children: [
+                              Icon(Icons.map_outlined,color: Colors.grey,),
+                              Text(
+                              "Explorer ",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 8,
+                              ),
+                            ),
+                            ]),
+                          
+                          
+                          
+                        ),
+                      ],
+                    ),
+                  ),
+                  ],
+                ),
+                const SizedBox(height: 5),
+                const Text(
+                  "commentufbhuguhfuhbuhguhubhguhbuhguhuhuuubvhfuhughufhguhufhughurhfguhufhguhu",
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 10,
+                  ),
+                ),
+                SizedBox(height: 5),
+                Row(
+                  children: [
+                    for (int i = 0; i < 3; i++)
+                      Icon(Icons.star, color: Colors.yellow, size: 20),
+                    SizedBox(width: 5),
+                    Spacer(),
+                    Text(
+                      "time",
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    SizedBox(width: 5),
+                    Text(
+                      "date",
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
-        ])
-    );
-  }
-}
-
-class AvisListes extends StatelessWidget {
-  const AvisListes({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Row(
-      children: [
-        const CircleAvatar(
-          // backgroundImage: NetworkImage(avis["photoUrl"]),
-          radius: 30,
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "name surname",
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-              SizedBox(height: 5),
-              Text(
-                "commentufbhuguhfuhbuhguhubhguhbuhguhuhuuubvhfuhughufhguhufhughurhfguhufhguhu",
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: Colors.grey,
-                ),
-              ),
-              SizedBox(height: 5),
-              Row(
-                children: [
-                  Row(
-            children: [
-              Icon(Icons.star, color: Colors.yellow, size: 20),
-              Icon(Icons.star, color: Colors.yellow, size: 20),
-              Icon(Icons.star, color: Colors.yellow, size: 20),
-              Icon(Icons.star, color: Colors.yellow, size: 20),
-              Icon(Icons.star, color: Colors.yellow, size: 20),
-            ],
-          ),
-                  SizedBox(width: 5),
-                  Spacer(),
-                  Text(
-                    "time",
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  SizedBox(width: 5),
-                  Text(
-                    "date",
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
