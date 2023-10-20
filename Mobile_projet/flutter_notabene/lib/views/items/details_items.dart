@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_notabene/services/api_service.dart';
 
 import '../carte_view.dart';
 
@@ -18,7 +19,7 @@ class MyDetailsItems extends StatelessWidget {
             DetailsHeader(nom: nomEntreprise, idCompagny:idEntreprise), // Correction ici : Passer nomEntreprise
             MyChangeInfos(adresseEntreprise:adresseEntreprise),
             const Infos1Description(),
-            InfosAvis(),
+            InfosAvis(adresseEntreprise:adresseEntreprise),
             SizedBox(height: 20), 
           ],
         ),
@@ -100,7 +101,7 @@ class MyChangeInfos extends StatelessWidget {
             length: 2,
             child: Column(
               children: [
-                TabBar(
+                const TabBar(
                   labelColor: Colors.black,
                   tabs: [
                     Tab(text: "À savoir"),
@@ -206,7 +207,6 @@ class Infos1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("Building tests : $adresseEntreprise");
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -326,8 +326,42 @@ class Infos1Description extends StatelessWidget {
     );
   }
 }
-class InfosAvis extends StatelessWidget {
-  const InfosAvis({Key? key});
+
+class InfosAvis extends StatefulWidget {
+    final String? adresseEntreprise;
+
+  const InfosAvis({Key? key, this.adresseEntreprise,});
+
+  @override
+  InfosAvisState createState() => InfosAvisState();
+}
+class InfosAvisState extends State<InfosAvis> {
+  List<dynamic> myItemsData = [];
+ 
+
+  Future<void> getData() async {
+    try {
+      final reponse = await ApiManager().fetchData("getAllCommentaire", "message de recuperation des commentaires", "messageError");
+     
+      print("mes de recuperation des données  ");
+      setState(() {
+        myItemsData = reponse['utilisateursAvecCommentaires'];
+ 
+      });
+    } catch (e) {
+      print("Erreur : Les données n'ont pas été recuperer $e");
+    }
+  }
+
+  Future<void> printDataByCategorie() async{
+    final String nomStructure=widget.adresseEntreprise?? "";
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -336,11 +370,11 @@ class InfosAvis extends StatelessWidget {
         color: Colors.transparent,
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.only(left: 20.0, right: 20.0),
-        child: const Column(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Notes et avis',
+              'Notes et avis ',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -355,14 +389,12 @@ class InfosAvis extends StatelessWidget {
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AvisListe(),
-                AvisListe(),
-                 AvisListe(),
-                 AvisListe(),
-                  AvisListe(),
-               
-              ],
+              children: myItemsData.map((item) {
+                return AvisListe(
+                  nomUtilisateur: item['nom_utilisateur'],
+                  commentaires: item['commentaires'],
+                );
+              }).toList(),
             ),
           ],
         ),
@@ -370,8 +402,12 @@ class InfosAvis extends StatelessWidget {
     );
   }
 }
+
+
 class AvisListe extends StatelessWidget {
-  const AvisListe({Key? key});
+   final String ? nomUtilisateur;
+  final List<dynamic> ?commentaires;
+  const AvisListe({Key? key,this.nomUtilisateur, this.commentaires});
 
   @override
   Widget build(BuildContext context) {
@@ -379,7 +415,7 @@ class AvisListe extends StatelessWidget {
       padding: EdgeInsets.only(top: 20.0),
       child: Row(
         children: [
-          CircleAvatar(
+          const CircleAvatar(
             radius: 30,
             backgroundImage: NetworkImage("https://images.unsplash.com/photo-1524499982521-1ffd58dd89ea?auto=format&fit=crop&q=80&w=1571&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
           ),
@@ -390,10 +426,10 @@ class AvisListe extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                     const Flexible(
+                      Flexible(
                       child: Text(
-                  "Name surname cbjsbjbcj ",
-                  style: TextStyle(
+                  "$nomUtilisateur bjsbcjbjbffyyfy",
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 13,
                   ),
