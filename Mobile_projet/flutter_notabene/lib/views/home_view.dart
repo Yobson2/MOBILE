@@ -40,18 +40,22 @@ class _HomeViewState extends State<HomeView> {
       getAllData();
       String query = _searchController.text;
       List<dynamic> filteredResults = [];
-
+       
       if (query.isNotEmpty) {
-    for (var item in searchResults) {
-      if (item['nom_entreprise'].toLowerCase().contains(query)) {
-        filteredResults.add(item);
-      }
-    }
+        for (var item in searchResults) {
+          if (item['nom_entreprise'] != null && item['nom_entreprise'].toLowerCase().contains(query)) {
+            filteredResults.add(item);
+          }
+        }
+
              
       }
         setState(() {
           searchResultsFinal=filteredResults;
         });
+
+
+        // print("Filtered results $searchResultsFinal");
     }
 
   @override

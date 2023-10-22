@@ -16,10 +16,10 @@ class MyDetailsItems extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            DetailsHeader(nom: nomEntreprise, idCompagny:idEntreprise), // Correction ici : Passer nomEntreprise
+            DetailsHeader(nom: nomEntreprise, idCompagny:idEntreprise), 
             MyChangeInfos(adresseEntreprise:adresseEntreprise),
             const Infos1Description(),
-            InfosAvis(adresseEntreprise:adresseEntreprise),
+            InfosAvis(idEntreprise:idEntreprise),
             SizedBox(height: 20), 
           ],
         ),
@@ -326,35 +326,30 @@ class Infos1Description extends StatelessWidget {
     );
   }
 }
-
 class InfosAvis extends StatefulWidget {
-    final String? adresseEntreprise;
+  final int? idEntreprise;
 
-  const InfosAvis({Key? key, this.adresseEntreprise,});
+  const InfosAvis({Key? key, this.idEntreprise});
 
   @override
   InfosAvisState createState() => InfosAvisState();
 }
+
 class InfosAvisState extends State<InfosAvis> {
   List<dynamic> myItemsData = [];
- 
+  List<dynamic> myItemsDataCommentaire = [];
 
   Future<void> getData() async {
     try {
-      final reponse = await ApiManager().fetchData("getAllCommentaire", "message de recuperation des commentaires", "messageError");
-     
-      print("mes de recuperation des données  ");
+      final reponse = await ApiManager().fetchData("getAllCommentaire/${widget.idEntreprise}", "message de recuperation des commentaires", "messageError");
+
       setState(() {
         myItemsData = reponse['utilisateursAvecCommentaires'];
- 
       });
-    } catch (e) {
-      print("Erreur : Les données n'ont pas été recuperer $e");
-    }
-  }
 
-  Future<void> printDataByCategorie() async{
-    final String nomStructure=widget.adresseEntreprise?? "";
+    } catch (e) {
+      print("Erreur : Les données n'ont pas été récupérées $e");
+    }
   }
 
   @override
@@ -389,10 +384,9 @@ class InfosAvisState extends State<InfosAvis> {
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: myItemsData.map((item) {
+              children: myItemsData.map((commentaire) {
                 return AvisListe(
-                  nomUtilisateur: item['nom_utilisateur'],
-                  commentaires: item['commentaires'],
+                  commentaires: commentaire,
                 );
               }).toList(),
             ),
@@ -403,14 +397,14 @@ class InfosAvisState extends State<InfosAvis> {
   }
 }
 
-
 class AvisListe extends StatelessWidget {
-   final String ? nomUtilisateur;
-  final List<dynamic> ?commentaires;
-  const AvisListe({Key? key,this.nomUtilisateur, this.commentaires});
+  final dynamic commentaires;
+  const AvisListe({Key? key, this.commentaires});
 
   @override
   Widget build(BuildContext context) {
+
+    // print("object $commentaires");
     return Container(
       padding: EdgeInsets.only(top: 20.0),
       child: Row(
@@ -428,7 +422,7 @@ class AvisListe extends StatelessWidget {
                   children: [
                       Flexible(
                       child: Text(
-                  "$nomUtilisateur bjsbcjbjbffyyfy",
+                    "${commentaires['nom_utilisateur']} befbbb b b",
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 13,
@@ -489,8 +483,8 @@ class AvisListe extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 5),
-                const Text(
-                  "commentufbhuguhfuhbuhguhubhguhbuhguhuhuuubvhfuhughufhguhufhughurhfguhufhguhu",
+                Text(
+                 commentaires['contenu_commentaire'] ?? "",
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -501,25 +495,25 @@ class AvisListe extends StatelessWidget {
                 SizedBox(height: 5),
                 Row(
                   children: [
-                    for (int i = 0; i < 3; i++)
+                    for (int i = 0; i < (commentaires['nombre_etoiles'] ?? 0); i++)
                       Icon(Icons.star, color: Colors.yellow, size: 20),
                     SizedBox(width: 5),
                     Spacer(),
                     Text(
-                      "time",
+                      "${commentaires['date_commentaire']}",
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey,
                       ),
                     ),
-                    SizedBox(width: 5),
-                    Text(
-                      "date",
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey,
-                      ),
-                    ),
+                    // SizedBox(width: 5),
+                    // Text(
+                    //   "date",
+                    //   style: TextStyle(
+                    //     fontSize: 12,
+                    //     color: Colors.grey,
+                    //   ),
+                    // ),
                   ],
                 ),
               ],
@@ -529,4 +523,5 @@ class AvisListe extends StatelessWidget {
       ),
     );
   }
+  
 }

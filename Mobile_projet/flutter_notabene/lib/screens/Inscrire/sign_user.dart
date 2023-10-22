@@ -21,7 +21,7 @@ class UserRegistrationSection extends StatelessWidget {
     _passwordController.clear();
     print("objective data $userData");
   } catch (e) {
-    print("erreur message");
+    print("erreur message $e");
   }
  
 }
