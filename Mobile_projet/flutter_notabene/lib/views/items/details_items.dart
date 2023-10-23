@@ -500,20 +500,20 @@ class AvisListe extends StatelessWidget {
                     SizedBox(width: 5),
                     Spacer(),
                     Text(
+                      "${commentaires['heure']}",
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    SizedBox(width: 5),
+                    Text(
                       "${commentaires['date_commentaire']}",
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey,
                       ),
                     ),
-                    // SizedBox(width: 5),
-                    // Text(
-                    //   "date",
-                    //   style: TextStyle(
-                    //     fontSize: 12,
-                    //     color: Colors.grey,
-                    //   ),
-                    // ),
                   ],
                 ),
               ],

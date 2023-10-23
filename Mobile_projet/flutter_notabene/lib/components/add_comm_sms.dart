@@ -59,15 +59,25 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
   int? userId;
   late final dynamic mesPhotos=mainSession.selectedImageUrl_;
   int nombreEtoiles = 0;
+  late int locRegister ;
+  late int id_entreprise;
 
   String? selectedCategory;
   String selectedOption = '';
+  List<dynamic> searchResults = [];
+  List<dynamic> searchResultsFinal = [];
+  bool test=true;
 
 
  
   @override
   void initState() {
     super.initState();
+     commentLatitude=0;
+     commentLongitude=0;
+     locRegister = 0;
+     id_entreprise=0;
+
       if (widget.placeName != null && widget.placeAddress != null) {
       texteAfficheLieu = widget.placeName!;
       texteAfficheAddresse = widget.placeAddress!;
@@ -107,7 +117,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
  Future<void> addCommentaire(int myId) async {
   var request = http.MultipartRequest(
     'POST',
-    Uri.parse('http://192.168.1.107:8082/apiNotabene/v1/addPost/$myId'),
+    Uri.parse('http://192.168.1.9:8082/apiNotabene/v1/addPost/$myId'),
   );
 
   if (_images.isNotEmpty) {
@@ -123,7 +133,8 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
       request.files.add(multipartFile);
     }
   }
-
+   request.fields['id_localisation'] = locRegister.toString() ;
+   request.fields['id_entreprise'] = id_entreprise.toString() ;
   request.fields['contenu_commentaire'] = _commentaireController.text;
   request.fields['nom_entreprise'] = _nameEntrepriseController.text ;
   request.fields['addresse_entreprise'] = texteAfficheAddresse;
@@ -186,6 +197,48 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
   }
 }
 
+
+ Future<void> getSuggestion() async {
+    try {
+       final requete = await ApiManager().fetchData("getItemsCommentaires", "message ok", "messageError");
+
+       setState(() {
+        searchResults = requete["data"];
+      });
+    } catch (e) {
+      print("Erreur : Les données n'ont pas été recuperer $e");
+    }
+      
+  }
+
+   Future<void> _search() async {
+      getSuggestion();
+      String query = _nameEntrepriseController.text;
+      List<dynamic> filteredResults = [];
+       
+      
+      if (query.isNotEmpty) {
+        for (var item in searchResults) {
+          if (item['nom_entreprise'] != null && item['nom_entreprise'].toLowerCase().contains(query)) {
+            filteredResults.add(item);
+          }
+          
+        }
+
+          // print("Filtered results $filteredResults");   
+      }
+        setState(() {
+          searchResultsFinal=filteredResults;
+         
+        });
+
+
+        
+    }
+
+
+  
+
   
 
   
@@ -193,6 +246,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
   @override
   Widget build(BuildContext context) {
     print('User $userId created ');
+    print("datat $searchResultsFinal");
       // _nameEntrepriseController.text = mainSession.entreprise;
       // _commentaireController.text = mainSession.motCommentaire;
 
@@ -227,11 +281,99 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
             prefixIcon: Icon(Icons.comment),
           ),
           onChanged: (value) {
-            setState(() {
-            mainSession.setEntrepriseName(_nameEntrepriseController.text);
-          });
+          //   setState(() {
+          //   mainSession.setEntrepriseName(_nameEntrepriseController.text);
+          // });
+          _search();
+          
           },
         ),
+        if (searchResultsFinal.isNotEmpty) 
+             Padding(
+               padding: const EdgeInsets.only(right: 10.0,left: 10.0),
+                child: Container(
+                  // height: 150,
+                   decoration: BoxDecoration(
+                    
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 5.0,
+                      ),
+                    ],
+                  ),
+                  child:ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: searchResultsFinal.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Container(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                           Row(
+                            children: [
+                               Text(searchResultsFinal[index]['nom_entreprise'],
+                               style: const TextStyle(
+                                    fontSize: 18, 
+                                    color: Colors.black54
+                                    
+                                  ),
+                               ),
+                            ],
+                           ),
+                            
+                            Row(
+                              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                 const Icon(Icons.location_on, size: 14),
+                              const SizedBox(width: 4),
+                              Flexible(
+                                
+                                child: Text(
+                                 searchResultsFinal[index]['adresse_entreprise']  ,
+                                  softWrap: true, 
+                                  style: const TextStyle(
+                                    fontSize: 13, 
+                                    
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 70,),
+                               Text(
+                                searchResultsFinal[index]['categories'],
+                                style: const TextStyle(
+                                    fontSize: 10, 
+                                    color: Colors.blue, 
+                                    
+                                  ),
+                                
+                                ),
+                               
+                              ],
+                            ),
+                          ],
+                        )
+                      ),
+                      onTap: () {
+                      
+                        setState(() {
+                         locRegister=searchResultsFinal[index]['id_localisation'];
+                         id_entreprise=searchResultsFinal[index]['id_entreprise'];
+                         _nameEntrepriseController.text=searchResultsFinal[index]['nom_entreprise'];
+                         texteAfficheAddresse=searchResultsFinal[index]['adresse_entreprise'];
+                         commentLongitude=searchResultsFinal[index]['longitude'];
+                         commentLatitude=searchResultsFinal[index]['latitude'];
+                         searchResultsFinal=[];
+                      
+                        });
+                        },
+                    );
+                  },
+                ), 
+                ),
+             ),
           const Divider(),
           InkWell(
           onTap: () {
