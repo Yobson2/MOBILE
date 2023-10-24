@@ -25,8 +25,9 @@ class CommentaireComponent extends StatefulWidget {
    final String? placeName;
    final double? latitude;
    final double? longitude;
+   final String? cartegieItem;
   
-  const CommentaireComponent({Key? key, this.imageUrl,this.infos, this.placeAddress, this.placeName, this.latitude, this.longitude,this.allPhotos}) : super(key: key);
+  const CommentaireComponent({Key? key, this.imageUrl,this.infos, this.placeAddress, this.placeName, this.latitude, this.longitude,this.allPhotos, this.cartegieItem}) : super(key: key);
   
   
   
@@ -47,6 +48,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
   late double commentLongitude; 
    late final String? image;
    final picker = ImagePicker();
+   late final String cat;
   XFile? _imageFile;
  List<File> _images = [];
 
@@ -117,7 +119,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
  Future<void> addCommentaire(int myId) async {
   var request = http.MultipartRequest(
     'POST',
-    Uri.parse('http://192.168.1.9:8082/apiNotabene/v1/addPost/$myId'),
+    Uri.parse('http://192.168.1.6:8082/apiNotabene/v1/addPost/$myId'),
   );
 
   if (_images.isNotEmpty) {
@@ -245,7 +247,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
 
   @override
   Widget build(BuildContext context) {
-    print('User $userId created ');
+    print('User $userId  ${widget.cartegieItem}  created ');
     print("datat $searchResultsFinal");
       // _nameEntrepriseController.text = mainSession.entreprise;
       // _commentaireController.text = mainSession.motCommentaire;
@@ -260,7 +262,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
             Navigator.pop(context);
           },
         ),
-          title: const Text('Ajoutez un avis '), 
+          title: const Text('Ajoutez un avis  '), 
           backgroundColor: Colors.grey,
            elevation: 0,
         ),

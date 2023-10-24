@@ -8,6 +8,7 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../components/add_comm_sms.dart';
+import '../../components/option_component.dart';
 import '../home_notconnect.dart';
 import '../home_view.dart';
 
@@ -181,10 +182,13 @@ Future<void> _initializeUserData() async {
              elevation: 5,
             child: Icon(Icons.comment_bank),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const CommentaireComponent()),
-              );
+              showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return CategoriesModal();
+              },
+            );
+              
             },
           )
         ],
@@ -227,3 +231,4 @@ Future<void> _initializeUserData() async {
     );
   }
 }
+
