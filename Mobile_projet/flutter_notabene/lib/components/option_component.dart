@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_notabene/components/add_comm_sms.dart';
+import 'package:flutter_notabene/main.dart';
 import '../models/categories_model.dart';
 
 class CategoriesModal extends StatelessWidget {
-  final Function(String)? onCategorySelected;
 
-  CategoriesModal({this.onCategorySelected});
+  const CategoriesModal({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      // height: 400,
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
@@ -25,10 +24,20 @@ class CategoriesModal extends StatelessWidget {
       ),
       padding: EdgeInsets.all(16.0),
       
-      
-        
-        child: 
-           GridView.builder(
+          child:Column(
+            children: [
+              const Text("Sélectionnez une catégorie",
+            style: TextStyle(
+                      decoration: TextDecoration.none,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+          
+          ) ,
+           const SizedBox(height: 16),
+           Expanded(
+              child:  GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
           crossAxisSpacing: 8.0,
@@ -39,15 +48,11 @@ class CategoriesModal extends StatelessWidget {
           final category = CategoriesData.categories[index];
           return GestureDetector(
             onTap: () {
-              // if (onCategorySelected != null) {
-              //   onCategorySelected!(category.title);
-              //   Navigator.of(context).pop();
-              //   // print('onCategorySelected');
-              // }
-               print('onCategorySelected ${category.title}');
+              mainSession.setCategorie(category.title);
+             
                 Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => CommentaireComponent(cartegieItem:category.title)),
+                MaterialPageRoute(builder: (context) => const CommentaireComponent()),
               );
             },
             child: AnimatedContainer(
@@ -68,18 +73,40 @@ class CategoriesModal extends StatelessWidget {
                   const SizedBox(height: 8),
                   Text(
                     category.title,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 12,
                       color: Colors.white,
                       decoration: TextDecoration.none,
                     ),
                   ),
+                  
                 ],
               ),
             ),
           );
         },
       ),
+              ),
+             GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Container(
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.grey.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Icon(
+                Icons.arrow_back,
+                color: Colors.black,
+                size: 30,
+              ),
+            ),
+          )
+
+            ],)
+          
         
       );
   }

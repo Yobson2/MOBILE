@@ -12,6 +12,7 @@ class SessionManager {
     List<dynamic> selectedImageUrl_=[];
     String entreprise="";
     String motCommentaire="";
+    String categorie="";
     
 
   late String sessionId;
@@ -36,6 +37,11 @@ class SessionManager {
    setCommentaire(String name){
     motCommentaire=name;
     print("objects selected $motCommentaire");
+  }
+
+  setCategorie(String mot){
+    categorie=mot;
+   
   }
 
  

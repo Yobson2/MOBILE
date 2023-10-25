@@ -25,9 +25,9 @@ class CommentaireComponent extends StatefulWidget {
    final String? placeName;
    final double? latitude;
    final double? longitude;
-   final String? cartegieItem;
+  //  final String? cartegieItem;
   
-  const CommentaireComponent({Key? key, this.imageUrl,this.infos, this.placeAddress, this.placeName, this.latitude, this.longitude,this.allPhotos, this.cartegieItem}) : super(key: key);
+  const CommentaireComponent({Key? key, this.imageUrl,this.infos, this.placeAddress, this.placeName, this.latitude, this.longitude,this.allPhotos}) : super(key: key);
   
   
   
@@ -104,14 +104,14 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
  
   
   Future<void> _fetchAndDisplayUserId() async {
-    final id= mainSession.userId;
-   
-     setState(() {
-       this.userId = id;
-       testImage2=true;
-       commentLatitude=widget.latitude!;
-       commentLongitude=widget.longitude!;
-     }); 
+  final id = mainSession.userId;
+  setState(() {
+    this.userId = id;
+    testImage2 = true;
+    commentLatitude = widget.latitude!;
+    commentLongitude = widget.longitude!;
+  }); 
+
       
   }
 
@@ -119,7 +119,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
  Future<void> addCommentaire(int myId) async {
   var request = http.MultipartRequest(
     'POST',
-    Uri.parse('http://192.168.1.6:8082/apiNotabene/v1/addPost/$myId'),
+    Uri.parse('http://192.168.1.9:8082/apiNotabene/v1/addPost/$myId'),
   );
 
   if (_images.isNotEmpty) {
@@ -143,7 +143,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
   request.fields['nombre_etoiles'] = nombreEtoiles.toString();
   request.fields['longitude_'] = commentLongitude.toString();
   request.fields['latitude_'] = commentLatitude.toString();
-  request.fields['categorie'] = selectedCategory.toString();
+  request.fields['categorie'] = mainSession.categorie;
 
   try {
       // Afficher le loader
@@ -164,7 +164,6 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
        _nameEntrepriseController.clear();
       setState(() {
          nombreEtoiles = 0;
-        //  mesPhotos=null;
         mainSession.selectedImageUrl_=[];
         mainSession.entreprise="";
         mainSession.motCommentaire="";
@@ -225,9 +224,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
             filteredResults.add(item);
           }
           
-        }
-
-          // print("Filtered results $filteredResults");   
+        } 
       }
         setState(() {
           searchResultsFinal=filteredResults;
@@ -247,7 +244,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
 
   @override
   Widget build(BuildContext context) {
-    print('User $userId  ${widget.cartegieItem}  created ');
+    print('User $userId   created ');
     print("datat $searchResultsFinal");
       // _nameEntrepriseController.text = mainSession.entreprise;
       // _commentaireController.text = mainSession.motCommentaire;
@@ -262,7 +259,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
             Navigator.pop(context);
           },
         ),
-          title: const Text('Ajoutez un avis  '), 
+          title: const Text('Ajoutez un avis '), 
           backgroundColor: Colors.grey,
            elevation: 0,
         ),
@@ -273,7 +270,129 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
           ListView( 
             children: <Widget>[
             const Divider(),
-           TextField(
+          InkWell(
+          onTap: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const MapSample()),
+            );
+          },
+          child: Container(
+            padding: EdgeInsets.all(10.0), 
+            decoration: BoxDecoration(
+              border: Border.all(),
+              borderRadius: BorderRadius.circular(5.0),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.place),
+                const SizedBox(width: 8.0),
+                Text(texteAfficheAddresse),
+                const Spacer(), 
+                const Icon(Icons.map),
+              ],
+            ),
+          ),
+        ),
+        const Divider(),
+        TextField(
+          controller: _commentaireController,
+          textDirection: TextDirection.ltr,
+          maxLines: 5,
+          decoration: const InputDecoration(
+            labelText: "Votre commentaire",
+            border: OutlineInputBorder(),
+            prefixIcon: Icon(Icons.comment),
+          ),
+          onChanged: (value) {
+             setState(() {
+            mainSession.setCommentaire(_commentaireController.text);
+          });
+          },
+        ),
+         const Divider(),
+
+              Row(
+                
+                mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(5, (index) {
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      nombreEtoiles = index + 1; 
+                    });
+                  },
+                  child: Icon(
+                    index < nombreEtoiles ? Icons.star : Icons.star_border,
+                    color: Colors.yellow,
+                    size: 30.0,
+                  ),
+                );
+              }),
+            ),
+             const Divider(),
+              Container(
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(0.0)),
+                ),
+                child: Column(
+                  children: [
+                    if (testImage1 || testImage2)
+                      Container(
+                        color: testImage1 ? Colors.transparent : Colors.transparent,
+                        height: 200,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: testImage1 ? _images.length : mesPhotos?.length ?? 0,
+                          itemBuilder: (BuildContext context, int index) {
+                            final imageUrl = testImage1 ? _images[index] : mesPhotos![index];
+                            return Padding(
+                              padding: const EdgeInsets.all(1.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  if (testImage1) {
+                                    _showImageModal(imageUrl.path); 
+                                  } else {
+                                    _showImageModal(imageUrl);
+                                  }
+                                },
+                                child: Container(
+                                  width: 150,
+                                  height: 100,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    image: DecorationImage(
+                                      image: testImage1
+                                          ? FileImage(_images[index])
+                                          : FileImage(File(imageUrl)),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+               const ListTile(
+          leading: Icon(Icons.info_outline, color: Colors.blue),
+          title: Text(
+            "Facultatif pour les particuliers",
+            style: TextStyle(
+              fontSize: 12.0,
+              color: Colors.grey,
+              fontStyle: FontStyle.italic,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+
+
+             const Divider(),
+             TextField(
              textDirection: TextDirection.ltr,
              enabled: true,
           controller: _nameEntrepriseController,
@@ -283,9 +402,9 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
             prefixIcon: Icon(Icons.comment),
           ),
           onChanged: (value) {
-          //   setState(() {
-          //   mainSession.setEntrepriseName(_nameEntrepriseController.text);
-          // });
+            setState(() {
+            mainSession.setEntrepriseName(_nameEntrepriseController.text);
+          });
           _search();
           
           },
@@ -376,146 +495,6 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
                 ), 
                 ),
              ),
-          const Divider(),
-          InkWell(
-          onTap: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const MapSample()),
-            );
-          },
-          child: Container(
-            padding: EdgeInsets.all(10.0), 
-            decoration: BoxDecoration(
-              border: Border.all(),
-              borderRadius: BorderRadius.circular(5.0),
-            ),
-            child: Row(
-              children: [
-                const Icon(Icons.place),
-                const SizedBox(width: 8.0),
-                Text(texteAfficheAddresse),
-                const Spacer(), 
-                const Icon(Icons.map),
-              ],
-            ),
-          ),
-        ),
-        const Divider(),
-        TextField(
-          controller: _commentaireController,
-          textDirection: TextDirection.ltr,
-          maxLines: 5,
-          decoration: const InputDecoration(
-            labelText: "Votre commentaire",
-            border: OutlineInputBorder(),
-            prefixIcon: Icon(Icons.comment),
-          ),
-          onChanged: (value) {
-             setState(() {
-            mainSession.setCommentaire(_commentaireController.text);
-          });
-          },
-        ),
-         const Divider(),
-              Row(
-                
-                mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(5, (index) {
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      nombreEtoiles = index + 1; 
-                    });
-                  },
-                  child: Icon(
-                    index < nombreEtoiles ? Icons.star : Icons.star_border,
-                    color: Colors.yellow,
-                    size: 30.0,
-                  ),
-                );
-              }),
-            ),
-  
-              const Divider(),
-              Column(
-              children: [
-                const Text(
-                  'Choisissez une catégorie',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                DropdownButton<String>(
-                  value: selectedCategory,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedCategory = newValue;
-                    });
-                  },
-                  items: CategoriesData.categories.map((Category category) {
-                    return DropdownMenuItem<String>(
-                      value: category.title,
-                      child: Row(
-                        children: <Widget>[
-                          Icon(category.icon, color: category.color),
-                          const SizedBox(width: 10.0),
-                          Text(category.title),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ],
-            ),
-               const Divider(),
-              Container(
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(0.0)),
-                ),
-                child: Column(
-                  children: [
-                    if (testImage1 || testImage2)
-                      Container(
-                        color: testImage1 ? Colors.orange : Colors.red,
-                        height: 200,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: testImage1 ? _images.length : mesPhotos?.length ?? 0,
-                          itemBuilder: (BuildContext context, int index) {
-                            final imageUrl = testImage1 ? _images[index] : mesPhotos![index];
-                            return Padding(
-                              padding: const EdgeInsets.all(1.0),
-                              child: GestureDetector(
-                                onTap: () {
-                                  if (testImage1) {
-                                    _showImageModal(imageUrl.path); 
-                                  } else {
-                                    _showImageModal(imageUrl);
-                                  }
-                                },
-                                child: Container(
-                                  width: 150,
-                                  height: 100,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5.0),
-                                    image: DecorationImage(
-                                      image: testImage1
-                                          ? FileImage(_images[index])
-                                          : FileImage(File(imageUrl)),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                  ],
-                ),
-              ),
 
                const Divider(),
               ElevatedButton(
