@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_notabene/services/api_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../carte_view.dart';
 import 'details_items.dart';
 
 class ListesBlocItems extends StatefulWidget {
@@ -29,11 +30,11 @@ class _ListesBlocItemsState extends State<ListesBlocItems> {
   Future<void> myCustomFunction() async {
     try {
       final requete = await ApiManager().fetchData(
-          "getAllEntreprise/${widget.title}",
+          "getAllCommentaire/${widget.title}",
           "Les données des entreprises ont été recuperer",
           "Error lors de la recuperation");
 
-      final res = requete['allEntreprises'];
+      final res = requete['utilisateursAvecCommentaires'];
 
        Timer(Duration(seconds: 1), () {
       setState(() {
@@ -133,48 +134,134 @@ class MyItems extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
              Text(
-              item['nom_entreprise'],
-              style: TextStyle(
+              item['nom_utilisateur'] ?? '',
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
+             const SizedBox(height: 6,),
             Row(
                 children: [
-                  Icon(Icons.location_on, size: 14),
-                  SizedBox(width: 4),
-                  Flexible(
-                    child: Text(
-                      item['adresse_entreprise'] ,
-                      softWrap: true, 
-                      style: TextStyle(
-                        fontSize: 13, 
-                        
-                      ),
-                    ),
+                  // const Icon(Icons.comment, size: 14),
+                  // const SizedBox(width: 4),
+
+                 Flexible(
+                  child:Text(
+                    "${item['contenu_commentaire']} bdjbshbfhbshbfhbhbhbhbbhuguggygygygygygyg",
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 10,
                   ),
+                )),
                 ],
               ),
+              Row(
+                children: [
+                  for (int i = 0; i < (item['nombre_etoiles'] ?? 0); i++)
+                      Icon(Icons.star, color: Colors.yellow, size: 12),
+                ],
+              ),
+               Row(
+                  children: [
+                    Text(
+                      "${item['heure']}",
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    SizedBox(width: 5),
+                    Text(
+                    item['date_commentaire'] ,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
+                    ),
+                     const Spacer(flex: 15,),
+                    // const SizedBox(width: 100,),
+                      Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                           
+                          },
+                          child: Column(
+                            children: [
+                              const Icon(Icons.photo_album_outlined, color: Colors.grey,),
+                              Text(
+                              "Photos ",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 6,
+                              ),
+                            ),
+                            ]),
+                        ),
+                        const SizedBox(width: 5),
+                        InkWell(
+                          onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                builder: (context) =>  MapSample(),
+                                ),
+                            );
+                          },
+                          child:const Column(
+                            children: [
+                              Icon(Icons.map_outlined,color: Colors.grey,),
+                              Text(
+                              "Explorer ",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 6,
+                              ),
+                            ),
+                            ]),
+                          
+                          
+                          
+                        ),
+                      ],
+                    ),
+                  ),
+                  ],
+                ),
 
           ],
         ),
-        subtitle: Text("Informations supplementaire"),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Column(
-              children: [
-                Row(
-                  children: [
-                   for (int i = 0; i < 5; i++)
-                      Icon(Icons.star, color: Colors.yellow, size: 10),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
+      subtitle: Row(
+  children: [
+    if(item['entreprise'] != null)
+    Icon(
+      Icons.business,
+      size: 20,
+      color: Colors.grey,
+    ),
+    SizedBox(width: 5),
+    Text(
+      item['entreprise'] != null
+        ? "${item['entreprise']['nom_entreprise'] ?? 'Nom non disponible'}"
+        : '',
+      style: TextStyle(
+        fontSize: 14,
+        color: Colors.grey,
+        fontWeight: FontWeight.normal,
+      ),
+    ),
+  ],
+),
+
+        
       ),
     ))
     );
   }
 }
+
+

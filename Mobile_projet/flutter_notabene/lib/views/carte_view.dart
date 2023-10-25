@@ -140,6 +140,8 @@ class MapSampleState extends State<MapSample> {
       final Map<String, dynamic> data = json.decode(response.body);
       final List<dynamic> results = data['results'];
 
+  
+
       suggestions = results.map((result) {
         return result['name'] +' '+ result['formatted_address'] as String;
       }).toList();
