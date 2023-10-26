@@ -69,6 +69,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
   List<dynamic> searchResults = [];
   List<dynamic> searchResultsFinal = [];
   bool test=true;
+  List<dynamic> resultat=[];
 
 
  
@@ -119,7 +120,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
  Future<void> addCommentaire(int myId) async {
   var request = http.MultipartRequest(
     'POST',
-    Uri.parse('http://192.168.1.9:8082/apiNotabene/v1/addPost/$myId'),
+    Uri.parse('http://192.168.1.8:8082/apiNotabene/v1/addPost/$myId'),
   );
 
   if (_images.isNotEmpty) {
@@ -202,7 +203,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
  Future<void> getSuggestion() async {
     try {
        final requete = await ApiManager().fetchData("getItemsCommentaires", "message ok", "messageError");
-
+      
        setState(() {
         searchResults = requete["data"];
       });
@@ -214,7 +215,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
 
    Future<void> _search() async {
       getSuggestion();
-      String query = _nameEntrepriseController.text;
+      String query = _nameEntrepriseController.text?? ''; 
       List<dynamic> filteredResults = [];
        
       
@@ -245,7 +246,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
   @override
   Widget build(BuildContext context) {
     print('User $userId   created ');
-    print("datat $searchResultsFinal");
+    print("datat $resultat");
       // _nameEntrepriseController.text = mainSession.entreprise;
       // _commentaireController.text = mainSession.motCommentaire;
 
@@ -343,9 +344,10 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
                         height: 200,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
-                          itemCount: testImage1 ? _images.length : mesPhotos?.length ?? 0,
+                          // mesPhotos
+                          itemCount: testImage1 ? _images.length : resultat.length ,
                           itemBuilder: (BuildContext context, int index) {
-                            final imageUrl = testImage1 ? _images[index] : mesPhotos![index];
+                            final imageUrl = testImage1 ? _images[index] : resultat![index];
                             return Padding(
                               padding: const EdgeInsets.all(1.0),
                               child: GestureDetector(
@@ -402,9 +404,9 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
             prefixIcon: Icon(Icons.comment),
           ),
           onChanged: (value) {
-            setState(() {
-            mainSession.setEntrepriseName(_nameEntrepriseController.text);
-          });
+          //   setState(() {
+          //   mainSession.setEntrepriseName(_nameEntrepriseController.text);
+          // });
           _search();
           
           },
@@ -462,9 +464,9 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
                                 ),
                               ),
                               const SizedBox(width: 70,),
-                               Text(
-                                searchResultsFinal[index]['categories'],
-                                style: const TextStyle(
+                               const Text(
+                               "categories" ,
+                                style: TextStyle(
                                     fontSize: 10, 
                                     color: Colors.blue, 
                                     
@@ -520,13 +522,19 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
                             ListTile(
                               leading: Icon(Icons.photo_album),
                               title: Text("Galerie de notabene"),
-                              onTap: () {
-                                Navigator.pop(context); 
-                                Navigator.pop(context); 
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => const GalleryPage()),
-                                );
+                              onTap: () async {
+                                // Navigator.pop(context); 
+                                // Navigator.pop(context); 
+                                // Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(builder: (context) => const GalleryPage()),
+                                // );
+                                 resultat = await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => GalleryPage()),
+                                  );
+                                    
+
                                 setState(() {
                                    testImage2=true;
                                    testImage1=false;

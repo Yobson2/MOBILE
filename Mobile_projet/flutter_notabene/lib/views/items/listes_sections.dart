@@ -54,7 +54,9 @@ class _ListesBlocItemsState extends State<ListesBlocItems> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: Column(
+          children: [
+            Text(
           "${widget.title ?? ""}",
           style: GoogleFonts.quicksand(
             textStyle: const TextStyle(
@@ -63,6 +65,11 @@ class _ListesBlocItemsState extends State<ListesBlocItems> {
               fontWeight: FontWeight.bold,
             ),
           ),
+        ),
+        Text("(${myItemsData.length}) Avis",
+        style: TextStyle(fontSize: 14, color: Colors.grey),
+        )
+          ],
         ),
         toolbarHeight: 80,
         centerTitle: true,
@@ -111,19 +118,7 @@ class MyItems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-        onTap: () {
-          final name= item['nom_entreprise'];
-          final idEntreprise=item['id_entreprise'];
-          final adresseEntreprise=item['adresse_entreprise'];
-           Navigator.push(
-              context,
-               MaterialPageRoute(builder: (context) => MyDetailsItems(nomEntreprise:name, idEntreprise:idEntreprise,adresseEntreprise:adresseEntreprise)),
-              );
-
-             
-      },
-      child: SingleChildScrollView(
+    return SingleChildScrollView(
         child:Card(
        color: Colors.white,
       child: ListTile(
@@ -254,13 +249,37 @@ class MyItems extends StatelessWidget {
         fontWeight: FontWeight.normal,
       ),
     ),
+      if(item['entreprise'] != null)
+    InkWell(
+          onTap: () {
+                 final name= item['entreprise']['nom_entreprise'];
+                final idEntreprise=item['entreprise']['id_entreprise'];
+                final adresseEntreprise=item['entreprise']['adresse_entreprise'];
+                final idLocalisation=item['entreprise']['id_Localisation'];
+           Navigator.push(
+              context,
+               MaterialPageRoute(builder: (context) => MyDetailsItems(nomEntreprise:name, idEntreprise:idEntreprise,adresseEntreprise:adresseEntreprise,idLocalisation:idLocalisation)),
+              );           
+            },
+          child: const Column(
+          children: [
+             Icon(Icons.info, color: Colors.grey,),
+                  Text(
+                  "Details ",
+                    style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 5,
+                    ),
+                  ),
+                 ]),
+                ),
+
   ],
 ),
 
         
       ),
-    ))
-    );
+    ));
   }
 }
 

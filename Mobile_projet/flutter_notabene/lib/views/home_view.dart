@@ -152,7 +152,7 @@ class _HomeViewState extends State<HomeView> {
                               ),
                               const SizedBox(width: 70,),
                                Text(
-                                searchResultsFinal[index]['categories'],
+                                'categories',
                                 style: const TextStyle(
                                     fontSize: 10, 
                                     color: Colors.blue, 
@@ -178,6 +178,19 @@ class _HomeViewState extends State<HomeView> {
                 ), 
                 ),
              ),
+          //     CarouselSlider(
+          //   options: CarouselOptions(
+          //     autoPlay: true,
+          //     aspectRatio: 13.3 / 9,
+          //     viewportFraction: 1,
+          //     autoPlayAnimationDuration: Duration(milliseconds: 1000),
+          //   ),
+          //   items: [
+          //     Image.asset('assets/images/pict2.jpg'),
+          //     Image.asset('assets/images/pict2.jpg'),
+          //     Image.asset('assets/images/pict2.jpg'),
+          //   ],
+          // ),
             const CategorySection(),
           ],
          

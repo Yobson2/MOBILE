@@ -66,12 +66,12 @@ class _GalleryPageState extends State<GalleryPage> {
     if (selectedImageUrls.isNotEmpty) {
       // selectedImageUrl_=selectedImageUrls
        mainSession.selectedImageUrl_=selectedImageUrls;
-        // Navigator.pop(context);
+        Navigator.pop(context,selectedImageUrls);
         //  Navigator.pop(context);
-        Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const CommentaireComponent()),
-            );
+        // Navigator.pushReplacement(
+        //       context,
+        //       MaterialPageRoute(builder: (context) => const CommentaireComponent()),
+        //     );
     } else {
       print("Please select a new image");
     }

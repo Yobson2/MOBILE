@@ -7,8 +7,9 @@ import '../carte_view.dart';
 class MyDetailsItems extends StatelessWidget {
   final String? nomEntreprise;
   final int? idEntreprise;
+  final int? idLocalisation;
   final String? adresseEntreprise;
-  const MyDetailsItems({Key? key, this.nomEntreprise, this.idEntreprise, this.adresseEntreprise, }) : super(key: key);
+  const MyDetailsItems({Key? key, this.nomEntreprise, this.idEntreprise, this.adresseEntreprise,this.idLocalisation }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,8 @@ class MyDetailsItems extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            DetailsHeader(nom: nomEntreprise, idCompagny:idEntreprise), 
+            
+            DetailsHeader(nom: nomEntreprise, idCompagny:idEntreprise, adresseEntreprise:adresseEntreprise), 
             MyChangeInfos(adresseEntreprise:adresseEntreprise),
             const Infos1Description(),
             InfosAvis(idEntreprise:idEntreprise),
@@ -31,8 +33,8 @@ class MyDetailsItems extends StatelessWidget {
 class DetailsHeader extends StatelessWidget {
   final String? nom;
    final int? idCompagny; 
-
-  const DetailsHeader({Key? key, this.nom, this.idCompagny}) : super(key: key);
+   final String? adresseEntreprise; 
+  const DetailsHeader({Key? key, this.nom, this.idCompagny, this.adresseEntreprise}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +43,7 @@ class DetailsHeader extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CarouselSlider(
+              CarouselSlider(
             options: CarouselOptions(
               autoPlay: true,
               aspectRatio: 13.3 / 9,
@@ -54,11 +56,12 @@ class DetailsHeader extends StatelessWidget {
               Image.asset('assets/images/pict2.jpg'),
             ],
           ),
+
           const SizedBox(height: 18),
           Padding(
             padding: const EdgeInsets.only(left: 18.0),
             child: Text(
-              "$nom $idCompagny", 
+              "$nom", 
               style: const TextStyle(color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
             ),
           ),
