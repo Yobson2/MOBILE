@@ -96,7 +96,7 @@ class _ListesBlocItemsState extends State<ListesBlocItems> {
                         itemCount: myItemsData.length,
                         itemBuilder: (context, index) {
                           Map<String, dynamic> item = myItemsData[index];
-                          return MyItems(item: item);
+                          return MyItems(item: item,categorieName:widget.title);
                         },
                       )
                     : Center(
@@ -113,8 +113,9 @@ class _ListesBlocItemsState extends State<ListesBlocItems> {
 
 class MyItems extends StatelessWidget {
    final Map<String, dynamic> item;
+   final String? categorieName;
 
-  MyItems({ required this.item,});
+  MyItems({ required this.item,this.categorieName});
 
   @override
   Widget build(BuildContext context) {
@@ -258,7 +259,7 @@ class MyItems extends StatelessWidget {
                 final idLocalisation=item['entreprise']['id_Localisation'];
            Navigator.push(
               context,
-               MaterialPageRoute(builder: (context) => MyDetailsItems(nomEntreprise:name, idEntreprise:idEntreprise,adresseEntreprise:adresseEntreprise,idLocalisation:idLocalisation)),
+               MaterialPageRoute(builder: (context) => MyDetailsItems(nomEntreprise:name, idEntreprise:idEntreprise,adresseEntreprise:adresseEntreprise,idLocalisation:idLocalisation,categorieName:categorieName)),
               );           
             },
           child: const Column(

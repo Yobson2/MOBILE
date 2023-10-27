@@ -9,7 +9,8 @@ class MyDetailsItems extends StatelessWidget {
   final int? idEntreprise;
   final int? idLocalisation;
   final String? adresseEntreprise;
-  const MyDetailsItems({Key? key, this.nomEntreprise, this.idEntreprise, this.adresseEntreprise,this.idLocalisation }) : super(key: key);
+  final String? categorieName;
+  const MyDetailsItems({Key? key, this.nomEntreprise, this.idEntreprise, this.adresseEntreprise,this.idLocalisation,this.categorieName }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,7 @@ class MyDetailsItems extends StatelessWidget {
             DetailsHeader(nom: nomEntreprise, idCompagny:idEntreprise, adresseEntreprise:adresseEntreprise), 
             MyChangeInfos(adresseEntreprise:adresseEntreprise),
             const Infos1Description(),
-            InfosAvis(idEntreprise:idEntreprise),
+            InfosAvis(idEntreprise:idEntreprise,categorieName:categorieName),
             SizedBox(height: 20), 
           ],
         ),
@@ -331,8 +332,9 @@ class Infos1Description extends StatelessWidget {
 }
 class InfosAvis extends StatefulWidget {
   final int? idEntreprise;
+  final String? categorieName;
 
-  const InfosAvis({Key? key, this.idEntreprise});
+  const InfosAvis({Key? key, this.idEntreprise,this.categorieName});
 
   @override
   InfosAvisState createState() => InfosAvisState();
@@ -344,7 +346,7 @@ class InfosAvisState extends State<InfosAvis> {
 
   Future<void> getData() async {
     try {
-      final reponse = await ApiManager().fetchData("getAllCommentaire/${widget.idEntreprise}", "message de recuperation des commentaires", "messageError");
+      final reponse = await ApiManager().fetchData("getAllCommentaire/${widget.categorieName}/${widget.idEntreprise}", "message de recuperation des commentaires", "messageError");
 
       setState(() {
         myItemsData = reponse['utilisateursAvecCommentaires'];
@@ -371,14 +373,15 @@ class InfosAvisState extends State<InfosAvis> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Notes et avis ',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text(
+             const SizedBox(height: 5),
+            const Text(
               'Notes et avis validés par des utilisateurs ayant bénéficié du même service.',
               style: TextStyle(
                 fontSize: 12,
@@ -407,7 +410,6 @@ class AvisListe extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    // print("object $commentaires");
     return Container(
       padding: EdgeInsets.only(top: 20.0),
       child: Row(
@@ -423,16 +425,19 @@ class AvisListe extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                      Flexible(
-                      child: Text(
-                    "${commentaires['nom_utilisateur']} befbbb b b",
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 13,
-                  ),
-                ),
-                     ),
-                      const Spacer(),
+                      Container(
+                        color: Colors.transparent,
+                        width: 140,
+                          child: Text(
+                                 "${commentaires['nom_utilisateur']}",
+                                    style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                           
+                      ),
+                      const Spacer(flex: 4,),
               
                   Container(
                     
@@ -443,9 +448,9 @@ class AvisListe extends StatelessWidget {
                           onTap: () {
                            
                           },
-                          child: Column(
+                          child: const Column(
                             children: [
-                              const Icon(Icons.photo_album_outlined, color: Colors.grey,),
+                              Icon(Icons.photo_album_outlined, color: Colors.grey,),
                               Text(
                               "Photos ",
                               style: TextStyle(
@@ -485,21 +490,20 @@ class AvisListe extends StatelessWidget {
                   ),
                   ],
                 ),
-                const SizedBox(height: 5),
                 Text(
                  commentaires['contenu_commentaire'] ?? "",
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.grey,
                     fontSize: 10,
                   ),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Row(
                   children: [
                     for (int i = 0; i < (commentaires['nombre_etoiles'] ?? 0); i++)
-                      Icon(Icons.star, color: Colors.yellow, size: 20),
+                      Icon(Icons.star, color: Colors.yellow, size: 16),
                     SizedBox(width: 5),
                     Spacer(),
                     Text(
