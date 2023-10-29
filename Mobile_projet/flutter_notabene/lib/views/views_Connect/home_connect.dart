@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_notabene/main.dart';
 import 'package:flutter_notabene/screens/login_screen.dart';
-import 'package:flutter_notabene/services/api_service.dart';
 import 'package:flutter_notabene/views/carte_view.dart';
 import 'package:flutter_notabene/views/photo_view.dart';
+import 'package:flutter_notabene/views/views_Connect/profit_connect.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../components/add_comm_sms.dart';
 import '../../components/option_component.dart';
 import '../home_notconnect.dart';
 import '../home_view.dart';
+import 'notification_connect.dart';
 
 
 
@@ -104,7 +104,10 @@ Future<void> _initializeUserData() async {
               leading: const Icon(Icons.settings),
               title: const Text('Profil'),
               onTap: () {
-                Navigator.pop(context);
+                 Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NoteUserWidget()),
+              );
               },
             ),
             const Divider(),
@@ -112,12 +115,16 @@ Future<void> _initializeUserData() async {
               leading: const Icon(Icons.notification_add),
               title: const Text('Notifications'),
               onTap: () {
-                Navigator.pop(context);
+                
+               Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const NotifUserWidget()),
+              );
               },
             ),
              const Divider(),
             ListTile(
-              leading: const Icon(Icons.notification_add),
+              leading: const Icon(Icons.create),
               title: const Text('Entreprise'),
               onTap: () {
                 Navigator.pop(context);
