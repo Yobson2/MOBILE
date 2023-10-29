@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_notabene/services/api_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../components/moreAvis_component.dart';
 import '../carte_view.dart';
 import 'details_items.dart';
 
@@ -129,18 +130,44 @@ class MyItems extends StatelessWidget {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-             Text(
-              item['nom_utilisateur'] ?? '',
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
+             
+            Row(
+              children: [
+                SizedBox(
+                  width: 120,
+                  child: Text(
+                              item['nom_utilisateur'] ?? '',
+                              style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                ),
+                 const Spacer(flex: 15,),
+            InkWell(
+              onTap: () {
+                final userName= item['nom_utilisateur'];
+                final usercontenu= item['contenu_commentaire']; usercontenu;
+                final entrepriseName= item['entreprise']['nom_entreprise'];
+                final heure=item['heure'];
+                final date=item['date_commentaire'];
+                final nbre_etoiles=item['nombre_etoiles'];
+                          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return  AvisModal(userName:userName,usercontenu:usercontenu,entrepriseName:entrepriseName,heure:heure,date:date,nbre_etoiles:nbre_etoiles, idPhoto:1,idLoc:1);
+              },
+            );  
+                          },
+                          child: const Column(
+                            children: [
+                              Icon(Icons.more_horiz, color: Colors.grey,),
+                            ]),
+                        ),
+              ],
             ),
              const SizedBox(height: 6,),
             Row(
                 children: [
-                  // const Icon(Icons.comment, size: 14),
-                  // const SizedBox(width: 4),
-
                  Flexible(
                   child:Text(
                     "${item['contenu_commentaire']} bdjbshbfhbshbfhbhbhbhbbhuguggygygygygygyg",
@@ -171,61 +198,13 @@ class MyItems extends StatelessWidget {
                     SizedBox(width: 5),
                     Text(
                     item['date_commentaire'] ,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 12,
                         color: Colors.grey,
                       ),
                     ),
                      const Spacer(flex: 15,),
-                    // const SizedBox(width: 100,),
-                      Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                           
-                          },
-                          child: Column(
-                            children: [
-                              const Icon(Icons.photo_album_outlined, color: Colors.grey,),
-                              Text(
-                              "Photos ",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 6,
-                              ),
-                            ),
-                            ]),
-                        ),
-                        const SizedBox(width: 5),
-                        InkWell(
-                          onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                builder: (context) =>  MapSample(),
-                                ),
-                            );
-                          },
-                          child:const Column(
-                            children: [
-                              Icon(Icons.map_outlined,color: Colors.grey,),
-                              Text(
-                              "Explorer ",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 6,
-                              ),
-                            ),
-                            ]),
-                          
-                          
-                          
-                        ),
-                      ],
-                    ),
-                  ),
+                      
                   ],
                 ),
 

@@ -115,6 +115,14 @@ Future<void> _initializeUserData() async {
                 Navigator.pop(context);
               },
             ),
+             const Divider(),
+            ListTile(
+              leading: const Icon(Icons.notification_add),
+              title: const Text('Entreprise'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
             const Divider(),
             ListTile(
               leading: const Icon(Icons.exit_to_app),

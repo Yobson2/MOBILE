@@ -120,7 +120,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
  Future<void> addCommentaire(int myId) async {
   var request = http.MultipartRequest(
     'POST',
-    Uri.parse('http://192.168.1.7:8082/apiNotabene/v1/addPost/$myId'),
+    Uri.parse('http://192.168.1.107:8082/apiNotabene/v1/addPost/$myId'),
   );
 
   if (_images.isNotEmpty) {
