@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../components/option_component.dart';
 import '../home_notconnect.dart';
 import '../home_view.dart';
+import 'insertEntrepise.dart';
 import 'notification_connect.dart';
 
 
@@ -127,7 +128,11 @@ Future<void> _initializeUserData() async {
               leading: const Icon(Icons.create),
               title: const Text('Entreprise'),
               onTap: () {
-                Navigator.pop(context);
+              
+                Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const  InsertCompagnyWidget()),
+              );
               },
             ),
             const Divider(),
