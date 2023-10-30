@@ -11,7 +11,10 @@ import '../components/add_comm_sms.dart';
 import '../main.dart';
 
 class MapSample extends StatefulWidget {
-  const MapSample({Key? key});
+  final double? latLoc;
+  final double? longLoc;
+
+  const MapSample({Key? key, this.latLoc,this.longLoc});
 
   @override
   State<MapSample> createState() => MapSampleState();
@@ -59,6 +62,7 @@ class MapSampleState extends State<MapSample> {
     _getUserLocation();
     latitude2 = 0.0; 
     longitude2 = 0.0; 
+
   }
 
  
@@ -73,11 +77,26 @@ class MapSampleState extends State<MapSample> {
     Position position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );
+    double? latitude;
+    double? longitude;
+    LatLng userLocation;
+    // double latitude = position.latitude;
+    // double longitude = position.longitude;
+    // LatLng userLocation = LatLng(latitude, longitude);
 
-    double latitude = position.latitude;
-    double longitude = position.longitude;
-    LatLng userLocation = LatLng(latitude, longitude);
+    if(widget.latLoc!=null && widget.longLoc!=null){
+      latitude=widget.latLoc;
+      longitude=widget.longLoc;
+       userLocation = LatLng(latitude!, longitude!);
+    }else{
+       latitude=position.latitude;
+      longitude=position.longitude;
+       userLocation = LatLng(latitude, longitude);
+    }
 
+    
+  
+    print("Initialized ${widget.latLoc}  ${widget.longLoc}");
     setState(() {
       
       _kUserMarker = Marker(
@@ -97,8 +116,8 @@ class MapSampleState extends State<MapSample> {
       isLoading = false; // Cacher l'indicateur de chargement
       // isLoadingCarte=true;
     });
-     latitude2 = latitude; 
-    longitude2 = longitude; 
+     latitude2 = latitude!; 
+    longitude2 = longitude!; 
   });
 
  

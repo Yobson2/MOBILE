@@ -32,8 +32,6 @@ class _ConnectedUserWidgetState extends State<ConnectedUserWidget> {
     const HomeView(),
     const MapSample(),
     const PhotoViewWithHero(),
-    const Text("Bienvenue,"),
-    
   ];
 
 @override

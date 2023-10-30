@@ -154,7 +154,7 @@ class MyItems extends StatelessWidget {
                           showDialog(
               context: context,
               builder: (BuildContext context) {
-                return  AvisModal(userName:userName,usercontenu:usercontenu,entrepriseName:entrepriseName,heure:heure,date:date,nbre_etoiles:nbre_etoiles, idPhoto:1,idLoc:1);
+                return  AvisModal(userName:userName,usercontenu:usercontenu,entrepriseName:entrepriseName,heure:heure,date:date,nbre_etoiles:nbre_etoiles, idPhoto:item['id_photo'],idLoc: item['entreprise']['id_Localisation']);
               },
             );  
                           },
@@ -170,7 +170,7 @@ class MyItems extends StatelessWidget {
                 children: [
                  Flexible(
                   child:Text(
-                    "${item['contenu_commentaire']} bdjbshbfhbshbfhbhbhbhbbhuguggygygygygygyg",
+                    "${item['contenu_commentaire']} ",
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -186,12 +186,15 @@ class MyItems extends StatelessWidget {
                       Icon(Icons.star, color: Colors.yellow, size: 12),
                 ],
               ),
+              //  const Spacer(flex: 3,),
+
                Row(
+              
                   children: [
                     Text(
                       "${item['heure']}",
                       style: TextStyle(
-                        fontSize: 12,
+                        fontSize: 10,
                         color: Colors.grey,
                       ),
                     ),
@@ -199,7 +202,7 @@ class MyItems extends StatelessWidget {
                     Text(
                     item['date_commentaire'] ,
                       style: const TextStyle(
-                        fontSize: 12,
+                        fontSize: 10,
                         color: Colors.grey,
                       ),
                     ),
@@ -212,27 +215,10 @@ class MyItems extends StatelessWidget {
         ),
       subtitle: Row(
   children: [
-    if(item['entreprise'] != null)
-    Icon(
-      Icons.business,
-      size: 20,
-      color: Colors.grey,
-    ),
-    SizedBox(width: 5),
-    Text(
-      item['entreprise'] != null
-        ? "${item['entreprise']['nom_entreprise'] ?? 'Nom non disponible'}"
-        : '',
-      style: TextStyle(
-        fontSize: 14,
-        color: Colors.grey,
-        fontWeight: FontWeight.normal,
-      ),
-    ),
       if(item['entreprise'] != null)
     InkWell(
           onTap: () {
-                 final name= item['entreprise']['nom_entreprise'];
+                 final name= item['entreprise']['nom_entreprise'] ?? 'null';
                 final idEntreprise=item['entreprise']['id_entreprise'];
                 final adresseEntreprise=item['entreprise']['adresse_entreprise'];
                 final idLocalisation=item['entreprise']['id_Localisation'];
@@ -244,15 +230,20 @@ class MyItems extends StatelessWidget {
           child: const Column(
           children: [
              Icon(Icons.info, color: Colors.grey,),
-                  Text(
-                  "Details ",
-                    style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 5,
-                    ),
-                  ),
+                 
                  ]),
                 ),
+                 const SizedBox(width: 5),
+                Text(
+      item['entreprise'] != null
+        ? "${item['entreprise']['nom_entreprise'] ?? 'Nom non disponible'}"
+        : '',
+      style: TextStyle(
+        fontSize: 14,
+        color: Colors.grey,
+        fontWeight: FontWeight.normal,
+      ),
+    ),
 
   ],
 ),
