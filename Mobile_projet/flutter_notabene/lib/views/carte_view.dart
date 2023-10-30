@@ -96,7 +96,7 @@ class MapSampleState extends State<MapSample> {
 
     
   
-    print("Initialized ${widget.latLoc}  ${widget.longLoc}");
+    // print("Initialized ${widget.latLoc}  ${widget.longLoc}");
     setState(() {
       
       _kUserMarker = Marker(
