@@ -19,6 +19,7 @@ class _HomeViewState extends State<HomeView> {
   TextEditingController _searchController = TextEditingController();
   List<dynamic> searchResults = [];
   List<dynamic> searchResultsFinal = [];
+  bool searcheck=false;
   @override
   void initState() {
     super.initState();
@@ -100,16 +101,15 @@ class _HomeViewState extends State<HomeView> {
              // Afficher les résultats ici
             if (searchResultsFinal.isNotEmpty)
              Padding(
-               padding: const EdgeInsets.only(right: 30.0,left: 30.0),
+               padding: const EdgeInsets.only(right: 0.0,left: 0.0),
                 child: Container(
-                  // height: 150,
                    decoration: BoxDecoration(
                     
-                    color: Colors.white,
+                    color: Colors.white10,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 5.0,
+                        color: Colors.white10.withOpacity(0.2),
+                        blurRadius: 1.0,
                       ),
                     ],
                   ),
@@ -150,19 +150,25 @@ class _HomeViewState extends State<HomeView> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 70,),
-                               Text(
-                                'categories',
-                                style: const TextStyle(
-                                    fontSize: 10, 
-                                    color: Colors.blue, 
-                                    
+                              const SizedBox(width: 10,),
+                              
+                               Container(
+                                alignment: Alignment.centerRight,
+                                width: 180,
+                                 child: Text(
+                                  'categories',
+                                  style: const TextStyle(
+                                      fontSize: 10, 
+                                      color: Colors.blue, 
+                                      
+                                    ),
+                                  
                                   ),
-                                
-                                ),
+                               ),
                                
                               ],
                             ),
+                            const Divider()
                           ],
                         )
                       ),
@@ -178,20 +184,49 @@ class _HomeViewState extends State<HomeView> {
                 ), 
                 ),
              ),
-          //     CarouselSlider(
+              
+          //   CarouselSlider(
           //   options: CarouselOptions(
-          //     autoPlay: true,
-          //     aspectRatio: 13.3 / 9,
-          //     viewportFraction: 1,
-          //     autoPlayAnimationDuration: Duration(milliseconds: 1000),
-          //   ),
-          //   items: [
-          //     Image.asset('assets/images/pict2.jpg'),
-          //     Image.asset('assets/images/pict2.jpg'),
-          //     Image.asset('assets/images/pict2.jpg'),
-          //   ],
-          // ),
+          //   height: 180,
+            
+          //   autoPlay: true,
+          //   enlargeCenterPage: true,
+          // ), 
+          // items: [
+          //     // Cadre 1
+          //     SingleChildScrollView(
+          //       child: Container(
+          //     margin: EdgeInsets.all(5.0),
+          //     decoration: BoxDecoration(
+          //       borderRadius: BorderRadius.circular(8.0),
+          //       color: Colors.blue,
+          //     ),
+          //     child: Column(
+          //       mainAxisAlignment: MainAxisAlignment.center,
+          //       children: [
+          //         Image.network(
+          //           'https://images.unsplash.com/photo-1682687981907-170c006e3744?auto=format&fit=crop&q=80&w=1471&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+          //           height: 200,
+          //         ),
+          //         SizedBox(height: 10),
+          //         Text(
+          //           'Titre 1',
+          //           style: TextStyle(fontSize: 24, color: Colors.white),
+          //         ),
+          //         Text(
+          //           'Description 1',
+          //           style: TextStyle(fontSize: 16, color: Colors.white),
+          //         ),
+          //       ],
+          //     ),
+          //   ),)
+            
+            
+
+
+          // ],),
             const CategorySection(),
+           
           ],
          
           

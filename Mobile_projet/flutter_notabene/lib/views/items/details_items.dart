@@ -16,6 +16,28 @@ class MyDetailsItems extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar:  PreferredSize(
+          preferredSize: Size.fromHeight(80.0), 
+          child: AppBar(
+            backgroundColor: Colors.black12,
+            elevation: 0,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(30.0), 
+                bottomRight: Radius.circular(30.0),
+              ),
+            ),
+            // title: const Text(
+            //   'Infos',
+            //   style: TextStyle(
+            //     fontSize: 20,
+            //     fontWeight: FontWeight.bold,
+            //   ),
+            // ),
+            centerTitle: true,
+          ),
+        ),
+    
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -24,7 +46,7 @@ class MyDetailsItems extends StatelessWidget {
             MyChangeInfos(adresseEntreprise:adresseEntreprise),
             const Infos1Description(),
             InfosAvis(idEntreprise:idEntreprise,categorieName:categorieName),
-            SizedBox(height: 20), 
+            SizedBox(height: 10), 
           ],
         ),
       ),
@@ -45,19 +67,19 @@ class DetailsHeader extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-              CarouselSlider(
-            options: CarouselOptions(
-              autoPlay: true,
-              aspectRatio: 13.3 / 9,
-              viewportFraction: 1,
-              autoPlayAnimationDuration: Duration(milliseconds: 1000),
-            ),
-            items: [
-              Image.asset('assets/images/pict2.jpg'),
-              Image.asset('assets/images/pict2.jpg'),
-              Image.asset('assets/images/pict2.jpg'),
-            ],
-          ),
+          //     CarouselSlider(
+          //   options: CarouselOptions(
+          //     autoPlay: true,
+          //     aspectRatio: 13.3 / 9,
+          //     viewportFraction: 1,
+          //     autoPlayAnimationDuration: Duration(milliseconds: 1000),
+          //   ),
+          //   items: [
+          //     Image.asset('assets/images/pict2.jpg'),
+          //     Image.asset('assets/images/pict2.jpg'),
+          //     Image.asset('assets/images/pict2.jpg'),
+          //   ],
+          // ),
 
           const SizedBox(height: 18),
           Padding(
@@ -133,7 +155,7 @@ class MyTables extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       child: Container(
-        height: 300,
+        height: 220,
         color: const Color.fromRGBO(238,232,244,1),
         child:  TabBarView(
           children: <Widget>[
@@ -302,11 +324,11 @@ class Infos1Description extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildTitle("Description"),
+          // _buildTitle("Description"),
           SizedBox(height: 10),
-          _buildDescription(
-            "Bienvenue sur notre plateforme d'informations. Cette section contient des détails essentiels que vous devez connaître pour naviguer au mieux dans notre application. Prenez le temps de lire ces informations attentivement afin de profiter pleinement de toutes les fonctionnalités que nous offrons.",
-          ),
+          // _buildDescription(
+          //   "Bienvenue sur notre plateforme d'informations. Cette section contient des détails essentiels que vous devez connaître pour naviguer au mieux dans notre application. Prenez le temps de lire ces informations attentivement afin de profiter pleinement de toutes les fonctionnalités que nous offrons.",
+          // ),
         ],
       ),
     );

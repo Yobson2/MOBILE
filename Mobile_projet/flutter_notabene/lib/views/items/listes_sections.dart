@@ -54,14 +54,23 @@ class _ListesBlocItemsState extends State<ListesBlocItems> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Column(
+      appBar: PreferredSize(
+          preferredSize: Size.fromHeight(80.0), 
+          child: AppBar(
+            backgroundColor: Colors.black12,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(30.0), 
+                bottomRight: Radius.circular(30.0),
+              ),
+            ),
+            title: Column(
           children: [
             Text(
           "${widget.title ?? ""}",
           style: GoogleFonts.quicksand(
             textStyle: const TextStyle(
-              color: Colors.black,
+              color: Colors.white,
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
@@ -72,10 +81,12 @@ class _ListesBlocItemsState extends State<ListesBlocItems> {
         )
           ],
         ),
-        toolbarHeight: 80,
-        centerTitle: true,
-        elevation: 0.0,
-      ),
+            centerTitle: true,
+            toolbarHeight: 80,
+            elevation: 0.0,
+          ),
+        ),
+    
       body: Container(
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(

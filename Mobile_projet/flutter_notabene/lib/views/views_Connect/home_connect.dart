@@ -154,9 +154,19 @@ Future<void> _initializeUserData() async {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-         automaticallyImplyLeading: false,
-        title: const Row(
+      appBar: PreferredSize(
+          preferredSize: Size.fromHeight(60.0), 
+          child: AppBar(
+             automaticallyImplyLeading: false,
+            backgroundColor: Colors.black12,
+            elevation: 0,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(30.0), 
+                bottomRight: Radius.circular(30.0),
+              ),
+            ),
+            title: const Row(
           children: [
             Icon(Icons.note),
             Text(
@@ -184,7 +194,11 @@ Future<void> _initializeUserData() async {
             },
           ),
         ],
-      ),
+    
+            centerTitle: true,
+          ),
+        ),
+
       body: IndexedStack(
         index: _currentIndex,
         children: pages,
