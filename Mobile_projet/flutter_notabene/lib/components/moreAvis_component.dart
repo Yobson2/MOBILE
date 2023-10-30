@@ -78,7 +78,7 @@ class AvisModalState extends State<AvisModal> {
   }
   @override
   Widget build(BuildContext context) {
-   print('mes donneees $logitude ---$latitude');
+  
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -116,7 +116,7 @@ class AvisModalState extends State<AvisModal> {
               ),
               SizedBox(width: 16),
                Text(
-                "Vue détaillée ${widget.idPhoto}",
+                "Vue détaillée ",
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,

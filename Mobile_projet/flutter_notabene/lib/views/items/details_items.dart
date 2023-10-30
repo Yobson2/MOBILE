@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_notabene/services/api_service.dart';
 
+import '../../components/moreAvis_component.dart';
 import '../carte_view.dart';
 
 class MyDetailsItems extends StatelessWidget {
@@ -393,6 +394,7 @@ class InfosAvisState extends State<InfosAvis> {
               children: myItemsData.map((commentaire) {
                 return AvisListe(
                   commentaires: commentaire,
+                  
                 );
               }).toList(),
             ),
@@ -405,7 +407,8 @@ class InfosAvisState extends State<InfosAvis> {
 
 class AvisListe extends StatelessWidget {
   final dynamic commentaires;
-  const AvisListe({Key? key, this.commentaires});
+  final String? categorieName;
+  const AvisListe({Key? key, this.commentaires,this.categorieName});
 
   @override
   Widget build(BuildContext context) {
@@ -446,45 +449,22 @@ class AvisListe extends StatelessWidget {
                       children: [
                         InkWell(
                           onTap: () {
-                           
+                               final userName= commentaires['nom_utilisateur'];
+                              final usercontenu= commentaires['contenu_commentaire']; usercontenu;
+                              final entrepriseName= commentaires['entreprise']['nom_entreprise'];
+                              final heure=commentaires['heure'];
+                              final date=commentaires['date_commentaire'];
+                              final nbre_etoiles=commentaires['nombre_etoiles'];
+                                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return  AvisModal(userName:userName,usercontenu:usercontenu,entrepriseName:entrepriseName,heure:heure,date:date,nbre_etoiles:nbre_etoiles, idPhoto:commentaires['id_photo'],idLoc: commentaires['entreprise']['id_Localisation']);
+                            },
+                          );  
                           },
-                          child: const Column(
-                            children: [
-                              Icon(Icons.photo_album_outlined, color: Colors.grey,),
-                              Text(
-                              "Photos ",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 8,
-                              ),
-                            ),
-                            ]),
+                          child: Icon(Icons.more_horiz)
                         ),
                         const SizedBox(width: 5),
-                        InkWell(
-                          onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                builder: (context) =>  MapSample(),
-                                ),
-                            );
-                          },
-                          child:const Column(
-                            children: [
-                              Icon(Icons.map_outlined,color: Colors.grey,),
-                              Text(
-                              "Explorer ",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 8,
-                              ),
-                            ),
-                            ]),
-                          
-                          
-                          
-                        ),
                       ],
                     ),
                   ),
