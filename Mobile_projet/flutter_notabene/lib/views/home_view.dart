@@ -175,9 +175,8 @@ class _HomeViewState extends State<HomeView> {
                       onTap: () {
                         Navigator.push(
                              context,
-                            MaterialPageRoute(builder: (context) => MyDetailsItems()),
+                            MaterialPageRoute(builder: (context) => MyDetailsItems(idEntreprise:searchResultsFinal[index]["id_entreprise"],nomEntreprise:searchResultsFinal[index]["nom_entreprise"],idLocalisation:searchResultsFinal[index]["id_Localisation"],adresseEntreprise:searchResultsFinal[index]["adresse_entreprise"],categorieName:"BANQUE")),
                           );
-                         print("Search id  ${searchResultsFinal[index]}");
                         },
                     );
                   },

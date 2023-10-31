@@ -15,24 +15,15 @@ class NotifUserWidgetState extends State<NotifUserWidget> {
   Widget _buildMenu(int index) {
     switch (index) {
       case 0:
-        return const Padding(
+        return Padding(
           padding: EdgeInsets.all(8.0),
-          child: Center(
-            child: Text(
-              'Ici, vous pouvez trouver une liste complète de toutes les entreprises qui ont été commentées.',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-          ),
+             child:Text("texte 1"),
+              
         );
       case 1:
-        return const Padding(
+        return Padding(
           padding: EdgeInsets.all(8.0),
-          child: Center(
-            child: Text(
-              'Dans cette section, vous trouverez les réponses fournies par les entreprises en réponse aux commentaires des utilisateurs.',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-          ),
+          child: Text("texte 2"),
         );
       default:
         return Container();
@@ -42,15 +33,27 @@ class NotifUserWidgetState extends State<NotifUserWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.teal,
-        title: Text(
-          'Mes Notifications',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+      appBar: PreferredSize(
+          preferredSize: Size.fromHeight(50.0), 
+          child: AppBar(
+            backgroundColor: Colors.black12,
+            elevation: 0,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(30.0), 
+                bottomRight: Radius.circular(30.0),
+              ),
+            ),
+            title: const Text(
+              'Mes Notifications',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            centerTitle: true,
+          ),
         ),
-        centerTitle: true,
-        elevation: 0,
-      ),
       body: _buildMenu(_currentIndex),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
@@ -88,6 +91,44 @@ class NotifUserWidgetState extends State<NotifUserWidget> {
             label: 'Réponses',
           ),
         ],
+      ),
+    );
+  }
+}
+
+
+
+
+
+class ListesNotif extends StatefulWidget {
+  @override
+  ListesNotifState createState() => ListesNotifState();
+}
+
+class ListesNotifState extends State<ListesNotif> {
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text(
+        'Ici, vous pouvez trouver une liste complète de toutes les entreprises qui ont été commentées.',
+        style: TextStyle(fontSize: 18),
+      ),
+    );
+  }
+}
+
+class ListesNotifReponse extends StatefulWidget {
+  @override
+  ListesNotifReponseState createState() => ListesNotifReponseState();
+}
+
+class ListesNotifReponseState extends State<ListesNotif> {
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text(
+        'Ici, les entreprises qui ont été commentées.',
+        style: TextStyle(fontSize: 18),
       ),
     );
   }

@@ -17,7 +17,7 @@ class MyDetailsItems extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar:  PreferredSize(
-          preferredSize: Size.fromHeight(80.0), 
+          preferredSize: Size.fromHeight(60.0), 
           child: AppBar(
             backgroundColor: Colors.black12,
             elevation: 0,
@@ -27,13 +27,6 @@ class MyDetailsItems extends StatelessWidget {
                 bottomRight: Radius.circular(30.0),
               ),
             ),
-            // title: const Text(
-            //   'Infos',
-            //   style: TextStyle(
-            //     fontSize: 20,
-            //     fontWeight: FontWeight.bold,
-            //   ),
-            // ),
             centerTitle: true,
           ),
         ),

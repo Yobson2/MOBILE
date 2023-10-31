@@ -17,15 +17,27 @@ class NoteUserWidgetState extends State<NoteUserWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.teal, // Couleur de fond de l'AppBar
-        title: Text(
-          'Mon Profil',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+       appBar: PreferredSize(
+          preferredSize: Size.fromHeight(60.0), 
+          child: AppBar(
+            backgroundColor: Colors.teal,
+            elevation: 0,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(30.0), 
+                bottomRight: Radius.circular(30.0),
+              ),
+            ),
+            title: const Text(
+              'Mon Profil',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            centerTitle: true,
+          ),
         ),
-        centerTitle: true,
-        elevation: 0, // Supprime l'ombre sous l'AppBar
-      ),
       body: Padding(
         padding: EdgeInsets.all(20),
         child: Column(
@@ -38,7 +50,7 @@ class NoteUserWidgetState extends State<NoteUserWidget> {
             SizedBox(height: 20),
             ListTile(
               title: Text(
-                'Nom',
+                'Pseudo',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               subtitle: Text(

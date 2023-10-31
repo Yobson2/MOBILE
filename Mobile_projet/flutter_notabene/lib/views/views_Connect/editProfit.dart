@@ -19,15 +19,27 @@ class EditUserWidgetState extends State<EditUserWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.teal,
-        title: Text(
-          'Modifier Profit',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+      appBar: PreferredSize(
+          preferredSize: Size.fromHeight(60.0), 
+          child: AppBar(
+            backgroundColor: Colors.teal,
+            elevation: 0,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(30.0), 
+                bottomRight: Radius.circular(30.0),
+              ),
+            ),
+            title: const Text(
+              'Modifier Profit',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            centerTitle: true,
+          ),
         ),
-        centerTitle: true,
-        elevation: 0,
-      ),
       body: SingleChildScrollView(
         child: Padding(
         padding: EdgeInsets.all(20),
@@ -37,6 +49,7 @@ class EditUserWidgetState extends State<EditUserWidget> {
             Container(
               width: 100, 
               height: 100, 
+              
               decoration: BoxDecoration(
                 border: Border.all(width: 2, color: Colors.teal), 
                 borderRadius: BorderRadius.circular(50), 
@@ -63,7 +76,7 @@ class EditUserWidgetState extends State<EditUserWidget> {
             TextFormField(
               controller: nameController,
               decoration: InputDecoration(
-                labelText: 'Nom',
+                labelText: 'Pseudo',
                 border: OutlineInputBorder(),
                 icon: Icon(Icons.person),
               ),

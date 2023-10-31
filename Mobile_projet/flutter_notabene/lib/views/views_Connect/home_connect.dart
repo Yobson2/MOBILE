@@ -32,6 +32,7 @@ class _ConnectedUserWidgetState extends State<ConnectedUserWidget> {
     const HomeView(),
     const MapSample(),
     const PhotoViewWithHero(),
+    Text("data")
   ];
 
 @override
@@ -259,6 +260,12 @@ Future<void> _initializeUserData() async {
         selectedFontSize: 12,
         unselectedFontSize: 12,
         iconSize: 32,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
+        type: BottomNavigationBarType.fixed, 
+        backgroundColor: Colors.white, 
+        elevation: 10,
+       
       ),
     );
   }

@@ -93,9 +93,27 @@ class _MyCameraState extends State<MyCamera> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Notabene Camera'),
-      ),
+       appBar:PreferredSize(
+          preferredSize: Size.fromHeight(50.0), 
+          child: AppBar(
+            backgroundColor: Colors.black12,
+            elevation: 0,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(30.0), 
+                bottomRight: Radius.circular(30.0),
+              ),
+            ),
+            title: const Text(
+              'Notabene Camera',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            centerTitle: true,
+          ),
+        ),
       body: FutureBuilder<void>(
         future: _initializeControllerFuture,
         builder: (context, snapshot) {
