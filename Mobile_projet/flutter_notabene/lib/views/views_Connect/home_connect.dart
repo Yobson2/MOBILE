@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../components/option_component.dart';
 import '../home_notconnect.dart';
 import '../home_view.dart';
+import '../parametres_view.dart';
 import 'insertEntrepise.dart';
 import 'notification_connect.dart';
 
@@ -32,7 +33,7 @@ class _ConnectedUserWidgetState extends State<ConnectedUserWidget> {
     const HomeView(),
     const MapSample(),
     const PhotoViewWithHero(),
-    Text("data")
+    const ParamsView(),
   ];
 
 @override
@@ -78,79 +79,6 @@ Future<void> _initializeUserData() async {
 }
 
 
-  void _showSettingsModal(BuildContext context) {
-    showModalBottomSheet(
-    context: context,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(
-        top: Radius.circular(20.0),
-      ),
-    ),
-    builder: (BuildContext context) {
-      return Container(
-        padding: const EdgeInsets.all(30.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text(
-              'Paramètres',
-              style: TextStyle(
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 20.0),
-            ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text('Profil'),
-              onTap: () {
-                 Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => NoteUserWidget()),
-              );
-              },
-            ),
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.notification_add),
-              title: const Text('Notifications'),
-              onTap: () {
-                
-               Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const NotifUserWidget()),
-              );
-              },
-            ),
-             const Divider(),
-            ListTile(
-              leading: const Icon(Icons.create),
-              title: const Text('Entreprise'),
-              onTap: () {
-              
-                Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const  InsertCompagnyWidget()),
-              );
-              },
-            ),
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.exit_to_app),
-              title: const Text('Quitter'),
-              onTap: () {
-                 Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const NotConnectedUserWidget()),
-              );
-              },
-            ),
-          ],
-        ),
-      );
-    },
-  );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -232,9 +160,7 @@ Future<void> _initializeUserData() async {
         onTap: (index) {
           setState(() {
             _currentIndex = index;
-            if (index == 3) {
-              _showSettingsModal(context);
-            }
+            
           });
         },
         items: const <BottomNavigationBarItem>[

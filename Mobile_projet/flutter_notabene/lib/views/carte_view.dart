@@ -404,7 +404,7 @@ class MapSampleState extends State<MapSample> {
 
               ),
 
-            //  if (isLoadingCarte) 
+            
              Positioned(
             left: 10.0,
             right: 10.0,

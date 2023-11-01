@@ -49,25 +49,25 @@ class CategoriesData {
     ),
      Category(
       icon: Icons.diversity_2,
-      color: Color(0xFF4CAF50),
+      color: Color(0xFF1E3C72),
       title: "DIVERS",
       idCategory: 7,
     ),
      Category(
       icon: Icons.diversity_2,
-      color: Color(0xFF4CAF50),
+      color:  Color(0xFFD32F2F),
       title: "DIVERS",
       idCategory: 8,
     ),
      Category(
       icon: Icons.diversity_2,
-      color: Color(0xFF4CAF50),
+      color: Color(0xFF757575),
       title: "DIVERS",
       idCategory: 9,
     ),
      Category(
       icon: Icons.diversity_2,
-      color: Color(0xFF4CAF50),
+      color: Color(0xFFF57C00),
       title: "DIVERS",
       idCategory: 10,
     ),
@@ -79,19 +79,19 @@ class CategoriesData {
     ),
      Category(
       icon: Icons.diversity_2,
-      color: Color(0xFF4CAF50),
+      color: Color(0xFF1E3C72),
       title: "DIVERS",
       idCategory: 12,
     ),
      Category(
       icon: Icons.diversity_2,
-      color: Color(0xFF4CAF50),
+      color: Color(0xFFD32F2F),
       title: "DIVERS",
       idCategory: 13,
     ),
      Category(
       icon: Icons.diversity_2,
-      color: Color(0xFF4CAF50),
+      color: Color(0xFF757575),
       title: "DIVERSnnjn",
       idCategory: 14,
     ),
@@ -103,7 +103,7 @@ class CategoriesData {
     ),
     Category(
       icon: Icons.diversity_2,
-      color: Color(0xFF4CAF50),
+      color: Color(0xFF1E3C72),
       title: "DIVERS",
       idCategory: 15,
     )
