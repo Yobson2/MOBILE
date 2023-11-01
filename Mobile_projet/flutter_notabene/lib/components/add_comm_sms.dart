@@ -70,12 +70,14 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
   List<dynamic> searchResultsFinal = [];
   bool test=true;
   List<dynamic> resultat=[];
+   bool printBtn = false;
 
 
  
   @override
   void initState() {
     super.initState();
+     printBtn = false;
      commentLatitude=0;
      commentLongitude=0;
      locRegister = 0;
@@ -120,7 +122,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
  Future<void> addCommentaire(int myId) async {
   var request = http.MultipartRequest(
     'POST',
-    Uri.parse('http://192.168.1.7:8082/apiNotabene/v1/addPost/$myId'),
+    Uri.parse('http://192.168.1.107:8082/apiNotabene/v1/addPost/$myId'),
   );
 
   if (_images.isNotEmpty) {
@@ -273,9 +275,12 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
             const Divider(),
           InkWell(
           onTap: () {
+            setState(() {
+               printBtn = true;
+            });
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const MapSample()),
+              MaterialPageRoute(builder: (context) => const MapSample(testPrint: true)),
             );
           },
           child: Container(

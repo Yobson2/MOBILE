@@ -13,8 +13,9 @@ import '../main.dart';
 class MapSample extends StatefulWidget {
   final double? latLoc;
   final double? longLoc;
+  final bool? testPrint;
 
-  const MapSample({Key? key, this.latLoc,this.longLoc});
+  const MapSample({Key? key, this.latLoc,this.longLoc, this.testPrint});
 
   @override
   State<MapSample> createState() => MapSampleState();
@@ -296,7 +297,7 @@ class MapSampleState extends State<MapSample> {
               }
             },
             style: TextStyle(color: Colors.black),
-            decoration: const InputDecoration(
+            decoration:  InputDecoration(
               prefixIcon: Icon(
                 Icons.search,
                 color: Colors.black,
@@ -435,7 +436,9 @@ class MapSampleState extends State<MapSample> {
                         const SizedBox(height: 8.0),
                         Text("Adresse: $placeAddress"),
                         const SizedBox(height: 10.0), 
-                        Center(
+
+                        if(widget.testPrint!)
+                          Center(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -473,6 +476,7 @@ class MapSampleState extends State<MapSample> {
                             ],
                           ),
                         ),
+                        
                       ],
                     ),
                   ),

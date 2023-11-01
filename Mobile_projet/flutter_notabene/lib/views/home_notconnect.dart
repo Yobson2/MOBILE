@@ -17,10 +17,11 @@ class NotConnectedUserWidget extends StatefulWidget {
 
 class _NotConnectedUserWidgetState extends State<NotConnectedUserWidget> {
   int _currentIndex = 0; 
+   bool printBtn = true;
 
    List<Widget> pages = [
     const HomeView(),
-    const MapSample(),
+    MapSample(),
     const PhotoViewWithHero(),
     MessageConnexion(),
     
@@ -31,6 +32,7 @@ class _NotConnectedUserWidgetState extends State<NotConnectedUserWidget> {
   @override
   void initState() {
     super.initState();
+     printBtn = true;
   } 
 
   //dispose() est utilisé pour libérer les ressources lorsque
@@ -47,6 +49,7 @@ class _NotConnectedUserWidgetState extends State<NotConnectedUserWidget> {
 
   @override
   Widget build(BuildContext context) {
+     pages[1] = MapSample(testPrint: printBtn);
     return Scaffold(
       
       appBar: PreferredSize(
@@ -114,9 +117,9 @@ class _NotConnectedUserWidgetState extends State<NotConnectedUserWidget> {
         onTap: (index) {
           setState(() {
             _currentIndex = index;
-            // if (index == 3) {
-             
-            // }
+            if (index == 1) {
+              printBtn=false;
+            }
           });
         },
         items: const <BottomNavigationBarItem>[

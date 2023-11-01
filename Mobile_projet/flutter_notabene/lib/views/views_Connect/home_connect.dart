@@ -28,6 +28,7 @@ class _ConnectedUserWidgetState extends State<ConnectedUserWidget> {
   
   Map<String, dynamic> userData = {};
   int _currentIndex = 0;
+   bool printBtn = true;
 
   List<Widget> pages = [
     const HomeView(),
@@ -39,6 +40,7 @@ class _ConnectedUserWidgetState extends State<ConnectedUserWidget> {
 @override
 void initState() {
   super.initState();
+   printBtn = true;
   _initializeUserData();
 }
 
@@ -82,6 +84,7 @@ Future<void> _initializeUserData() async {
 
   @override
   Widget build(BuildContext context) {
+      pages[1] = MapSample(testPrint: printBtn);
     return Scaffold(
       appBar: PreferredSize(
           preferredSize: Size.fromHeight(60.0), 
@@ -160,7 +163,9 @@ Future<void> _initializeUserData() async {
         onTap: (index) {
           setState(() {
             _currentIndex = index;
-            
+              if (index == 1) {
+              printBtn=false;
+            }
           });
         },
         items: const <BottomNavigationBarItem>[

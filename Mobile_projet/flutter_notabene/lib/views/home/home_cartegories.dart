@@ -1,27 +1,29 @@
 import 'package:flutter/material.dart';
-
 import '../../models/categories_model.dart';
 import '../items/listes_sections.dart';
-
-
-
 
 class CategorySection extends StatelessWidget {
   const CategorySection({Key? key}) : super(key: key);
 
-    
+  void navigateToCategory(BuildContext context, int idCarte, String title) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ListesBlocItems(id: idCarte, title: title),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        // color: Colors.black,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
         ),
       ),
-        child: Padding(
+      child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
@@ -39,7 +41,7 @@ class CategorySection extends StatelessWidget {
                   ),
                   IconButton(
                     onPressed: () {
-                      // ...
+                     
                     },
                     icon: const Icon(Icons.arrow_forward_ios),
                   ),
@@ -48,60 +50,28 @@ class CategorySection extends StatelessWidget {
             ),
             SizedBox(
               height: 100,
-              child: ListView.separated(
+              child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 25),
+                itemCount: CategoriesData.categories.length,
                 itemBuilder: (context, index) {
+                 
                   final category = CategoriesData.categories[index];
                   return GestureDetector(
                     onTap: () {
-                      final idCarte=category.idCategory;
-                      switch (idCarte) {
-                        case 1:
-                          
-                          Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                          builder: (context) => ListesBlocItems(id:idCarte,title: category.title),
-                          ),
-                          );
-                          break;
-                        case 2:
-                          Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                          builder: (context) =>  ListesBlocItems(id:idCarte,title: category.title),)
-                          );
-                          break;
-                        case 3:
-                         Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                          builder: (context) => ListesBlocItems(id:idCarte,title: category.title),
-                          ));
-                          break;
-                        case 4:
-                          Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                          builder: (context) => ListesBlocItems(id:idCarte,title: category.title),
-                          ));
-                          break;
-                        case 5:
-                          Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                          builder: (context) => ListesBlocItems(id:idCarte,title: category.title),
-                          ));
-                          break;
-                      }
+                      navigateToCategory(context, category.idCategory, category.title);
                     },
+                    
                     child: Column(
+                      
                       children: [
+                       
                         Hero(
                           tag: 'category_${category.idCategory}',
+                           
                           child: Container(
                             padding: const EdgeInsets.all(10),
+                            margin: EdgeInsets.only(right: 6.0, left: 5.0),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
                               color: category.color,
@@ -114,7 +84,8 @@ class CategorySection extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 5),
-                        Text(
+                       Flexible(
+                        child:  Text(
                           category.title,
                           style: TextStyle(
                             fontSize: 12,
@@ -122,13 +93,12 @@ class CategorySection extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         )
+                        
+                        )
                       ],
                     ),
                   );
                 },
-                separatorBuilder: (context, index) =>
-                    const SizedBox(width: 10),
-                itemCount: CategoriesData.categories.length,
               ),
             ),
           ],
@@ -137,8 +107,3 @@ class CategorySection extends StatelessWidget {
     );
   }
 }
-
-
-
-
-

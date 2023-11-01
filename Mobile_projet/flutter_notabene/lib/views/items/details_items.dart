@@ -5,13 +5,25 @@ import 'package:flutter_notabene/services/api_service.dart';
 import '../../components/moreAvis_component.dart';
 import '../carte_view.dart';
 
-class MyDetailsItems extends StatelessWidget {
+class MyDetailsItems extends StatefulWidget {
   final String? nomEntreprise;
   final int? idEntreprise;
   final int? idLocalisation;
   final String? adresseEntreprise;
   final String? categorieName;
   const MyDetailsItems({Key? key, this.nomEntreprise, this.idEntreprise, this.adresseEntreprise,this.idLocalisation,this.categorieName }) : super(key: key);
+ State<MyDetailsItems> createState() => MyDetailsItemsState();
+}
+
+class MyDetailsItemsState extends State<MyDetailsItems> {
+  bool printBtn = true;
+
+  @override
+  void initState() {
+    super.initState();
+    printBtn = true;
+  
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +47,10 @@ class MyDetailsItems extends StatelessWidget {
         child: Column(
           children: [
             
-            DetailsHeader(nom: nomEntreprise, idCompagny:idEntreprise, adresseEntreprise:adresseEntreprise), 
-            MyChangeInfos(adresseEntreprise:adresseEntreprise),
+            DetailsHeader(nom: widget.nomEntreprise, idCompagny:widget.idEntreprise, adresseEntreprise:widget.adresseEntreprise), 
+            MyChangeInfos(adresseEntreprise:widget.adresseEntreprise),
             const Infos1Description(),
-            InfosAvis(idEntreprise:idEntreprise,categorieName:categorieName),
+            InfosAvis(idEntreprise:widget.idEntreprise,categorieName:widget.categorieName),
             SizedBox(height: 10), 
           ],
         ),

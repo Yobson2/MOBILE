@@ -40,11 +40,13 @@ class AvisModalState extends State<AvisModal> {
  List<dynamic> mesDonneesLoc = [];
  late double logitude = 0.0;
  late double latitude = 0.0;
+ bool printBtn = true;
 
   @override
   void initState() {
    
     super.initState();
+     printBtn = true;
     getPhotoData();
     getPhotoDataLocalisation();
   }
@@ -233,10 +235,14 @@ class AvisModalState extends State<AvisModal> {
           children: [
     
            GestureDetector(
+            
                 onTap: () {
+                  setState(() {
+                    printBtn = false;
+                  });
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => MapSample(longLoc:logitude,latLoc:latitude)),
+                    MaterialPageRoute(builder: (context) => MapSample(longLoc:logitude,latLoc:latitude,testPrint: printBtn)),
                   );
                 },
                 child: const Column(
