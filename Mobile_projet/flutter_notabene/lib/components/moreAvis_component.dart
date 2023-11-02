@@ -170,20 +170,20 @@ class AvisModalState extends State<AvisModal> {
                 ),
                 SizedBox(height: 16),
                
-            //    Row(
-            //   mainAxisAlignment: MainAxisAlignment.center,
-            //   children: [
-            //     if (entrepriseName != null) // Utilisation de 'if' conditionnel
-            //       Icon(Icons.business),
-            //     Text(
-            //       entrepriseName != null ? "${entrepriseName}" : '',
-            //       style: TextStyle(
-            //         fontSize: 18, 
-            //         fontWeight: FontWeight.bold,
-            //       ),
-            //     ),
-            //   ],
-            // ),
+               Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                 if (widget.entrepriseName!="") 
+                  Icon(Icons.business),
+                Text(
+                  "${widget.entrepriseName}",
+                  style: TextStyle(
+                    fontSize: 18, 
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
 
 
                 SizedBox(height: 16),
@@ -194,18 +194,13 @@ class AvisModalState extends State<AvisModal> {
                       margin: EdgeInsets.symmetric(horizontal: 8),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 5,
-                            offset: Offset(0, 3),
-                          ),
-                        ],
                       ),
-                      child: ClipRRect(
+                      child: Card(
+                        color: Colors.grey[200],
+                        child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child:Image.network(
-                          "http://192.168.1.7:8082/images/images_1698758707039_CAP4671698923468031741.jpg",
+                          "http://192.168.1.8:8082/images/${donnees}",
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
                             print("Error loading image: $error");
@@ -213,7 +208,7 @@ class AvisModalState extends State<AvisModal> {
                           },
                         ),
 
-                      ),
+                      ) ,)
                     );
                   }).toList(),
                   options: CarouselOptions(

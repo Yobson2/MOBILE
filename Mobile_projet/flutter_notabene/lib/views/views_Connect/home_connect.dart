@@ -98,7 +98,7 @@ Future<void> _initializeUserData() async {
                 bottomRight: Radius.circular(30.0),
               ),
             ),
-            title: const Row(
+            title:  Row(
           children: [
             Icon(Icons.note),
             Text(
@@ -107,7 +107,7 @@ Future<void> _initializeUserData() async {
             Text(
               'bene',
               style: TextStyle(
-                color: Colors.yellow,
+                color: Colors.grey[800],
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
               ),

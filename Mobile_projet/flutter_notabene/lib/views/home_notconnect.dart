@@ -21,9 +21,9 @@ class _NotConnectedUserWidgetState extends State<NotConnectedUserWidget> {
 
    List<Widget> pages = [
     const HomeView(),
-    MapSample(),
+    const MapSample(),
     const PhotoViewWithHero(),
-    MessageConnexion(),
+    const MessageConnexion(),
     
     
   ];
@@ -53,7 +53,7 @@ class _NotConnectedUserWidgetState extends State<NotConnectedUserWidget> {
     return Scaffold(
       
       appBar: PreferredSize(
-          preferredSize: Size.fromHeight(60.0), 
+          preferredSize: const Size.fromHeight(60.0), 
           child: AppBar(
              automaticallyImplyLeading: false,
             backgroundColor: Colors.black12,
@@ -157,6 +157,8 @@ class _NotConnectedUserWidgetState extends State<NotConnectedUserWidget> {
 
 
 class MessageConnexion extends StatelessWidget {
+  const MessageConnexion({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Center(

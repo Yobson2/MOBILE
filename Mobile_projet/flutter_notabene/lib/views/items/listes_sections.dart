@@ -157,15 +157,18 @@ class MyItems extends StatelessWidget {
             InkWell(
               onTap: () {
                 final userName= item['nom_utilisateur'];
-                final usercontenu= item['contenu_commentaire']; usercontenu;
-                final entrepriseName= item['entreprise']['nom_entreprise'];
+                final usercontenu= item['contenu_commentaire'];
+                final entrepriseName = item['entreprise'] != null ? item['entreprise']['nom_entreprise'] : 'null';
+                final idLoc= item['entreprise'] != null ? item['entreprise']['id_Localisation']:  item['id_localisation'];
                 final heure=item['heure'];
                 final date=item['date_commentaire'];
                 final nbre_etoiles=item['nombre_etoiles'];
+              
+              
                           showDialog(
               context: context,
               builder: (BuildContext context) {
-                return  AvisModal(userName:userName,usercontenu:usercontenu,entrepriseName:entrepriseName,heure:heure,date:date,nbre_etoiles:nbre_etoiles, idPhoto:item['id_photo'],idLoc: item['entreprise']['id_Localisation']);
+                return  AvisModal(userName:userName,usercontenu:usercontenu,entrepriseName:entrepriseName,heure:heure,date:date,nbre_etoiles:nbre_etoiles, idPhoto:item['id_photo'],idLoc: idLoc);
               },
             );  
                           },

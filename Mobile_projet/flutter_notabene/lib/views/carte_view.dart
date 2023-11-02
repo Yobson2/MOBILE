@@ -429,14 +429,29 @@ class MapSampleState extends State<MapSample> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "Nom de l'endroit: $placeName",
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                         Row(
+                          children: [
+                            Icon(Icons.place, color: Colors.blue), 
+                            SizedBox(width: 8.0),
+                           Flexible(
+                            child:  Text(
+                              "Nom de l'endroit: $placeName",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            )
+                          ],
                         ),
-                        const SizedBox(height: 8.0),
-                        Text("Adresse: $placeAddress"),
-                        const SizedBox(height: 10.0), 
-
+                        SizedBox(height: 8.0),
+                        Row(
+                          children: [
+                            Icon(Icons.location_on, color: Colors.green), 
+                            SizedBox(width: 8.0),
+                            Flexible(
+                              child: Text("Adresse: $placeAddress"),)
+                          ],
+                        ),
+                        SizedBox(height: 10.0),
+                    
                         if(widget.testPrint!)
                           Center(
                           child: Row(
@@ -476,7 +491,16 @@ class MapSampleState extends State<MapSample> {
                             ],
                           ),
                         ),
-                        
+                       Container(
+                        height: 22,
+                        alignment: Alignment.center, 
+                        child: Icon(
+                          Icons.horizontal_rule,
+                          size: 50.0, 
+                          color: Colors.blue, 
+                        ),
+                      )
+
                       ],
                     ),
                   ),
