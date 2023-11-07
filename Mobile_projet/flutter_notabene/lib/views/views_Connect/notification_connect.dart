@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'listeAvisByuser.dart';
+
 class NotifUserWidget extends StatefulWidget {
   final String? token;
   const NotifUserWidget({this.token, Key? key}) : super(key: key);
@@ -10,21 +12,44 @@ class NotifUserWidget extends StatefulWidget {
 
 class NotifUserWidgetState extends State<NotifUserWidget> {
   int _currentIndex = 0;
-  int _reponseCount = 5;
+  int _reponseCount = 0;
 
   Widget _buildMenu(int index) {
     switch (index) {
       case 0:
         return Padding(
           padding: EdgeInsets.all(8.0),
-             child:Text("texte 1"),
+             child:ListesInsertAvisWidget(),
               
         );
       case 1:
-        return Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Text("texte 2"),
+        return Container(
+          width: double.infinity,
+          height: double.infinity,
+          color: Colors.grey[200], 
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.warning,
+                color: Colors.red,
+                size: 80,
+              ),
+              SizedBox(height: 16),
+              Text(
+                "Veuillez noter que votre compte doit être certifié avant de pouvoir répondre à un avis concernant votre entreprise.",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+            ],
+          ),
         );
+
       default:
         return Container();
     }
@@ -75,7 +100,7 @@ class NotifUserWidgetState extends State<NotifUserWidget> {
                 Positioned(
                   right: 0,
                   top: 0,
-                  child: _reponseCount > 0
+                  child: _reponseCount >= 0 
                       ? CircleAvatar(
                           radius: 8,
                           backgroundColor: Colors.red,

@@ -122,7 +122,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
  Future<void> addCommentaire(int myId) async {
   var request = http.MultipartRequest(
     'POST',
-    Uri.parse('http://192.168.1.8:8082/apiNotabene/v1/addPost/$myId'),
+    Uri.parse('http://192.168.1.4:8082/apiNotabene/v1/addPost/$myId'),
   );
 
   if (_images.isNotEmpty) {
@@ -277,10 +277,11 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
           onTap: () {
             setState(() {
                printBtn = true;
+
             });
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const MapSample(testPrint: true)),
+              MaterialPageRoute(builder: (context) => const MapSample(testPrint: true,testPrint2:false)),
             );
           },
           child: Container(

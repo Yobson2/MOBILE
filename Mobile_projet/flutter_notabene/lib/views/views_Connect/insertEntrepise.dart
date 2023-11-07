@@ -12,8 +12,9 @@ class InsertCompagnyWidget extends StatefulWidget {
 }
 
 class InsertCompagnyWidgetState extends State<InsertCompagnyWidget> {
-  int _currentIndex = 0;
-  int _reponseCount = 5;
+  int _currentIndex = 0; // Initialize with a valid index
+
+
 
   Widget _buildMenu(int index) {
     switch (index) {

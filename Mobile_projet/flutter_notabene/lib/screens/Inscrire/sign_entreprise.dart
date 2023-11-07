@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_flushbar/flutter_flushbar.dart';
+import 'package:flutter_notabene/views/carte_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:http/http.dart' as http;
+import '../../components/option2_component.dart';
+import '../../main.dart';
 
 class CompanyRegistrationSection extends StatefulWidget {
   @override
@@ -11,11 +16,25 @@ class CompanyRegistrationSection extends StatefulWidget {
 
 class _CompanyRegistrationSectionState
     extends State<CompanyRegistrationSection> {
-  String selectedOption = 'Dynamic Option 1';
-  List<String> dynamicOptions = ['Dynamic Option 1', 'Dynamic Option 2', 'Dynamic Option 3'];
-
+  String selectedOption = '';
+  String selectedCategory = '';
   File? _image;
+  final TextEditingController textFieldController = TextEditingController();
+  final TextEditingController addressFieldController = TextEditingController();
+  final TextEditingController emailFieldController = TextEditingController();
+  final TextEditingController phoneFieldController = TextEditingController();
+    int? userId;
+    List<dynamic> resultat=[];
 
+
+@override
+  void initState() {
+    super.initState();
+    final id = mainSession.userId;
+      setState(() {
+        this.userId = id;
+      }); 
+    }
   Future<void> _getImage() async {
     final image = await ImagePicker().pickImage(source: ImageSource.gallery);
     setState(() {
@@ -24,17 +43,71 @@ class _CompanyRegistrationSectionState
       }
     });
   }
+    
+Future<void> EnregistrerCompagny(userId) async {
+ 
+  var url = 'http://192.168.1.4:8082/apiNotabene/v1/insertEntreprise/$userId';
+     if (selectedOption.isEmpty ||
+              (textFieldController.text.isEmpty || addressFieldController.text.isEmpty 
+             )) {
+            // Show a SnackBar with a message
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Veuillez remplir tous les champs.'),
+                duration: Duration(seconds: 2),
+              ),
+            );
+            return; 
+          }
+
+ 
+  try {
+    var request = http.MultipartRequest('POST', Uri.parse(url));
+    request.fields['nom_entreprise'] = textFieldController.text;
+    request.fields['adresse_entreprise'] = addressFieldController.text;
+    request.fields['longitude_'] =  resultat[3].toString();
+    request.fields['latitude_'] = resultat[2].toString();
+    request.fields['categorie'] =  selectedOption.toString(); 
+
+    if (_image != null) {
+      var multipartFile = await http.MultipartFile.fromPath('image', _image!.path);
+      request.files.add(multipartFile);
+    }
+  
+    var response = await request.send();
+
+    if (response.statusCode == 200) {
+      Flushbar(
+        title: 'Succès',
+        message: 'Inscription d\'entreprise réussie',
+        duration: Duration(seconds: 3),
+      )..show(context);
+      
+      setState(() {
+        textFieldController.clear();
+       addressFieldController.clear();
+        selectedOption = '';
+         _image= null;
+         resultat=[];
+      });
+
+    }
+  } catch (e) {
+    print("Erreur lors de l'envoi des données: $e");
+  }
+}
 
   @override
   Widget build(BuildContext context) {
+  
     return SingleChildScrollView(
       child: Container(
         padding: EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text(
-              "Remplissez les informations de votre entreprise",
+             const Text(
+              "Remplissez les informations de votre entreprise ",
               style: TextStyle(
                 color: Colors.grey,
                 fontSize: 18,
@@ -42,22 +115,11 @@ class _CompanyRegistrationSectionState
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 20),
-
-            TextField(
-              decoration: InputDecoration(
-                labelText: "Nom de l'entreprise",
-                prefixIcon: Icon(
-                  Icons.business,
-                  size: 17,
-                ),
-                border: OutlineInputBorder(), 
-                contentPadding: EdgeInsets.all(12), 
-              ),
-            ),
+            
             SizedBox(height: 15),
 
             TextField(
+              controller: addressFieldController,
               decoration: InputDecoration(
                 labelText: "Adresse de l'entreprise",
                 prefixIcon: Icon(
@@ -67,8 +129,15 @@ class _CompanyRegistrationSectionState
                 border: OutlineInputBorder(),
                 contentPadding: EdgeInsets.all(12),
                 suffixIcon: ElevatedButton(
-                  onPressed: () {
-                    print("mon test ");
+                  onPressed: () async {
+                     resultat = await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => const MapSample(testPrint:false)),
+                                  );
+
+                           setState(() {
+                                  addressFieldController.text=resultat[1].toString();
+                                });
                   },
                   style: ElevatedButton.styleFrom(
                     primary: Colors.blue,
@@ -76,7 +145,7 @@ class _CompanyRegistrationSectionState
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  child: const Text(
+                  child:  Text(
                     "Selectionner",
                     style: TextStyle(
                       color: Colors.white,
@@ -87,31 +156,19 @@ class _CompanyRegistrationSectionState
             ),
             SizedBox(height: 20),
 
-            const TextField(
+             TextField(
+              controller: textFieldController,
               decoration: InputDecoration(
-                labelText: "Adresse e-mail",
+                labelText: "Nom de l'entreprise",
                 prefixIcon: Icon(
-                  FontAwesomeIcons.envelope,
+                  Icons.business,
                   size: 17,
                 ),
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.all(12),
+                border: OutlineInputBorder(), 
+                contentPadding: EdgeInsets.all(12), 
               ),
             ),
-            SizedBox(height: 15),
-
-            const TextField(
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: "Numéro de téléphone",
-                prefixIcon: Icon(
-                  FontAwesomeIcons.phone,
-                  size: 17,
-                ),
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.all(12),
-              ),
-            ),
+            
 
             SizedBox(height: 15),
 
@@ -127,28 +184,49 @@ class _CompanyRegistrationSectionState
                   : Image.file(_image!, width: 150, height: 150, fit: BoxFit.cover),
             ),
 
-            DropdownButton<String>(
-              value: selectedOption,
-              icon: Icon(Icons.arrow_drop_down),
-              iconSize: 24,
-              elevation: 16,
-              style: TextStyle(color: Colors.blue),
-              underline: Container(
-                height: 2,
-                color: Colors.grey,
-              ),
-              onChanged: (newValue) {
-                setState(() {
-                  selectedOption = newValue!;
-                });
-              },
-              items: dynamicOptions.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
+      SizedBox(height: 10),
+           if (selectedOption!="")
+          Text(
+            "Catégorie sélectionnée : $selectedOption",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
             ),
+          ),
+           SizedBox(height: 10),
+           ElevatedButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return CategoriesModal2(
+                    onCategorySelected: (selectedCategory) {
+                      setState(() {
+                        selectedOption = selectedCategory;
+                      });
+                    },
+                  );
+                },
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              primary: Colors.blue, 
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10), 
+              ),
+            ),
+            child: const Text(
+              "Associer une catégorie",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+         
 
             SizedBox(height: 30),
 
@@ -156,13 +234,14 @@ class _CompanyRegistrationSectionState
               alignment: Alignment.centerRight,
               child: ElevatedButton(
                 onPressed: () {
-                  // Ajoutez ici le code pour gérer le bouton "S'inscrire"
+                 EnregistrerCompagny(userId);
+
                 },
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 5),
                   primary: Colors.blue,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
                 child: const Text(

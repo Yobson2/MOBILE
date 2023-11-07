@@ -1,65 +1,60 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_notabene/services/api_service.dart';
 
+class MyComment extends StatefulWidget {
+  @override
+  _MyCommentState createState() => _MyCommentState();
+}
 
-
-class MyComment extends StatelessWidget {
-  final List<Map<String, dynamic>> avisRecents = [
+class _MyCommentState extends State<MyComment> {
+  List<dynamic> myItemsData = [];
  
-    {
-      "name": 'John',
-      "surname": 'Doe',
-      "photoUrl": 'https://images.unsplash.com/photo-1692116716561-953cc9a868b6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80',
-      "time": '12/12/2021',
-      "starCount": 4,
-      "comment": 'Great experience! Highly recommended.',
-    },
-    {
-      "name": 'John',
-      "surname": 'Doe',
-      "photoUrl": '',
-       "time": '12/12/2021',
-      "starCount": 4,
-      "comment": 'Great experience! Highly recommended.',
-    },
-    {
-      "name": 'John',
-      "surname": 'Doe',
-      "photoUrl": '',
-       "time": '12/12/2021',
-      "starCount": 4,
-      "comment": 'Great experience! Highly recommended.',
-    },
-    {
-      "name": 'John',
-      "surname": 'Doe',
-      "photoUrl": '',
-        "time": '12/12/2021',
-      "starCount": 4,
-      "comment": 'Great experience! Highly recommended.',
+
+  @override
+  void initState() {
+    super.initState();
+   getDataAvis();
+  }
+
+ Future<void> getDataAvis() async {
+  try {
+    final reponse = await ApiManager().fetchData("getAllCommentaire", "message", "messageError");
+    if (reponse != null && reponse.containsKey('data')) {
+      final res = reponse['data'];
+      setState(() {
+        myItemsData = List<dynamic>.from(res);
+      });
+    } else {
+      print("Erreur: Réponse de l'API invalide");
     }
-  ];
+  } catch (e) {
+    print("Erreur : Les avis récents n'ont pas été récupérés $e");
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
             'Évaluations récentes',
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 15,
               fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 10),
-          Expanded( // Wrap the ListView.builder with Expanded
+          Expanded(
             child: ListView.builder(
               shrinkWrap: true,
-              itemCount: avisRecents.length,
+              itemCount: 3,
               itemBuilder: (context, index) {
-                final avis = avisRecents[index];
+                final avis = myItemsData[index];
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: Row(
@@ -75,7 +70,7 @@ class MyComment extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '${avis["name"]} ${avis["surname"]}',
+                             '${avis["nom_utilisateur"] ?? "Unknown User"}',
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
@@ -83,7 +78,7 @@ class MyComment extends StatelessWidget {
                             ),
                             SizedBox(height: 5),
                             Text(
-                              avis["comment"],
+                              "${avis["contenu_commentaire"] }",
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
@@ -100,18 +95,17 @@ class MyComment extends StatelessWidget {
                                 ),
                                 SizedBox(width: 5),
                                 Text(
-                                  '${avis["starCount"]} etoiles',
+                                  ' etoiles',
                                   style: TextStyle(
                                     color: Colors.grey[600],
                                   ),
                                 ),
                                 Spacer(),
                                 Text(
-                                  avis["time"],
+                                  "avis",
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: Colors.grey[600],
-                                    
                                   ),
                                 ),
                               ],

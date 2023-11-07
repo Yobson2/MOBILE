@@ -42,6 +42,13 @@ class AvisModalState extends State<AvisModal> {
  late double latitude = 0.0;
  bool printBtn = true;
 
+
+List<dynamic> mes =  [
+        "images_1698866707767_CAP4671698923468031741.jpg",
+        "images_1698920687807_CAP9022900798735588594.jpg",
+        "images_1698867078268_FB_IMG_1698850505798.jpg",
+        "images_1698920687807_CAP9022900798735588594.jpg"
+    ];
   @override
   void initState() {
    
@@ -80,7 +87,8 @@ class AvisModalState extends State<AvisModal> {
   }
   @override
   Widget build(BuildContext context) {
-  
+    print("mes données $mes");
+     print("mes données 2 $mesDonnees");
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -173,8 +181,9 @@ class AvisModalState extends State<AvisModal> {
                Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                 if (widget.entrepriseName!="") 
+                 if (widget.entrepriseName!="null") 
                   Icon(Icons.business),
+                if (widget.entrepriseName!="null") 
                 Text(
                   "${widget.entrepriseName}",
                   style: TextStyle(
@@ -185,10 +194,10 @@ class AvisModalState extends State<AvisModal> {
               ],
             ),
 
-
+      
                 SizedBox(height: 16),
                 CarouselSlider(
-                  items: mesDonnees.map((donnees) {
+                  items: mes.map((donnees) {
                     return Container(
                       width: double.infinity,
                       margin: EdgeInsets.symmetric(horizontal: 8),
@@ -200,7 +209,7 @@ class AvisModalState extends State<AvisModal> {
                         child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child:Image.network(
-                          "http://192.168.1.8:8082/images/${donnees}",
+                          "http://192.168.1.4:8082/images/${donnees}",
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
                             print("Error loading image: $error");

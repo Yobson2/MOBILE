@@ -3,11 +3,22 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 class ApiManager {
-  final String baseUrl="http://192.168.1.8:8082/apiNotabene/v1";
+  final String baseUrl="http://192.168.1.4:8082/apiNotabene/v1";
   ApiManager();
 
   Future<Map<String, dynamic>> fetchData(String endpoint, String message, String messageError) async {
     final response = await http.get(Uri.parse('$baseUrl/$endpoint'));
+
+    if (response.statusCode == 200) {
+       print(message);
+      return json.decode(response.body);
+     
+    } else {
+      throw Exception(messageError);
+    }
+  }
+  Future<Map<String, dynamic>> deleteData(String endpoint, String message, String messageError) async {
+    final response = await http.delete(Uri.parse('$baseUrl/$endpoint'));
 
     if (response.statusCode == 200) {
        print(message);

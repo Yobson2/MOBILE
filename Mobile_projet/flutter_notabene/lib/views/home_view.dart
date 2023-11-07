@@ -19,7 +19,7 @@ class _HomeViewState extends State<HomeView> {
   TextEditingController _searchController = TextEditingController();
   List<dynamic> searchResults = [];
   List<dynamic> searchResultsFinal = [];
-  bool searcheck=false;
+  bool searcheck=true;
   @override
   void initState() {
     super.initState();
@@ -87,7 +87,10 @@ class _HomeViewState extends State<HomeView> {
                     child: TextField(
                       controller: _searchController,
                       onChanged: (value) {
-                        _search();  
+                        _search(); 
+                        setState(() {
+                          searcheck=true;
+                        }); 
                       },
                       decoration: const InputDecoration(
                         hintText: 'Rechercher...',
@@ -195,6 +198,8 @@ class _HomeViewState extends State<HomeView> {
           //     // Cadre 1
           //     SingleChildScrollView(
           //       child: Container(
+          //         height: 200,
+          //         width: 300,
           //     margin: EdgeInsets.all(5.0),
           //     decoration: BoxDecoration(
           //       borderRadius: BorderRadius.circular(8.0),
@@ -203,10 +208,10 @@ class _HomeViewState extends State<HomeView> {
           //     child: Column(
           //       mainAxisAlignment: MainAxisAlignment.center,
           //       children: [
-          //         Image.network(
-          //           'https://images.unsplash.com/photo-1682687981907-170c006e3744?auto=format&fit=crop&q=80&w=1471&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-          //           height: 200,
-          //         ),
+          //         // Image.network(
+          //         //   'https://images.unsplash.com/photo-1682687981907-170c006e3744?auto=format&fit=crop&q=80&w=1471&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+          //         //   height: 200,
+          //         // ),
           //         SizedBox(height: 10),
           //         Text(
           //           'Titre 1',
@@ -224,8 +229,9 @@ class _HomeViewState extends State<HomeView> {
 
 
           // ],),
+          // if(searcheck=false) 
             const CategorySection(),
-           
+            // MySecondBloc()
           ],
          
           

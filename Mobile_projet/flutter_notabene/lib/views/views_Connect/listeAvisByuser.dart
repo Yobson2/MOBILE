@@ -4,20 +4,14 @@ import 'package:flutter_notabene/services/api_service.dart';
 
 import '../../main.dart';
 
-class Company {
-  final String name;
-
-  Company(this.name);
-}
-
-class ListesInsertCompagnyWidget extends StatefulWidget {
-  const ListesInsertCompagnyWidget({Key? key}) : super(key: key);
+class ListesInsertAvisWidget extends StatefulWidget {
+  const ListesInsertAvisWidget({Key? key}) : super(key: key);
 
   @override
-  State<ListesInsertCompagnyWidget> createState() => ListesInsertCompagnyWidgetState();
+  State<ListesInsertAvisWidget> createState() => ListesInsertAvisWidgetState();
 }
 
-class ListesInsertCompagnyWidgetState extends State<ListesInsertCompagnyWidget> {
+class ListesInsertAvisWidgetState extends State<ListesInsertAvisWidget> {
      int? userId;
   List<dynamic> companies = [];
    bool isLoading = true;
@@ -63,7 +57,6 @@ class ListesInsertCompagnyWidgetState extends State<ListesInsertCompagnyWidget> 
         duration: Duration(seconds: 1),
       )..show(context);
     
-    print('mes données sont supprimées');
       setState(() {
         companies.removeWhere((company) => company["id_entreprise"] == idCompagny);
         isLoading = false; 
@@ -87,7 +80,7 @@ class ListesInsertCompagnyWidgetState extends State<ListesInsertCompagnyWidget> 
         elevation: 0,
         title: const Center(
           child: Text(
-            'Liste des entreprises enregistrées',
+            'Mes avis',
             style: TextStyle(color: Colors.black, fontSize: 16),
           ),
         ),
@@ -103,7 +96,7 @@ class ListesInsertCompagnyWidgetState extends State<ListesInsertCompagnyWidget> 
           itemBuilder: (BuildContext context, int index) {
             return Card(
                 elevation: 1,
-                margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+                margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 4),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),
                 ),
@@ -121,7 +114,7 @@ class ListesInsertCompagnyWidgetState extends State<ListesInsertCompagnyWidget> 
                   subtitle:  Padding(
                     padding: EdgeInsets.only(top: 8), 
                     child: Text(
-                      companies[index]["adresse_entreprise"],
+                      "Vous avez laissé 45 commentaires concernant cette entreprise.",
                       style: TextStyle(fontSize: 12),
                     ),
                   ),
@@ -130,25 +123,13 @@ class ListesInsertCompagnyWidgetState extends State<ListesInsertCompagnyWidget> 
   children: [
     GestureDetector(
       onTap: () {
-        _showDeleteConfirmationDialog(index);
+       
       },
       child: Container(
         padding: EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.grey, 
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2), 
-              spreadRadius: 1,
-              blurRadius: 2,
-              offset: Offset(0, 2), 
-            ),
-          ],
-        ),
         child: Icon(
-          Icons.delete, 
-          color: Colors.white, 
+          Icons.horizontal_rule, 
+          color: Colors.black, 
           size: 18, 
         ),
       ),
@@ -164,53 +145,6 @@ class ListesInsertCompagnyWidgetState extends State<ListesInsertCompagnyWidget> 
       ),
     );
   }
-
- void _showDeleteConfirmationDialog(int index) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text("Confirmation de suppression ${companies[index]["id_entreprise"]}"),
-        content: Text("Voulez-vous vraiment supprimer cette entreprise ?"),
-        actionsPadding: EdgeInsets.symmetric(horizontal: 20), 
-        actions: [
-          TextButton(
-            child: const Text(
-              "Annuler ",
-              style: TextStyle(color: Colors.blue), 
-            ),
-            onPressed: () {
-              Navigator.of(context).pop(); 
-            },
-          ),
-          const SizedBox(width: 10), 
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              primary: Colors.red, 
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10), 
-              ),
-            ),
-            child: const Text(
-              "Supprimer",
-              style: TextStyle(color: Colors.white, fontSize: 16), // Couleur et taille du texte
-            ),
-            onPressed: () {
-              final idCompagny=companies[index]["id_entreprise"];
-              deleteCompagny(idCompagny);
-              Navigator.of(context).pop(); 
-            },
-          ),
-        ],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15), 
-        ),
-      );
-    },
-  );
-}
-
-
 }
 
 

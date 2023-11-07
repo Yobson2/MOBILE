@@ -35,7 +35,7 @@ class CategorySection extends StatelessWidget {
                   const Text(
                     'Categories',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 15,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

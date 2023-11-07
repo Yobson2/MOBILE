@@ -8,10 +8,71 @@ import 'home_notconnect.dart';
 class ParamsView extends StatelessWidget {
   const ParamsView({super.key});
 
+ void _showExitConfirmationDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        title: Text(
+          "Déconnexion",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: Text(
+          "Êtes-vous sûr de vouloir vous déconnecter ?",
+          style: TextStyle(
+            fontSize: 16.0,
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            style: TextButton.styleFrom(
+              primary: Colors.red, 
+            ),
+            child: Text(
+              "Annuler",
+              style: TextStyle(
+                fontSize: 18.0,
+              ),
+            ),
+            onPressed: () {
+              Navigator.of(context).pop(); 
+            },
+          ),
+          TextButton(
+            style: TextButton.styleFrom(
+              primary: Colors.green, // Utilisation d'une couleur pour mettre en avant le bouton "Quitter"
+            ),
+            child: Text(
+              "Quitter",
+              style: TextStyle(
+                fontSize: 18.0,
+              ),
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NotConnectedUserWidget(),
+                ),
+              );
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child:Container(
+      child: Container(
         padding: const EdgeInsets.all(30.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -28,10 +89,10 @@ class ParamsView extends StatelessWidget {
               leading: const Icon(Icons.person_outline),
               title: const Text('Profil'),
               onTap: () {
-                 Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => NoteUserWidget()),
-              );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NoteUserWidget()),
+                );
               },
             ),
             const Divider(),
@@ -39,32 +100,25 @@ class ParamsView extends StatelessWidget {
               leading: const Icon(Icons.notification_add),
               title: const Text('Notifications'),
               onTap: () {
-                
-               Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const NotifUserWidget()),
-              );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const NotifUserWidget(),
+                  ),
+                );
               },
             ),
-             const Divider(),
+            const Divider(),
             ListTile(
               leading: const Icon(Icons.create),
               title: const Text('Entreprise'),
               onTap: () {
-              
                 Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const  InsertCompagnyWidget()),
-              );
-              },
-            ),
-             const Divider(),
-            ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text('Options avancées'),
-              onTap: () {
-              
-                print("object");
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const InsertCompagnyWidget(),
+                  ),
+                );
               },
             ),
             const Divider(),
@@ -72,16 +126,12 @@ class ParamsView extends StatelessWidget {
               leading: const Icon(Icons.exit_to_app),
               title: const Text('Quitter'),
               onTap: () {
-                 Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const NotConnectedUserWidget()),
-              );
+                _showExitConfirmationDialog(context);
               },
             ),
           ],
         ),
-      )
+      ),
     );
-     
   }
 }

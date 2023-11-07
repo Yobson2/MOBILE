@@ -14,8 +14,9 @@ class MapSample extends StatefulWidget {
   final double? latLoc;
   final double? longLoc;
   final bool? testPrint;
+  final bool? testPrint2;
 
-  const MapSample({Key? key, this.latLoc,this.longLoc, this.testPrint});
+  const MapSample({Key? key, this.latLoc,this.longLoc, this.testPrint,this.testPrint2});
 
   @override
   State<MapSample> createState() => MapSampleState();
@@ -49,6 +50,7 @@ class MapSampleState extends State<MapSample> {
 
   late double latitude2 ;
   late double longitude2;
+ 
 
 
 
@@ -63,6 +65,9 @@ class MapSampleState extends State<MapSample> {
     _getUserLocation();
     latitude2 = 0.0; 
     longitude2 = 0.0; 
+    final idUser= mainSession.userId;
+
+    print("idUser $idUser");
 
   }
 
@@ -114,8 +119,7 @@ class MapSampleState extends State<MapSample> {
 
   Timer(Duration(seconds: 1), () {
     setState(() {
-      isLoading = false; // Cacher l'indicateur de chargement
-      // isLoadingCarte=true;
+      isLoading = false; 
     });
      latitude2 = latitude!; 
     longitude2 = longitude!; 
@@ -490,6 +494,30 @@ class MapSampleState extends State<MapSample> {
 
                             ],
                           ),
+                        ),
+                         if(widget.testPrint2!=false)
+                        Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                  width: 200,
+                                  height: 40,
+                                  
+                                  child: ElevatedButton(
+                                    
+                                     onPressed: () {
+                                     List<dynamic> resultat = [placeName ?? "", placeAddress, latitude2, longitude2];
+                                      Navigator.pop(context, resultat);
+                                     },
+                                     
+                                      child: const Text('Selectionné'),)
+                                  )
+                                  
+                                  ]
+                            )
+
+
                         ),
                        Container(
                         height: 22,

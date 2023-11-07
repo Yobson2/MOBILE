@@ -65,7 +65,7 @@ class _GalleryPageState extends State<GalleryPage> {
   void _sendSelectedPhotos() {
     if (selectedImageUrls.isNotEmpty) {
       // selectedImageUrl_=selectedImageUrls
-       mainSession.selectedImageUrl_=selectedImageUrls;
+      //  mainSession.selectedImageUrl_=selectedImageUrls;
         Navigator.pop(context,selectedImageUrls);
         //  Navigator.pop(context);
         // Navigator.pushReplacement(
