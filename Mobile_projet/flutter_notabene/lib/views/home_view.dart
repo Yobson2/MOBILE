@@ -231,7 +231,7 @@ class _HomeViewState extends State<HomeView> {
           // ],),
           // if(searcheck=false) 
             const CategorySection(),
-            // MySecondBloc()
+            MySecondBloc()
           ],
          
           

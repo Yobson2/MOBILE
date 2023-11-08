@@ -45,9 +45,7 @@ class _CompanyRegistrationSectionState
   }
     
 Future<void> EnregistrerCompagny(userId) async {
- 
-  var url = 'http://192.168.1.4:8082/apiNotabene/v1/insertEntreprise/$userId';
-     if (selectedOption.isEmpty ||
+   if (selectedOption.isEmpty ||
               (textFieldController.text.isEmpty || addressFieldController.text.isEmpty 
              )) {
             // Show a SnackBar with a message
@@ -59,6 +57,9 @@ Future<void> EnregistrerCompagny(userId) async {
             );
             return; 
           }
+ 
+  var url = 'http://192.168.1.4:8082/apiNotabene/v1/insertEntreprise/$userId';
+    
 
  
   try {
