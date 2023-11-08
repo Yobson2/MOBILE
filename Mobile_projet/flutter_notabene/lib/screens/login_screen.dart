@@ -62,22 +62,17 @@ Future<void> loginUser() async {
         child: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Color(0xFFFFFFFF), Color(0xFF0000FF)],
-            ),
-          ),
-          child: Column(
+          
+          child: SingleChildScrollView(
+            child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              // const SizedBox(height: 80,),
               const SizedBox(height: 100,),
-              const SizedBox(height: 20,),
               Container(
                 alignment: Alignment.center,
-                height: 480,
-                width: 320,
+                 height: MediaQuery.of(context).size.height,
+                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -111,8 +106,12 @@ Future<void> loginUser() async {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 10,),
-                    SizedBox(
+                    const SizedBox(height: 220,),
+                    Container(
+                      // color: Colors.blue,
+                      child: Column(
+                        children: [
+                          SizedBox(
                       width: 250,
                       child: TextField(
                         controller: _emailController,
@@ -198,11 +197,14 @@ Future<void> loginUser() async {
                         ),
                       ],
                     )
+                        ],
+                      ),
+                    )
                   ],
                 ),
               ),
             ],
-          ),
+          ),)
         ),
       ),
     );

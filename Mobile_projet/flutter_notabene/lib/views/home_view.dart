@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_notabene/services/api_service.dart';
 
+import '../models/carousel_model.dart';
 import '../services/localisation_search.dart';
 import 'home/home_avis_recents.dart';
 import 'home/home_cartegories.dart';
@@ -187,48 +188,35 @@ class _HomeViewState extends State<HomeView> {
                 ),
              ),
               
-          //   CarouselSlider(
-          //   options: CarouselOptions(
-          //   height: 180,
-            
-          //   autoPlay: true,
-          //   enlargeCenterPage: true,
-          // ), 
-          // items: [
-          //     // Cadre 1
-          //     SingleChildScrollView(
-          //       child: Container(
-          //         height: 200,
-          //         width: 300,
-          //     margin: EdgeInsets.all(5.0),
-          //     decoration: BoxDecoration(
-          //       borderRadius: BorderRadius.circular(8.0),
-          //       color: Colors.blue,
-          //     ),
-          //     child: Column(
-          //       mainAxisAlignment: MainAxisAlignment.center,
-          //       children: [
-          //         // Image.network(
-          //         //   'https://images.unsplash.com/photo-1682687981907-170c006e3744?auto=format&fit=crop&q=80&w=1471&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-          //         //   height: 200,
-          //         // ),
-          //         SizedBox(height: 10),
-          //         Text(
-          //           'Titre 1',
-          //           style: TextStyle(fontSize: 24, color: Colors.white),
-          //         ),
-          //         Text(
-          //           'Description 1',
-          //           style: TextStyle(fontSize: 16, color: Colors.white),
-          //         ),
-          //       ],
-          //     ),
-          //   ),)
-            
-            
+        //    CarouselSlider(
+        //   options: CarouselOptions(
+        //     height: 200,
+        //     autoPlay: true,
+        //     enlargeCenterPage: true,
+        //   ), 
+        //   items: [
+        //  CarouselItem(
+        //   title: 'Bienvenue sur Notabene',
+        //   description: "Si vous appréciez notre service, n'hésitez pas à le partager !",
+        //   color: Colors.blue,
+        //   icon: Icons.star, 
+        // ),
+        // CarouselItem(
+        //   title: 'Explorer la carte',
+        //   description: "Découvrez notre large sélection de fonctionnalités et de contenus.",
+        //   color: Colors.yellow,
+        //   icon: Icons.explore, 
+        // ),
+        // CarouselItem(
+        //   title: "Prendre des photos",
+        //   description: "Capturez vos moments préférés et partagez-les avec vos amis.",
+        //   color: Colors.black12,
+        //   icon: Icons.camera_alt, 
+        // ),
+           
+        //   ],
+        // ),
 
-
-          // ],),
           // if(searcheck=false) 
             const CategorySection(),
             MySecondBloc()
@@ -245,7 +233,7 @@ class MySecondBloc extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 300,
+      height: 400,
       child: Column(
         children: [
           Expanded(child: MyComment()),

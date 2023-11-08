@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_notabene/screens/login_screen.dart';
 import 'package:flutter_notabene/views/photo_view.dart';
 
+import '../screens/Inscrire/testConnexion.dart';
+import '../screens/Inscrire/testResgiste.dart';
 import 'carte_view.dart';
 import 'home_view.dart';
 
@@ -199,7 +201,7 @@ class MessageConnexion extends StatelessWidget {
               onPressed: () {
                  Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                  MaterialPageRoute(builder: (context) => const LoginForm()),
                 );
               },
               child: const Text("Se connecter"),

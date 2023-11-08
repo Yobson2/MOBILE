@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_notabene/services/api_service.dart';
 
 import '../../components/moreAvis_component.dart';
+import '../items/details_items.dart';
 
 class MyComment extends StatefulWidget {
   @override
@@ -63,7 +64,7 @@ class _MyCommentState extends State<MyComment> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const CircleAvatar(
-                        // backgroundImage: NetworkImage(avis["photoUrl"]),
+                        backgroundImage: NetworkImage("https://images.unsplash.com/photo-1695653420505-19343dd89ac1?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
                         radius: 30,
                       ),
                       const SizedBox(width: 10),
@@ -153,6 +154,7 @@ class _MyCommentState extends State<MyComment> {
                             ),
                           ],
                         ),
+                        
                       ),
                     ],
                   ),
