@@ -25,7 +25,7 @@ class _NotConnectedUserWidgetState extends State<NotConnectedUserWidget> {
     const HomeView(),
     const MapSample(),
     const PhotoViewWithHero(),
-    const MessageConnexion(),
+    // const MessageConnexion(),
     
     
   ];
@@ -58,30 +58,35 @@ class _NotConnectedUserWidgetState extends State<NotConnectedUserWidget> {
           preferredSize: const Size.fromHeight(60.0), 
           child: AppBar(
              automaticallyImplyLeading: false,
-            backgroundColor: Colors.black12,
+            backgroundColor: Colors.blue,
             elevation: 0,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(30.0), 
-                bottomRight: Radius.circular(30.0),
+                bottomLeft: Radius.circular(10.0), 
+                bottomRight: Radius.circular(10.0),
               ),
             ),
             title: const Row(
-          children: [
-            Icon(Icons.note),
-            Text(
-              'Nota',
-            ),
-            Text(
-              'bene',
-              style: TextStyle(
-                color: Colors.yellow,
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
+            children: [
+              Text(
+                'Nota',
+                style: TextStyle(
+                  color: Colors.white, 
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20, 
+                ),
               ),
-            ),
-          ],
-        ),
+              Text(
+                'bene',
+                style: TextStyle(
+                  color: Colors.yellow, 
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20, 
+                ),
+              ),
+            ],
+          ),
+
         actions: [
           IconButton(
             color: Colors.black,
@@ -89,7 +94,7 @@ class _NotConnectedUserWidgetState extends State<NotConnectedUserWidget> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => LoginScreen()),
+                MaterialPageRoute(builder: (context) => const LoginForm()),
               );
             },
           ),
@@ -158,60 +163,60 @@ class _NotConnectedUserWidgetState extends State<NotConnectedUserWidget> {
 
 
 
-class MessageConnexion extends StatelessWidget {
-  const MessageConnexion({super.key});
+// class MessageConnexion extends StatelessWidget {
+//   const MessageConnexion({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: Colors.blue,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(
-              Icons.error,
-              color: Colors.white,
-              size: 40,
-            ),
-            const SizedBox(height: 10),
-            const Text(
-              "Vous n'êtes pas connecté",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 10),
-            const Text(
-              "Pour accéder à cette fonctionnalité, veuillez vous connecter avec votre compte. Si vous n'avez pas encore de compte, vous pouvez en créer un en quelques étapes simples. Connectez-vous dès maintenant pour profiter de l'expérience complète de notre application !",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-              ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                 Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LoginForm()),
-                );
-              },
-              child: const Text("Se connecter"),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Center(
+//       child: Container(
+//         padding: const EdgeInsets.all(20),
+//         decoration: BoxDecoration(
+//           color: Colors.blue,
+//           borderRadius: BorderRadius.circular(10),
+//         ),
+//         child: Column(
+//           mainAxisSize: MainAxisSize.min,
+//           children: [
+//             const Icon(
+//               Icons.error,
+//               color: Colors.white,
+//               size: 40,
+//             ),
+//             const SizedBox(height: 10),
+//             const Text(
+//               "Vous n'êtes pas connecté",
+//               style: TextStyle(
+//                 color: Colors.white,
+//                 fontSize: 20,
+//                 fontWeight: FontWeight.bold,
+//               ),
+//             ),
+//             const SizedBox(height: 10),
+//             const Text(
+//               "Pour accéder à cette fonctionnalité, veuillez vous connecter avec votre compte. Si vous n'avez pas encore de compte, vous pouvez en créer un en quelques étapes simples. Connectez-vous dès maintenant pour profiter de l'expérience complète de notre application !",
+//               textAlign: TextAlign.center,
+//               style: TextStyle(
+//                 color: Colors.white,
+//                 fontSize: 16,
+//               ),
+//             ),
+//             const SizedBox(height: 20),
+//             ElevatedButton(
+//               onPressed: () {
+//                  Navigator.push(
+//                   context,
+//                   MaterialPageRoute(builder: (context) => const LoginForm()),
+//                 );
+//               },
+//               child: const Text("Se connecter"),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 
 

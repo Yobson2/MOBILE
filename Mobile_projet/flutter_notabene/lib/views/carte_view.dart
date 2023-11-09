@@ -273,6 +273,7 @@ class MapSampleState extends State<MapSample> {
       
       appBar: AppBar(
           elevation: 0.0, 
+          backgroundColor: Colors.transparent,
         title: Container(
           padding: EdgeInsets.symmetric(horizontal: 10),
           width: 600,
@@ -312,13 +313,13 @@ class MapSampleState extends State<MapSample> {
             ),
           ),
         ),
-        actions: <Widget>[
-          IconButton(
-            color: Colors.black,
-            onPressed: showSelectedLocation,
-            icon: Icon(Icons.gps_fixed),
-          )
-        ],
+        // actions: <Widget>[
+        //   IconButton(
+        //     color: Colors.black,
+        //     onPressed: showSelectedLocation,
+        //     icon: Icon(Icons.gps_fixed),
+        //   )
+        // ],
       ),
 
     
@@ -482,7 +483,7 @@ class MapSampleState extends State<MapSample> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => LoginScreen(),
+                                        builder: (context) => const LoginForm(),
                                       ),
                                     );
                                   }

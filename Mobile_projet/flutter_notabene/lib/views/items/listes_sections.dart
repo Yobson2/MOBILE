@@ -57,7 +57,7 @@ class _ListesBlocItemsState extends State<ListesBlocItems> {
       appBar: PreferredSize(
           preferredSize: Size.fromHeight(80.0), 
           child: AppBar(
-            backgroundColor: Colors.black12,
+            backgroundColor: Colors.blue,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(30.0), 
@@ -77,7 +77,7 @@ class _ListesBlocItemsState extends State<ListesBlocItems> {
           ),
         ),
         Text("(${myItemsData.length}) Avis",
-        style: TextStyle(fontSize: 14, color: Colors.grey),
+        style: TextStyle(fontSize: 14, color: Colors.black),
         )
           ],
         ),

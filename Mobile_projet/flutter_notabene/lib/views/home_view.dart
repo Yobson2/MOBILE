@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_notabene/services/api_service.dart';
 
+import '../main.dart';
 import '../models/carousel_model.dart';
 import '../services/localisation_search.dart';
 import 'home/home_avis_recents.dart';
@@ -21,6 +22,8 @@ class _HomeViewState extends State<HomeView> {
   List<dynamic> searchResults = [];
   List<dynamic> searchResultsFinal = [];
   bool searcheck=true;
+  bool isLoading = true;
+ 
   @override
   void initState() {
     super.initState();
@@ -34,12 +37,16 @@ class _HomeViewState extends State<HomeView> {
       // print("resultat recherche $allItems");
       setState(() {
         searchResults = allItems;
+         isLoading = false;
       });
     }
   }
    
     Future<void> _search() async {
-      getAllData();
+      setState(() {
+    isLoading = true; 
+     });
+       await  getAllData();
       String query = _searchController.text;
       List<dynamic> filteredResults = [];
        
@@ -54,10 +61,13 @@ class _HomeViewState extends State<HomeView> {
       }
         setState(() {
           searchResultsFinal=filteredResults;
+          
         });
 
 
-        // print("Filtered results $searchResultsFinal");
+       setState(() {
+          isLoading = false; 
+        });
     }
 
   @override
@@ -188,38 +198,38 @@ class _HomeViewState extends State<HomeView> {
                 ),
              ),
               
-        //    CarouselSlider(
-        //   options: CarouselOptions(
-        //     height: 200,
-        //     autoPlay: true,
-        //     enlargeCenterPage: true,
-        //   ), 
-        //   items: [
-        //  CarouselItem(
-        //   title: 'Bienvenue sur Notabene',
-        //   description: "Si vous appréciez notre service, n'hésitez pas à le partager !",
-        //   color: Colors.blue,
-        //   icon: Icons.star, 
-        // ),
-        // CarouselItem(
-        //   title: 'Explorer la carte',
-        //   description: "Découvrez notre large sélection de fonctionnalités et de contenus.",
-        //   color: Colors.yellow,
-        //   icon: Icons.explore, 
-        // ),
-        // CarouselItem(
-        //   title: "Prendre des photos",
-        //   description: "Capturez vos moments préférés et partagez-les avec vos amis.",
-        //   color: Colors.black12,
-        //   icon: Icons.camera_alt, 
-        // ),
+           CarouselSlider(
+          options: CarouselOptions(
+            height: 200,
+            autoPlay: true,
+            enlargeCenterPage: true,
+          ), 
+          items: [
+         CarouselItem(
+          title: 'Bienvenue sur Notabene',
+          description: "Si vous appréciez notre service, n'hésitez pas à le partager !",
+          color: Colors.blue,
+          icon: Icons.star, 
+        ),
+        CarouselItem(
+          title: 'Explorer la carte',
+          description: "Découvrez notre large sélection de fonctionnalités et de contenus.",
+          color: Colors.cyan,
+          icon: Icons.explore, 
+        ),
+        CarouselItem(
+          title: "Prendre des photos",
+          description: "Capturez vos moments préférés et partagez-les avec vos amis.",
+          color: Colors.orange,
+          icon: Icons.camera_alt, 
+        ),
            
-        //   ],
-        // ),
+          ],
+        ),
 
           // if(searcheck=false) 
             const CategorySection(),
-            MySecondBloc()
+            MySecondBloc(isLoading:isLoading)
           ],
          
           
@@ -230,13 +240,20 @@ class _HomeViewState extends State<HomeView> {
 }
 
 class MySecondBloc extends StatelessWidget {
+   final bool? isLoading;
+
+  const MySecondBloc({ this.isLoading});
   @override
   Widget build(BuildContext context) {
+
+    print("mes test $isLoading");
     return Container(
       height: 400,
       child: Column(
         children: [
-          Expanded(child: MyComment()),
+          Expanded(child: isLoading!
+                  ? const Center(child: CircularProgressIndicator())
+                  : MyComment()),
         ],  
       ),  
     );

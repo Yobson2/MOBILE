@@ -28,7 +28,7 @@ class AppRoutes {
   {
     switch(settings.name){
       case login:
-        return MaterialPageRoute(builder: (context) => LoginScreen());
+        return MaterialPageRoute(builder: (context) => const LoginForm());
       case signup:
         return MaterialPageRoute(builder: (context) => RegistrationPage());
       case home:

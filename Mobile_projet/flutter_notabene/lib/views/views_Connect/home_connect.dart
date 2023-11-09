@@ -7,6 +7,7 @@ import 'package:flutter_notabene/views/views_Connect/profit_connect.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../components/infosConnexion.dart';
 import '../../components/option_component.dart';
 import '../home_notconnect.dart';
 import '../home_view.dart';
@@ -17,8 +18,8 @@ import 'notification_connect.dart';
 
 
 class ConnectedUserWidget extends StatefulWidget {
-    final String token;
-  const ConnectedUserWidget({required this.token, Key? key}) : super(key: key);
+    final String? token;
+  const ConnectedUserWidget({this.token, Key? key}) : super(key: key);
 
   @override
   State<ConnectedUserWidget> createState() => _ConnectedUserWidgetState();
@@ -36,6 +37,7 @@ class _ConnectedUserWidgetState extends State<ConnectedUserWidget> {
     const MapSample(),
     const PhotoViewWithHero(),
     const ParamsView(),
+    const MessageConnexion(),
   ];
 
 @override
@@ -47,7 +49,7 @@ void initState() {
 
 Future<void> _initializeUserData() async {
   try {
-    Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
+    Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token!);
     id = jwtDecodedToken['userId'];
     print("object id: " + id.toString());
    
@@ -86,46 +88,55 @@ Future<void> _initializeUserData() async {
   @override
   Widget build(BuildContext context) {
       pages[1] = MapSample(testPrint: printBtn,testPrint2:printBtn2);
+       final isLoggedIn = mainSession.userId!= 0;
+
     return Scaffold(
       appBar: PreferredSize(
           preferredSize: Size.fromHeight(60.0), 
           child: AppBar(
              automaticallyImplyLeading: false,
-            backgroundColor: Colors.black12,
+            backgroundColor: Colors.blue,
             elevation: 0,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(30.0), 
-                bottomRight: Radius.circular(30.0),
+                bottomLeft: Radius.circular(10.0), 
+                bottomRight: Radius.circular(10.0),
               ),
             ),
-            title:  Row(
+            title:  const Row(
           children: [
-            Icon(Icons.note),
             Text(
-              'Nota',
-            ),
-            Text(
-              'bene',
-              style: TextStyle(
-                color: Colors.grey[800],
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
+                'Nota',
+                style: TextStyle(
+                  color: Colors.white, 
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20, 
+                ),
               ),
-            ),
+              Text(
+                'bene',
+                style: TextStyle(
+                  color: Colors.yellow, 
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20, 
+                ),
+              ),
           ],
         ),
         actions: [
-          IconButton(
+          isLoggedIn ?
+          Text("data")
+          :IconButton(
             color: Colors.black,
             icon: const Icon(Icons.person_outline),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => LoginScreen()),
+                MaterialPageRoute(builder: (context) => const LoginForm()),
               );
             },
-          ),
+          )
+          
         ],
     
             centerTitle: true,
@@ -136,8 +147,8 @@ Future<void> _initializeUserData() async {
         index: _currentIndex,
         children: pages,
       ),
-    floatingActionButton: _currentIndex == 0
-    ? Column(
+    floatingActionButton:  isLoggedIn && _currentIndex==0  
+    ?  Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
@@ -168,7 +179,15 @@ Future<void> _initializeUserData() async {
               printBtn=false;
               printBtn2=false;
             }
+
           });
+           setState(() {
+          if (index == 3 && isLoggedIn==true) {
+            _currentIndex = index;
+          } else if (index == 3 && isLoggedIn==false) {
+            _currentIndex = 4;
+          } 
+       });
         },
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -203,4 +222,11 @@ Future<void> _initializeUserData() async {
     );
   }
 }
+
+
+
+
+
+
+
 

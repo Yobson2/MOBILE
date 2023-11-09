@@ -1,25 +1,37 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_notabene/models/user_model.dart';
-import 'package:flutter_notabene/screens/Sign_screen.dart';
-import 'package:flutter_notabene/screens/home_screem.dart';
-import 'package:flutter_notabene/services/api_service.dart';
-import 'package:flutter_notabene/views/views_Connect/home_connect.dart';
+import 'package:flutter_notabene/screens/Inscrire/testResgiste.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LoginScreen extends StatefulWidget {
-  @override
-  _LoginScreenState createState() => _LoginScreenState();
+import '../../models/user_model.dart';
+import '../../services/api_service.dart';
+import '../../views/views_Connect/home_connect.dart';
+import 'Inscrire/sign_user.dart';
 
+class LoginForm extends StatefulWidget {
+  const LoginForm({super.key});
+
+  @override
+  State<LoginForm> createState() => _LoginFormState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+class _LoginFormState extends State<LoginForm> {
+  bool hide = true;
+  String password = "";
+  String email = "";
+  bool isLoading = false;
+  bool isTwoFactorEnabled = false;
+  bool acceptTerms = true;
 
-  late SharedPreferences prefs;
+  bool isEmailValid = true;
+  bool isPasswordValid = true;
+   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+   late SharedPreferences prefs;
 
    
 
@@ -34,17 +46,18 @@ class _LoginScreenState extends State<LoginScreen> {
      }
 
 
-
+  
 Future<void> loginUser() async {
   try {
-    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
-      return;
-    }
+     _validateEmail();
+     _validatePassword();
     User userLogin= User(adresse_email:_emailController.text, mot_de_passe:_passwordController.text);
     var mytoken= await ApiManager().loginUserAndGetToken('loginUsers', userLogin.toMap());
+
      if(mytoken!=null){
        _emailController.clear();
        _passwordController.clear();
+       
        Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => ConnectedUserWidget(token: mytoken)),
@@ -52,138 +65,267 @@ Future<void> loginUser() async {
      }else{print("token not found");}
   } catch (e) {
     print("Erreur lors de la requête : $e");
+       _emailController.clear();
+       _passwordController.clear();
+       ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("Ce compte n'existe pas ! "),
+                duration: Duration(seconds: 2),
+              ),
+            );
+            return; 
+            
+          
   }
 }
+
+   void _validateEmail() {
+   
+  if (!emailRegex.hasMatch(_emailController.text)) {
+    setState(() {
+      isEmailValid = false;
+    });
+    throw Exception("Invalid email");
+  } else {
+    setState(() {
+      isEmailValid = true;
+    });
+  }
+}
+
+void _validatePassword() {
+  if (!passwordRegex.hasMatch(_passwordController.text)) {
+    setState(() {
+      isPasswordValid = false;
+    });
+    throw Exception("Invalid password");
+  } else {
+    setState(() {
+      isPasswordValid = true;
+    });
+  }
+}
+
+
+final RegExp emailRegex = RegExp(
+    r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$',
+    caseSensitive: false,
+    multiLine: false,
+);
+
+final RegExp passwordRegex = RegExp(
+    r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$',
+    caseSensitive: false,
+    multiLine: false,
+);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // resizeToAvoidBottomInset: false, 
+      backgroundColor: Theme.of(context).primaryColor,
       body: SingleChildScrollView(
-        child: Container(
+        child: SizedBox(
           height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          
-          child: SingleChildScrollView(
-            child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+          child: Column(
             children: [
-              // const SizedBox(height: 80,),
-              const SizedBox(height: 100,),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text('NOTABENE',
+                        style: GoogleFonts.lilitaOne(
+                            color: Colors.white, fontSize: 30)),
+                    const SizedBox(height: 10),
+                    Text("Veuillez vous connecter à votre compte",
+                        style: GoogleFonts.caveat(
+                            color: Colors.white, fontSize: 20)),
+                  ],
+                ),
+              ),
               Container(
-                alignment: Alignment.center,
-                 height: MediaQuery.of(context).size.height,
-                 width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.4,
+                width: double.infinity,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      spreadRadius: 1,
-                      blurRadius: 1,
-                      offset: const Offset(0, 1),
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 7,
+                      offset: const Offset(0, 3),
                     ),
                   ],
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const SizedBox(height: 15,),
-                    const Text(
-                      "BIENVENUE !",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 10,),
-                    const Text(
-                      "Veuillez vous connecter à votre compte",
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 220,),
-                    Container(
-                      // color: Colors.blue,
-                      child: Column(
-                        children: [
-                          SizedBox(
-                      width: 250,
-                      child: TextField(
-                        controller: _emailController,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                     
+                      TextField(
+                         controller: _emailController,
+                        onChanged: (value) {
+                          setState(() {
+                            email = value;
+                             isEmailValid = true;
+                          });
+                          
+                        },
+                        cursorColor: Colors.grey,
                         decoration: const InputDecoration(
-                          suffixIcon: Icon(FontAwesomeIcons.envelope, size: 17,),
-                          labelText: "Email",
+                          prefixIcon: Icon(FontAwesomeIcons.envelope, size: 17),
+                          border: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.grey,
+                              width: 2,
+                            ),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.grey,
+                            ),
+                          ),
+                          labelText: 'Email',
+                          labelStyle: TextStyle(
+                            color: Colors.grey,
+                          ),
+                          floatingLabelStyle: TextStyle(
+                            color: Colors.grey,
+                          ),
+                          floatingLabelBehavior: FloatingLabelBehavior.auto,
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      width: 250,
-                      child: TextField(
-                        obscureText: true,
-                        controller: _passwordController,
-                        decoration: const InputDecoration(
-                          suffixIcon: Icon(FontAwesomeIcons.eyeSlash, size: 17,),
-                          labelText: "Mot de passe",
+                       if (!isEmailValid)
+                          Container(
+                            margin:EdgeInsets.only(left: 190),
+                            child: const Text(
+                              "Format d'e-mail invalide",
+                              style: TextStyle(color: Colors.red,fontSize: 10),
+                            ),
+                          ),
+                      const SizedBox(height: 20),
+                      TextField(
+                         controller: _passwordController,
+                        onChanged: (value) {
+                          setState(() {
+                            password = value;
+                            isPasswordValid = true;
+                          });
+                          
+                        },
+                        cursorColor: Colors.grey,
+                        obscureText: hide,
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(
+                            Icons.lock_outline,
+                            color: Colors.grey,
+                            size: 17,
+                          ),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              hide
+                                  ? Icons.visibility_off_outlined
+                                  : Icons.remove_red_eye_outlined,
+                              color: Colors.grey,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                hide = !hide;
+                              });
+                            },
+                          ),
+                          border: const UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.grey,
+                              width: 2,
+                            ),
+                          ),
+                          focusedBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.grey,
+                            ),
+                          ),
+                          labelText: 'Mot de passe',
+                          labelStyle: const TextStyle(
+                            color: Colors.grey,
+                          ),
+                          floatingLabelStyle: const TextStyle(
+                            color: Colors.grey,
+                          ),
+                          floatingLabelBehavior: FloatingLabelBehavior.auto,
                         ),
                       ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.fromLTRB(20, 20, 40, 20),
+                       if (!isPasswordValid)
+                          Container(
+                            margin:EdgeInsets.only(left: 180),
+                            child: const Text(
+                              "Mot de passe invalide",
+                              style: TextStyle(color: Colors.red,fontSize: 10),
+                            ),
+                          ),
+                      const Padding(
+                      padding: EdgeInsets.fromLTRB(10, 10, 20, 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Text(
                             "Mot de passe oublié ?",
                             style: TextStyle(
-                              color: Colors.black, 
-                              fontSize: 10,
+                              color: Colors.blue, 
+                              fontSize: 12,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 20,),
-                    GestureDetector(
-                      onTap:loginUser,
-                      child: Container(
-                        width: 250,
-                        height: 50,
-                        alignment: Alignment.center,
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(40)),
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [Color(0xFFFFFFFF), Color(0xFF0000FF)],
-                          ),
-                        ),
-                        child: const Text(
-                          "Se connecter",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10,),
-                    Row(
+                      const SizedBox(height: 10),
+                      isLoading
+                          ? CircularProgressIndicator(
+                              color: Theme.of(context).primaryColor,
+                            )
+                          : ElevatedButton(
+                              onPressed: () {
+                                loginUser();
+                              
+                              },
+                              style: ButtonStyle(
+                                minimumSize:
+                                    MaterialStateProperty.all(const Size(double.infinity, 50)),
+                                backgroundColor:
+                                    MaterialStateProperty.all(Theme.of(context).primaryColor),
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(25),
+                                    side: BorderSide(color: Colors.white, width: 2),
+                                  ),
+                                ),
+                                elevation: MaterialStateProperty.all(10),
+                              ),
+                              child: Text(
+                                "Se connecter",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                      const SizedBox(height: 20),
+                      Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text("Nouveau sur Notabene ?"),
                         GestureDetector(
                           onTap: () {
                              
-                             Navigator.push(
+                             Navigator.pushReplacement(
                                context,
-                                    MaterialPageRoute(builder: (context) => RegistrationPage()),
+                                    MaterialPageRoute(builder: (context) => const SignForm()),
                                   );
                           },
                           child: const Text(
@@ -197,19 +339,14 @@ Future<void> loginUser() async {
                         ),
                       ],
                     )
-                        ],
-                      ),
-                    )
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],
-          ),)
+          ),
         ),
       ),
     );
   }
-  
- 
 }
-

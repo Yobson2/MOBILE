@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_notabene/views/views_Connect/home_connect.dart';
 import 'package:flutter_notabene/views/views_Connect/insertEntrepise.dart';
 import 'package:flutter_notabene/views/views_Connect/notification_connect.dart';
 import 'package:flutter_notabene/views/views_Connect/profit_connect.dart';
 
+import '../main.dart';
 import 'home_notconnect.dart';
 
 class ParamsView extends StatelessWidget {
   const ParamsView({super.key});
 
  void _showExitConfirmationDialog(BuildContext context) {
+  
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -54,10 +57,11 @@ class ParamsView extends StatelessWidget {
               ),
             ),
             onPressed: () {
+              mainSession.userId=0;
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => NotConnectedUserWidget(),
+                  builder: (context) => ConnectedUserWidget(),
                 ),
               );
             },

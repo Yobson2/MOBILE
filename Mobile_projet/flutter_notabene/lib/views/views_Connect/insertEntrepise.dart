@@ -42,7 +42,7 @@ class InsertCompagnyWidgetState extends State<InsertCompagnyWidget> {
       appBar:PreferredSize(
           preferredSize: Size.fromHeight(50.0), 
           child: AppBar(
-            backgroundColor: Colors.black12,
+            backgroundColor: Colors.blue,
             elevation: 0,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(

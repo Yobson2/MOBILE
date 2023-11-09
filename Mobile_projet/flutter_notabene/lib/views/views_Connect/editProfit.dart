@@ -22,7 +22,7 @@ class EditUserWidgetState extends State<EditUserWidget> {
       appBar: PreferredSize(
           preferredSize: Size.fromHeight(60.0), 
           child: AppBar(
-            backgroundColor: Colors.teal,
+            backgroundColor: Colors.blue,
             elevation: 0,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
@@ -107,11 +107,12 @@ class EditUserWidgetState extends State<EditUserWidget> {
             SizedBox(height: 16),
 
           ElevatedButton(
+            
             onPressed: () {
              
             },
             style: ElevatedButton.styleFrom(
-              primary: Colors.teal, 
+              primary: Colors.blue, 
               textStyle: TextStyle(color: Colors.white, fontSize: 18),
               padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15), 
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)), 

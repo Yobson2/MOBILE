@@ -31,7 +31,7 @@ class MyDetailsItemsState extends State<MyDetailsItems> {
       appBar:  PreferredSize(
           preferredSize: Size.fromHeight(60.0), 
           child: AppBar(
-            backgroundColor: Colors.black12,
+            backgroundColor: Colors.blue,
             elevation: 0,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
@@ -72,19 +72,6 @@ class DetailsHeader extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          //     CarouselSlider(
-          //   options: CarouselOptions(
-          //     autoPlay: true,
-          //     aspectRatio: 13.3 / 9,
-          //     viewportFraction: 1,
-          //     autoPlayAnimationDuration: Duration(milliseconds: 1000),
-          //   ),
-          //   items: [
-          //     Image.asset('assets/images/pict2.jpg'),
-          //     Image.asset('assets/images/pict2.jpg'),
-          //     Image.asset('assets/images/pict2.jpg'),
-          //   ],
-          // ),
 
           const SizedBox(height: 18),
           Padding(

@@ -20,7 +20,7 @@ class NoteUserWidgetState extends State<NoteUserWidget> {
        appBar: PreferredSize(
           preferredSize: Size.fromHeight(60.0), 
           child: AppBar(
-            backgroundColor: Colors.teal,
+            backgroundColor: Colors.blue,
             elevation: 0,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(

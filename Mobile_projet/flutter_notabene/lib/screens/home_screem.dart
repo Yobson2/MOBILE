@@ -9,14 +9,9 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isLoggedIn = mainSession.userId!= 0;
 
-    print("test de connexion $isLoggedIn");
-
-    return Scaffold(
-      body: isLoggedIn
-          ? const ConnectedUserWidget(token: "",)
-          : const NotConnectedUserWidget(),
+    return const Scaffold(
+      body: ConnectedUserWidget(token: "",)
     );
   }
 }
