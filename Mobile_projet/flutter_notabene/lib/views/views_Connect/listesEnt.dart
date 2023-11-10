@@ -111,7 +111,7 @@ class ListesInsertCompagnyWidgetState extends State<ListesInsertCompagnyWidget> 
 
                 child: ListTile(
                   leading:  CircleAvatar(
-                    backgroundImage: NetworkImage("http://192.168.1.4:8082/imageEntreprise/${companies[index]["photo_entreprises"]}"),
+                    backgroundImage: NetworkImage("http://192.168.1.8:8082/imageEntreprise/${companies[index]["photo_entreprises"]}"),
                     radius: 20,
                   ),
                   title: Text(

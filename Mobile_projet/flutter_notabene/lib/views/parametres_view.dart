@@ -5,7 +5,6 @@ import 'package:flutter_notabene/views/views_Connect/notification_connect.dart';
 import 'package:flutter_notabene/views/views_Connect/profit_connect.dart';
 
 import '../main.dart';
-import 'home_notconnect.dart';
 
 class ParamsView extends StatelessWidget {
   const ParamsView({super.key});
@@ -19,13 +18,13 @@ class ParamsView extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
-        title: Text(
+        title: const Text(
           "Déconnexion",
           style: TextStyle(
             fontWeight: FontWeight.bold,
           ),
         ),
-        content: Text(
+        content: const Text(
           "Êtes-vous sûr de vouloir vous déconnecter ?",
           style: TextStyle(
             fontSize: 16.0,
@@ -36,7 +35,7 @@ class ParamsView extends StatelessWidget {
             style: TextButton.styleFrom(
               primary: Colors.red, 
             ),
-            child: Text(
+            child: const Text(
               "Annuler",
               style: TextStyle(
                 fontSize: 18.0,
@@ -48,9 +47,9 @@ class ParamsView extends StatelessWidget {
           ),
           TextButton(
             style: TextButton.styleFrom(
-              primary: Colors.green, // Utilisation d'une couleur pour mettre en avant le bouton "Quitter"
+              primary: Colors.green, 
             ),
-            child: Text(
+            child: const Text(
               "Quitter",
               style: TextStyle(
                 fontSize: 18.0,
@@ -61,7 +60,7 @@ class ParamsView extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ConnectedUserWidget(),
+                  builder: (context) => const ConnectedUserWidget(),
                 ),
               );
             },
@@ -93,23 +92,47 @@ class ParamsView extends StatelessWidget {
               leading: const Icon(Icons.person_outline),
               title: const Text('Profil'),
               onTap: () {
-                Navigator.push(
+                if(mainSession.userId!=0){
+                  Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => NoteUserWidget()),
+                  MaterialPageRoute(builder: (context) => const NoteUserWidget()),
                 );
+                }else{
+                  ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Vous n'êtes pas connecté !"),
+                    duration: Duration(seconds: 1),
+                    backgroundColor: Colors.blue,
+                  ),
+                );
+                return;
+                }
+                
               },
             ),
             const Divider(),
             ListTile(
               leading: const Icon(Icons.notification_add),
-              title: const Text('Notifications'),
+              title: const Text('Historiques'),
               onTap: () {
-                Navigator.push(
+                if(mainSession.userId!=0){
+                   Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => const NotifUserWidget(),
                   ),
                 );
+                }else{
+                  ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Vous n'êtes pas connecté !"),
+                    duration: Duration(seconds: 1),
+                    backgroundColor: Colors.blue,
+                  ),
+                );
+                return;
+                }
+                
               },
             ),
             const Divider(),
@@ -117,12 +140,24 @@ class ParamsView extends StatelessWidget {
               leading: const Icon(Icons.create),
               title: const Text('Entreprise'),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const InsertCompagnyWidget(),
+                if(mainSession.userId!=0){
+                    Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const InsertCompagnyWidget(),
+                    ),
+                  );
+                }else{
+                  ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Vous n'êtes pas connecté !"),
+                    duration: Duration(seconds: 1),
+                    backgroundColor: Colors.blue,
                   ),
                 );
+                return;
+                }
+                
               },
             ),
             const Divider(),
@@ -130,7 +165,19 @@ class ParamsView extends StatelessWidget {
               leading: const Icon(Icons.exit_to_app),
               title: const Text('Quitter'),
               onTap: () {
-                _showExitConfirmationDialog(context);
+                if(mainSession.userId!=0){
+                 _showExitConfirmationDialog(context);
+                }else{
+                  ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Vous n'êtes pas connecté !"),
+                    duration: Duration(seconds: 1),
+                    backgroundColor: Colors.blue,
+                  ),
+                );
+                return;
+                }
+                
               },
             ),
           ],

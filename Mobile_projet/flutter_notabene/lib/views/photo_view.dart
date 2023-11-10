@@ -6,12 +6,26 @@ import 'package:google_fonts/google_fonts.dart';
 import '../components/infosConnexion.dart';
 import '../main.dart';
 
-class PhotoViewWithHero extends StatelessWidget {
+class PhotoViewWithHero extends StatefulWidget {
   const PhotoViewWithHero({Key? key}) : super(key: key);
 
   @override
+  PhotoViewWithHeroState createState() => PhotoViewWithHeroState();
+}
+
+class PhotoViewWithHeroState extends State<PhotoViewWithHero> {
+  late bool isLoggedIn ;
+
+  @override
+  void initState() {
+    super.initState();
+    isLoggedIn = mainSession.userId != 0;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final isLoggedIn = mainSession.userId!= 0;
+   
+   
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -61,19 +75,23 @@ class PhotoViewWithHero extends StatelessWidget {
                   ),
                   IconButton(
                     onPressed: () {
-                      isLoggedIn ?
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const PrintCamera()),
-                      ):  ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Vous n'êtes pas connecté !"),
-                          duration: Duration(seconds: 2),
-                          backgroundColor: Colors.blue,
-                        ),
-                      );
-                      return;
-                    
+                     
+                      if (mainSession.userId!=0) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const PrintCamera(),
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Vous n'êtes pas connecté !"),
+                            duration: Duration(seconds: 2),
+                            backgroundColor: Colors.blue,
+                          ),
+                        );
+                      }
                     },
                     icon: const Icon(
                       Icons.camera_alt,
@@ -87,18 +105,22 @@ class PhotoViewWithHero extends StatelessWidget {
             const SizedBox(height: 40),
             ElevatedButton(
               onPressed: () {
-                 isLoggedIn ?
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const GalleryPage()),
-                ):  ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("Vous n'êtes pas connecté !"),
-                    duration: Duration(seconds: 2),
-                    backgroundColor: Colors.blue,
-                  ),
-                );
-                return;
+                if (mainSession.userId!=0) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const GalleryPage(),
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Vous n'êtes pas connecté !"),
+                      duration: Duration(seconds: 2),
+                      backgroundColor: Colors.blue,
+                    ),
+                  );
+                }
               },
               style: ElevatedButton.styleFrom(
                 primary: Colors.black,
@@ -112,7 +134,6 @@ class PhotoViewWithHero extends StatelessWidget {
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
-                    // decoration: TextDecoration.underline,
                   ),
                 ),
                 side: const BorderSide(color: Colors.white, width: 2),
@@ -136,7 +157,4 @@ class PhotoViewWithHero extends StatelessWidget {
       ),
     );
   }
-
 }
-
-

@@ -44,8 +44,8 @@ class AvisModalState extends State<AvisModal> {
 
 
 List<dynamic> mes =  [
-        "images_1698866707767_CAP4671698923468031741.jpg",
-        "images_1698920687807_CAP9022900798735588594.jpg",
+        "image_1699272031168_Screenshot_20231105-230746_LinkedIn.jpg",
+        "image_1699538601942_FB_IMG_1699482790112.jpg",
         "images_1698867078268_FB_IMG_1698850505798.jpg",
         "images_1698920687807_CAP9022900798735588594.jpg"
     ];
@@ -209,7 +209,7 @@ List<dynamic> mes =  [
                         child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child:Image.network(
-                          "http://192.168.1.4:8082/images/${donnees}",
+                          "http://192.168.1.8:8082/images/${donnees}",
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
                             print("Error loading image: $error");

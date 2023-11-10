@@ -34,7 +34,7 @@ class _HomeViewState extends State<HomeView> {
     
     if (response != null) {
       final allItems = response['allEntreprises'];
-      // print("resultat recherche $allItems");
+      print("resultat recherche $allItems");
       setState(() {
         searchResults = allItems;
          isLoading = false;
@@ -43,13 +43,13 @@ class _HomeViewState extends State<HomeView> {
   }
    
     Future<void> _search() async {
-      setState(() {
-    isLoading = true; 
-     });
-       await  getAllData();
+    //   setState(() {
+    // isLoading = true; 
+    //  });
+       getAllData();
       String query = _searchController.text;
       List<dynamic> filteredResults = [];
-       
+        print("object112  $searchResults");  
       if (query.isNotEmpty) {
         for (var item in searchResults) {
           if (item['nom_entreprise'] != null && item['nom_entreprise'].toLowerCase().contains(query)) {
@@ -57,8 +57,9 @@ class _HomeViewState extends State<HomeView> {
           }
         }
 
-             
+         
       }
+        print("object2  $filteredResults");  
         setState(() {
           searchResultsFinal=filteredResults;
           
@@ -72,6 +73,7 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
+    print("object  $searchResultsFinal");
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -170,7 +172,7 @@ class _HomeViewState extends State<HomeView> {
                                 alignment: Alignment.centerRight,
                                 width: 180,
                                  child: Text(
-                                  'categories',
+                                   searchResultsFinal[index]['categories'] ,
                                   style: const TextStyle(
                                       fontSize: 10, 
                                       color: Colors.blue, 
@@ -251,7 +253,7 @@ class MySecondBloc extends StatelessWidget {
       height: 400,
       child: Column(
         children: [
-          Expanded(child: isLoading!
+          Expanded(child: isLoading==false
                   ? const Center(child: CircularProgressIndicator())
                   : MyComment()),
         ],  

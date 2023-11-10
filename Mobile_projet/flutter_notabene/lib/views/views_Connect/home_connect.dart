@@ -37,7 +37,7 @@ class _ConnectedUserWidgetState extends State<ConnectedUserWidget> {
     const MapSample(),
     const PhotoViewWithHero(),
     const ParamsView(),
-    const MessageConnexion(),
+    // const MessageConnexion(),
   ];
 
 @override
@@ -125,7 +125,27 @@ Future<void> _initializeUserData() async {
         ),
         actions: [
           isLoggedIn ?
-          Text("data")
+         Container(
+        padding: EdgeInsets.all(2),
+        width: 50,
+        height: 40,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: Colors.black12, 
+            width: 2.0, 
+          ),
+        ),
+        child: ClipOval(
+          child: Image(
+            image: NetworkImage(
+              'https://images.unsplash.com/photo-1699378999301-8c88a6a237d9?q=80&w=1364&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+            ),
+            fit: BoxFit.fill,
+          ),
+        ),
+      )
+
           :IconButton(
             color: Colors.black,
             icon: const Icon(Icons.person_outline),
@@ -181,13 +201,7 @@ Future<void> _initializeUserData() async {
             }
 
           });
-           setState(() {
-          if (index == 3 && isLoggedIn==true) {
-            _currentIndex = index;
-          } else if (index == 3 && isLoggedIn==false) {
-            _currentIndex = 4;
-          } 
-       });
+         
         },
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(

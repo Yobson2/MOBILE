@@ -89,7 +89,7 @@ class DetailsHeader extends StatelessWidget {
                   const Icon(Icons.star, color: Colors.yellow, size: 20),
                 const SizedBox(width: 10),
                 const Text(
-                  "(100) Avis",
+                  "(1) Avis",
                   style: TextStyle(fontSize: 16, color: Colors.grey),
                 ),
               ],

@@ -58,7 +58,7 @@ Future<void> EnregistrerCompagny(userId) async {
             return; 
           }
  
-  var url = 'http://192.168.1.4:8082/apiNotabene/v1/insertEntreprise/$userId';
+  var url = 'http://192.168.1.8:8082/apiNotabene/v1/insertEntreprise/$userId';
     
 
  

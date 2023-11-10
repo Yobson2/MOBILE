@@ -272,6 +272,7 @@ class MapSampleState extends State<MapSample> {
     return Scaffold(
       
       appBar: AppBar(
+        automaticallyImplyLeading: false,
           elevation: 0.0, 
           backgroundColor: Colors.transparent,
         title: Container(
