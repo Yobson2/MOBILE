@@ -3,7 +3,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 class ApiManager {
-  final String baseUrl="http://192.168.1.8:8082/apiNotabene/v1";
+  final String baseUrl="http://192.168.1.107:8082/apiNotabene/v1";
+  final String baseUrlImage="http://192.168.1.107:8082";
+
+   static String get apiKey => 'AIzaSyCRD-FSgdo6Tcpoj-RTuLQfmERxBagzm04';
+   static String get apiUrl =>'https://maps.googleapis.com/maps/api/place/textsearch/json?query';
   ApiManager();
 
   Future<Map<String, dynamic>> fetchData(String endpoint, String message, String messageError) async {

@@ -63,7 +63,6 @@ class ListesInsertCompagnyWidgetState extends State<ListesInsertCompagnyWidget> 
         duration: Duration(seconds: 1),
       )..show(context);
     
-    print('mes données sont supprimées');
       setState(() {
         companies.removeWhere((company) => company["id_entreprise"] == idCompagny);
         isLoading = false; 
@@ -111,7 +110,7 @@ class ListesInsertCompagnyWidgetState extends State<ListesInsertCompagnyWidget> 
 
                 child: ListTile(
                   leading:  CircleAvatar(
-                    backgroundImage: NetworkImage("http://192.168.1.8:8082/imageEntreprise/${companies[index]["photo_entreprises"]}"),
+                    backgroundImage: NetworkImage("${ApiManager().baseUrlImage}/imageEntreprise/${companies[index]["photo_entreprises"]}"),
                     radius: 20,
                   ),
                   title: Text(

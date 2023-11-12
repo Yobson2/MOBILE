@@ -17,6 +17,7 @@ class _GalleryPageState extends State<GalleryPage> {
   List<dynamic> _photos = [];
   int? _userId;
   List<String> _selectedImageUrls = [];
+  List<int> imageIdsToDelete = [];
 
   Future<void> _getData(id) async {
     final result = await _someAsyncMethod(id);
@@ -26,19 +27,51 @@ class _GalleryPageState extends State<GalleryPage> {
     });
   }
 
-  Future<List<dynamic>> _someAsyncMethod(id) async {
-    final response = await database.getUserImages(id);
-    return response;
-  }
+ Future<List<dynamic>> _someAsyncMethod(id) async {
+  final response = await database.getUserImages(id);
+  // Créer une nouvelle liste modifiable à partir de la liste existante
+      List<dynamic> mutableList = List.from(response);
+      return mutableList;
+    }
 
-  void _onPhotoClicked(String imageUrl) {
+  void _onPhotoClicked(List<dynamic> resultatImage) {
     setState(() {
-      if (_selectedImageUrls.contains(imageUrl)) {
-        _selectedImageUrls.remove(imageUrl);
+      if (_selectedImageUrls.contains(resultatImage[0]) && imageIdsToDelete.contains(resultatImage[1])) {
+        _selectedImageUrls.remove(resultatImage[0]);
+        imageIdsToDelete.remove(resultatImage[1]);
       } else {
-        _selectedImageUrls.add(imageUrl);
+        _selectedImageUrls.add(resultatImage[0]);
+         imageIdsToDelete.add(resultatImage[1]);
       }
     });
+    
+  }
+ void _removeSelectedPhotos() {
+  setState(() {
+    _photos.removeWhere((photo) => _selectedImageUrls.contains('${photo["image_data"]}'));
+  });
+}
+
+
+
+  Future<void> deletePhoto() async {
+    print("delete photo $_photos");
+    
+    try {
+      await database.deleteMultipleImages(imageIdsToDelete);
+       _removeSelectedPhotos(); 
+       _selectedImageUrls.clear(); 
+       ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Suppression terminée"),
+                    duration: Duration(seconds: 2),
+                    backgroundColor: Colors.blue,
+                  ),
+                );
+                return;
+    } catch (e) {
+       print("suppressing error: $e");
+    }
   }
 
   @override
@@ -78,19 +111,24 @@ class _GalleryPageState extends State<GalleryPage> {
   actions: [
     IconButton(
       onPressed: () {
-        // Gérer l'action de suppression
-        ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("Aucune photo n'a été choisie!"),
-                    duration: Duration(seconds: 2),
-                    backgroundColor: Colors.blue,
-                  ),
-                );
-                return;
+        if (_photos.isNotEmpty){
+       _showDeleteConfirmationDialog();
+      }else{
+        
+          ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Aucune photo n'a été choisie!"),
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.blue,
+        ),
+      );
+      return;
+      }
+       
       },
       icon: Icon(
         Icons.delete_sharp,
-        color: Colors.red,
+        color: Colors.white,
         size: 28,
       ),
       splashRadius: 24,
@@ -104,15 +142,19 @@ class _GalleryPageState extends State<GalleryPage> {
     ),
     IconButton(
   onPressed: () {
-    // _sendSelectedPhotos,
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Aucune photo n'a été choisie!"),
-        duration: Duration(seconds: 2),
-        backgroundColor: Colors.blue,
-      ),
-    );
-    return;
+     if (_selectedImageUrls.isNotEmpty){
+       _sendSelectedPhotos();
+      }else{
+        
+          ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Aucune photo n'a été choisie!"),
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.blue,
+        ),
+      );
+      return;
+      }
   },
   icon: ClipRRect(
     borderRadius: BorderRadius.circular(12), 
@@ -151,10 +193,11 @@ class _GalleryPageState extends State<GalleryPage> {
                         itemBuilder: (context, index) {
                           final imageUrl = '${_photos[index]["image_data"]}';
                           final isSelected = _selectedImageUrls.contains(imageUrl);
-
+                          final imageIndex=_photos[index]["id_image"];
+                          List<dynamic> resultatImage = [imageUrl,imageIndex];
                           return GestureDetector(
                             onTap: () {
-                              _onPhotoClicked(imageUrl);
+                              _onPhotoClicked(resultatImage);
                             },
                             child: Stack(
                               children: [
@@ -190,4 +233,48 @@ class _GalleryPageState extends State<GalleryPage> {
       ),
     );
   }
+  void _showDeleteConfirmationDialog() {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text("Confirmation de suppression"),
+        content: Text("Êtes-vous sûr de vouloir supprimer ces photos ?"),
+        actionsPadding: EdgeInsets.symmetric(horizontal: 20), 
+        actions: [
+          TextButton(
+            child: const Text(
+              "Annuler ",
+              style: TextStyle(color: Colors.blue), 
+            ),
+            onPressed: () {
+              Navigator.of(context).pop(); 
+            },
+          ),
+          const SizedBox(width: 10), 
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: Colors.red, 
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10), 
+              ),
+            ),
+            child: const Text(
+              "Supprimer",
+              style: TextStyle(color: Colors.white, fontSize: 16), // Couleur et taille du texte
+            ),
+            onPressed: () {
+              deletePhoto();
+              Navigator.of(context).pop(); 
+            },
+          ),
+        ],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15), 
+        ),
+      );
+    },
+  );
+}
+
 }

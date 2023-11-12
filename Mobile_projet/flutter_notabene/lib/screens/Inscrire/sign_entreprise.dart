@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flushbar/flutter_flushbar.dart';
+import 'package:flutter_notabene/services/api_service.dart';
 import 'package:flutter_notabene/views/carte_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -57,8 +58,8 @@ Future<void> EnregistrerCompagny(userId) async {
             );
             return; 
           }
- 
-  var url = 'http://192.168.1.8:8082/apiNotabene/v1/insertEntreprise/$userId';
+  
+  var url = '${ApiManager().baseUrl}/insertEntreprise/$userId';
     
 
  

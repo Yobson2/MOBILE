@@ -1,40 +1,3 @@
-// import 'package:path/path.dart';
-// import 'package:sqflite/sqflite.dart';
-
-
-// class DatabaseLocal {
-//   // static Database _database;
-//   late Database _database;
-  
-//   Future<Database> get database async {
-//     if (_database != null) return _database;
-    
-//     // Si la base de données n'a pas été initialisée, on la crée
-//     _database = await initDatabase();
-//     return _database;
-//   }
-
-//   Future<Database> initDatabase() async {
-//     String path = join(await getDatabasesPath(), 'my_database.db');
-    
-//     // Ouvrir la base de données (elle sera créée s'il n'existe pas)
-//     return await openDatabase(
-//       path,
-//       version: 1,
-//       onCreate: (Database db, int version) async {
-//         // Créer les tables ici
-//         await db.execute(
-//           'CREATE TABLE galeries(id_photos INTEGER PRIMARY KEY, images TEXT)',
-//         );
-//       },
-      
-//     );
-    
-//   }
-
-
-
-
 import 'dart:convert';
 import 'dart:io';
 
@@ -114,6 +77,19 @@ class DatabaseLocal {
     print('Erreur lors de la suppression de l\'image : $e');
   }
 }
+Future<void> deleteMultipleImages(List<int> imageIds) async {
+    try {
+      Database db = await database;
+      await db.delete(
+        'galeries',
+        where: 'id_image IN (${imageIds.map((id) => '?').join(', ')})',
+        whereArgs: imageIds,
+      );
+      print('Images supprimées avec succès');
+    } catch (e) {
+      print('Erreur lors de la suppression des images : $e');
+    }
+  }
 
 }
 

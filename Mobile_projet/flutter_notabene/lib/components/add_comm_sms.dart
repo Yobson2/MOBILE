@@ -122,7 +122,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
  Future<void> addCommentaire(int myId) async {
   var request = http.MultipartRequest(
     'POST',
-    Uri.parse('http://192.168.1.8:8082/apiNotabene/v1/addPost/$myId'),
+    Uri.parse('${ApiManager().baseUrl}/addPost/$myId'),
   );
 
   if (_images.isNotEmpty) {
@@ -248,9 +248,6 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
   @override
   Widget build(BuildContext context) {
     print('User $userId   created ');
-    print("datat $resultat");
-      // _nameEntrepriseController.text = mainSession.entreprise;
-      // _commentaireController.text = mainSession.motCommentaire;
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
