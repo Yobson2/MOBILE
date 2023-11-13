@@ -309,9 +309,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
             prefixIcon: Icon(Icons.comment),
           ),
           onChanged: (value) {
-             setState(() {
-            mainSession.setCommentaire(_commentaireController.text);
-          });
+            
           },
         ),
          const Divider(),
@@ -350,7 +348,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
                           // mesPhotos
                           itemCount: testImage1 ? _images.length : resultat.length ,
                           itemBuilder: (BuildContext context, int index) {
-                            final imageUrl = testImage1 ? _images[index] : resultat![index];
+                            final imageUrl = testImage1 ? _images[index] : resultat[index];
                             return Padding(
                               padding: const EdgeInsets.all(1.0),
                               child: GestureDetector(

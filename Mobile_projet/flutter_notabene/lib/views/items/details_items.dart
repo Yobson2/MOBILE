@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_notabene/main.dart';
 import 'package:flutter_notabene/services/api_service.dart';
 
 import '../../components/moreAvis_component.dart';
@@ -77,7 +78,7 @@ class DetailsHeader extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 18.0),
             child: Text(
-              "$nom", 
+              "$nom ", 
               style: const TextStyle(color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
             ),
           ),
@@ -85,11 +86,12 @@ class DetailsHeader extends StatelessWidget {
             padding: const EdgeInsets.only(left: 18.0),
             child: Row(
               children: [
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < mainSession.nbreTolalEtoille; i++)
                   const Icon(Icons.star, color: Colors.yellow, size: 20),
                 const SizedBox(width: 10),
-                const Text(
-                  "(1) Avis",
+                 Text(
+                 
+                  "(${mainSession.taille}) Avis",
                   style: TextStyle(fontSize: 16, color: Colors.grey),
                 ),
               ],
@@ -358,13 +360,17 @@ class InfosAvis extends StatefulWidget {
 class InfosAvisState extends State<InfosAvis> {
   List<dynamic> myItemsData = [];
   List<dynamic> myItemsDataCommentaire = [];
-
+   List<int> tabEtoilles = [];
+   List<int> tabNbFinal = [];
   Future<void> getData() async {
     try {
       final reponse = await ApiManager().fetchData("getAllCommentaire/${widget.categorieName}/${widget.idEntreprise}", "message de recuperation des commentaires", "messageError");
 
       setState(() {
         myItemsData = reponse['utilisateursAvecCommentaires'];
+        mainSession.setItemsLength(myItemsData.length);
+
+       
       });
 
     } catch (e) {
@@ -380,6 +386,7 @@ class InfosAvisState extends State<InfosAvis> {
 
   @override
   Widget build(BuildContext context) {
+    //  print("objects to delete $tabNbFinal");
     return SingleChildScrollView(
       child: Container(
         color: Colors.transparent,
@@ -408,7 +415,8 @@ class InfosAvisState extends State<InfosAvis> {
               children: myItemsData.map((commentaire) {
                 return AvisListe(
                   commentaires: commentaire,
-                  
+                   tabEtoilles: tabEtoilles,
+                   tabNbFinal:tabNbFinal
                 );
               }).toList(),
             ),
@@ -419,21 +427,38 @@ class InfosAvisState extends State<InfosAvis> {
   }
 }
 
-class AvisListe extends StatelessWidget {
+
+class AvisListe extends StatefulWidget {
   final dynamic commentaires;
+  final dynamic tabEtoilles;
   final String? categorieName;
-  const AvisListe({Key? key, this.commentaires,this.categorieName});
+  final dynamic tabNbFinal;
+
+  const AvisListe({Key? key, this.commentaires, this.categorieName, this.tabEtoilles, this.tabNbFinal}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  AvisListeState createState() => AvisListeState();
+}
 
+class AvisListeState extends State<AvisListe> {
+  @override
+  Widget build(BuildContext context) {
+    widget.tabEtoilles.add(widget.commentaires["nombre_etoiles"]);
+    int somme = widget.tabEtoilles.map((element) => element as int).reduce((value, element) => value + element);
+    print("this is my etoilles $somme");
+
+   
+   setState(() {
+      widget.tabNbFinal.add( somme );
+   });
     return Container(
       padding: EdgeInsets.only(top: 20.0),
       child: Row(
         children: [
           const CircleAvatar(
             radius: 30,
-            backgroundImage: NetworkImage("https://images.unsplash.com/photo-1524499982521-1ffd58dd89ea?auto=format&fit=crop&q=80&w=1571&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+            backgroundImage: NetworkImage(
+                "https://images.unsplash.com/photo-1524499982521-1ffd58dd89ea?auto=format&fit=crop&q=80&w=1571&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
           ),
           SizedBox(width: 10),
           Expanded(
@@ -442,50 +467,58 @@ class AvisListe extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                      Container(
-                        color: Colors.transparent,
-                        width: 140,
-                          child: Text(
-                                 "${commentaires['nom_utilisateur']}",
-                                    style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                          fontSize: 13,
-                                        ),
-                                      ),
-                                           
-                      ),
-                      const Spacer(flex: 4,),
-              
-                  Container(
-                    
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                               final userName= commentaires['nom_utilisateur'];
-                              final usercontenu= commentaires['contenu_commentaire']; usercontenu;
-                              final entrepriseName= commentaires['entreprise']['nom_entreprise'];
-                              final heure=commentaires['heure'];
-                              final date=commentaires['date_commentaire'];
-                              final nbre_etoiles=commentaires['nombre_etoiles'];
-                                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return  AvisModal(userName:userName,usercontenu:usercontenu,entrepriseName:entrepriseName,heure:heure,date:date,nbre_etoiles:nbre_etoiles, idPhoto:commentaires['id_photo'],idLoc: commentaires['entreprise']['id_Localisation']);
-                            },
-                          );  
-                          },
-                          child: Icon(Icons.more_horiz)
+                    Container(
+                      color: Colors.transparent,
+                      width: 140,
+                      child: Text(
+                        "${widget.commentaires['nom_utilisateur']}",
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
                         ),
-                        const SizedBox(width: 5),
-                      ],
+                      ),
                     ),
-                  ),
+                    const Spacer(
+                      flex: 4,
+                    ),
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              final userName = widget.commentaires['nom_utilisateur'];
+                              final usercontenu = widget.commentaires['contenu_commentaire'];
+                              final entrepriseName = widget.commentaires['entreprise']['nom_entreprise'];
+                              final heure = widget.commentaires['heure'];
+                              final date = widget.commentaires['date_commentaire'];
+                              final nbre_etoiles = widget.commentaires['nombre_etoiles'];
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AvisModal(
+                                    userName: userName,
+                                    usercontenu: usercontenu,
+                                    entrepriseName: entrepriseName,
+                                    heure: heure,
+                                    date: date,
+                                    nbre_etoiles: nbre_etoiles,
+                                    idPhoto: widget.commentaires['id_photo'],
+                                    idLoc: widget.commentaires['entreprise']['id_Localisation'],
+                                  );
+                                },
+                              );
+                            },
+                            child: Icon(Icons.more_horiz),
+                          ),
+                          const SizedBox(width: 5),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
                 Text(
-                 commentaires['contenu_commentaire'] ?? "",
+                  widget.commentaires['contenu_commentaire'] ?? "",
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
@@ -496,12 +529,12 @@ class AvisListe extends StatelessWidget {
                 const SizedBox(height: 5),
                 Row(
                   children: [
-                    for (int i = 0; i < (commentaires['nombre_etoiles'] ?? 0); i++)
+                    for (int i = 0; i < (widget.commentaires['nombre_etoiles'] ?? 0); i++)
                       Icon(Icons.star, color: Colors.yellow, size: 16),
                     SizedBox(width: 5),
                     Spacer(),
                     Text(
-                      "${commentaires['heure']}",
+                      "${widget.commentaires['heure']}",
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey,
@@ -509,7 +542,7 @@ class AvisListe extends StatelessWidget {
                     ),
                     SizedBox(width: 5),
                     Text(
-                      "${commentaires['date_commentaire']}",
+                      "${widget.commentaires['date_commentaire']}",
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey,
@@ -524,5 +557,4 @@ class AvisListe extends StatelessWidget {
       ),
     );
   }
-  
 }

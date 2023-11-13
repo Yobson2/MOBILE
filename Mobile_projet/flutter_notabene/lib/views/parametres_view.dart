@@ -113,7 +113,7 @@ class ParamsView extends StatelessWidget {
             const Divider(),
             ListTile(
               leading: const Icon(Icons.notification_add),
-              title: const Text('Historiques'),
+              title: const Text('Notification'),
               onTap: () {
                 if(mainSession.userId!=0){
                    Navigator.push(

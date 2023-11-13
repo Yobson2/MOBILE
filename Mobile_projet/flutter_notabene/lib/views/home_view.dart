@@ -253,7 +253,7 @@ class MySecondBloc extends StatelessWidget {
       height: 400,
       child: Column(
         children: [
-          Expanded(child: isLoading==false
+          Expanded(child: isLoading!=false
                   ? const Center(child: CircularProgressIndicator())
                   : MyComment()),
         ],  

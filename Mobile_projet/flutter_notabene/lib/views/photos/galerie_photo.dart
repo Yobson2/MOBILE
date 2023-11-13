@@ -145,7 +145,6 @@ class _GalleryPageState extends State<GalleryPage> {
      if (_selectedImageUrls.isNotEmpty){
        _sendSelectedPhotos();
       }else{
-        
           ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Aucune photo n'a été choisie!"),

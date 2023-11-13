@@ -1,5 +1,7 @@
 
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_notabene/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,6 +15,8 @@ class SessionManager {
     String entreprise="";
     String motCommentaire="";
     String categorie="";
+    int taille=0;
+    int nbreTolalEtoille=0;
     
 
   late String sessionId;
@@ -30,20 +34,16 @@ class SessionManager {
     userId = userId_;  
   }
 
-  setEntrepriseName(String name){
-    entreprise=name;
-  }
-  
-   setCommentaire(String name){
-    motCommentaire=name;
-    print("objects selected $motCommentaire");
-  }
 
   setCategorie(String mot){
     categorie=mot;
-   
   }
-
+  setItemsLength(int item){
+    taille=item;
+  }
+  setCalNumEtoille(int item){
+    nbreTolalEtoille= item ~/taille;
+  }
  
   
 
