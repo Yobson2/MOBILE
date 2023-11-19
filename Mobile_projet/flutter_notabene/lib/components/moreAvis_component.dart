@@ -243,7 +243,7 @@ List<dynamic> mes =  [
                   });
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => MapSample(longLoc:logitude,latLoc:latitude,testPrint: printBtn)),
+                    MaterialPageRoute(builder: (context) => MapSample(longLoc:logitude,latLoc:latitude,testPrint: printBtn,testPrint2:false)),
                   );
                 },
                 child: const Column(

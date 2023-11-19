@@ -34,7 +34,6 @@ class _HomeViewState extends State<HomeView> {
     
     if (response != null) {
       final allItems = response['allEntreprises'];
-      print("resultat recherche $allItems");
       setState(() {
         searchResults = allItems;
          isLoading = false;
@@ -43,13 +42,12 @@ class _HomeViewState extends State<HomeView> {
   }
    
     Future<void> _search() async {
-    //   setState(() {
-    // isLoading = true; 
-    //  });
+      setState(() {
+    isLoading = true; 
+     });
        getAllData();
       String query = _searchController.text;
       List<dynamic> filteredResults = [];
-        print("object112  $searchResults");  
       if (query.isNotEmpty) {
         for (var item in searchResults) {
           if (item['nom_entreprise'] != null && item['nom_entreprise'].toLowerCase().contains(query)) {
@@ -59,7 +57,6 @@ class _HomeViewState extends State<HomeView> {
 
          
       }
-        print("object2  $filteredResults");  
         setState(() {
           searchResultsFinal=filteredResults;
           
@@ -73,7 +70,7 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    print("object  $searchResultsFinal");
+    // print("object  $searchResultsFinal");
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -133,6 +130,14 @@ class _HomeViewState extends State<HomeView> {
                   shrinkWrap: true,
                   itemCount: searchResultsFinal.length,
                   itemBuilder: (context, index) {
+                     if (searchResultsFinal.isEmpty || index >= searchResultsFinal.length) {
+                  return Container(
+                    child: Center(
+                      child: Text('Aucun résultat trouvé'),
+                    ),
+                  );
+                }
+
                     return ListTile(
                       title: Container(
                         child: Column(
@@ -191,7 +196,7 @@ class _HomeViewState extends State<HomeView> {
                       onTap: () {
                         Navigator.push(
                              context,
-                            MaterialPageRoute(builder: (context) => MyDetailsItems(idEntreprise:searchResultsFinal[index]["id_entreprise"],nomEntreprise:searchResultsFinal[index]["nom_entreprise"],idLocalisation:searchResultsFinal[index]["id_Localisation"],adresseEntreprise:searchResultsFinal[index]["adresse_entreprise"],categorieName:"BANQUE")),
+                            MaterialPageRoute(builder: (context) => MyDetailsItems(idEntreprise:searchResultsFinal[index]["id_entreprise"],nomEntreprise:searchResultsFinal[index]["nom_entreprise"],idLocalisation:searchResultsFinal[index]["id_Localisation"],adresseEntreprise:searchResultsFinal[index]["adresse_entreprise"],categorieName:searchResultsFinal[index]["categories"])),
                           );
                         },
                     );
@@ -199,7 +204,7 @@ class _HomeViewState extends State<HomeView> {
                 ), 
                 ),
              ),
-              
+          if (!_searchController.text.isNotEmpty)  
            CarouselSlider(
           options: CarouselOptions(
             height: 200,
@@ -229,9 +234,10 @@ class _HomeViewState extends State<HomeView> {
           ],
         ),
 
-          // if(searcheck=false) 
+           if (!_searchController.text.isNotEmpty)
             const CategorySection(),
-            MySecondBloc(isLoading:isLoading)
+          if (!_searchController.text.isNotEmpty)
+            MySecondBloc(),
           ],
          
           
@@ -242,22 +248,37 @@ class _HomeViewState extends State<HomeView> {
 }
 
 class MySecondBloc extends StatelessWidget {
-   final bool? isLoading;
+  const MySecondBloc();
 
-  const MySecondBloc({ this.isLoading});
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder(
+      // Simule un chargement asynchrone pendant 2 secondes
+      future: Future.delayed(Duration(seconds: 2)),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // Affiche le loader pendant le chargement
+          return Container(
+            height: 400,
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        } else {
+          // Une fois le chargement terminé, affiche le contenu de la page
+          return Container(
+            height: 400,
+            child: Column(
+              children: [
+                // MyComment()
 
-    print("mes test $isLoading");
-    return Container(
-      height: 400,
-      child: Column(
-        children: [
-          Expanded(child: isLoading!=false
-                  ? const Center(child: CircularProgressIndicator())
-                  : MyComment()),
-        ],  
-      ),  
+                 Expanded(
+                  child: MyComment()), 
+              ],
+            ),
+          );
+        }
+      },
     );
   }
 }

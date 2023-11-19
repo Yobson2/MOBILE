@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_notabene/main.dart';
 import 'package:flutter_notabene/services/api_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -55,38 +56,48 @@ class _ListesBlocItemsState extends State<ListesBlocItems> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-          preferredSize: Size.fromHeight(80.0), 
+          preferredSize: Size.fromHeight(80.0),
           child: AppBar(
             backgroundColor: Colors.blue,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(30.0), 
+                bottomLeft: Radius.circular(30.0),
                 bottomRight: Radius.circular(30.0),
               ),
             ),
             title: Column(
-          children: [
-            Text(
-          "${widget.title ?? ""}",
-          style: GoogleFonts.quicksand(
-            textStyle: const TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
+              children: [
+                Text(
+                  "${widget.title ?? ""}",
+                  style: GoogleFonts.quicksand(
+                    textStyle: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Text(
+                  "(${myItemsData.length}) Avis",
+                  style: TextStyle(fontSize: 14, color: Colors.black),
+                )
+              ],
             ),
-          ),
-        ),
-        Text("(${myItemsData.length}) Avis",
-        style: TextStyle(fontSize: 14, color: Colors.black),
-        )
-          ],
-        ),
             centerTitle: true,
             toolbarHeight: 80,
             elevation: 0.0,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                 Navigator.pop(context);
+                setState(() {
+                  mainSession.nbreTolalEtoille=0;
+                });
+              },
+            ),
           ),
         ),
-    
+
       body: Container(
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
@@ -220,7 +231,7 @@ class MyItems extends StatelessWidget {
                         color: Colors.grey,
                       ),
                     ),
-                     const Spacer(flex: 15,),
+                    
                       
                   ],
                 ),
@@ -228,6 +239,7 @@ class MyItems extends StatelessWidget {
           ],
         ),
       subtitle: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
   children: [
       if(item['entreprise'] != null)
     InkWell(
@@ -253,7 +265,7 @@ class MyItems extends StatelessWidget {
         ? "${item['entreprise']['nom_entreprise'] ?? 'Nom non disponible'}"
         : '',
       style: TextStyle(
-        fontSize: 14,
+        fontSize: 10,
         color: Colors.grey,
         fontWeight: FontWeight.normal,
       ),

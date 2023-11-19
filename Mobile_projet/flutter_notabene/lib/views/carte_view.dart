@@ -232,7 +232,7 @@ class MapSampleState extends State<MapSample> {
           showCurrentUserLocation=false; 
       });
       
-
+   print('ontapapap $tappedPoint');
 
       searchPlaceInfo(tappedPoint.latitude, tappedPoint.longitude);
        setState(() {
@@ -291,39 +291,57 @@ class MapSampleState extends State<MapSample> {
             ],
           ),
           child: TextField(
-            controller: _searchController,
-            onChanged: (query) {
-              if (query.isNotEmpty) {
-                searchPlaces(query);
-              } else {
-                setState(() {
-                  suggestions = [];
-                  testcard = false; 
-                });
-              }
-            },
-            style: TextStyle(color: Colors.black),
-            decoration:  InputDecoration(
-              prefixIcon: Icon(
-                Icons.search,
-                color: Colors.black,
-              ),
-              hintText: 'Recherche....',
-              hintStyle: TextStyle(color: Colors.grey),
-              border: InputBorder.none,
+  controller: _searchController,
+  onChanged: (query) {
+    if (query.isNotEmpty) {
+      searchPlaces(query);
+    } else {
+      setState(() {
+        suggestions = [];
+        testcard = false;
+      });
+    }
+  },
+  style: TextStyle(color: Colors.black),
+  decoration: InputDecoration(
+    prefixIcon: Icon(
+      Icons.search,
+      color: Colors.black,
+    ),
+    suffixIcon: _searchController.text.isNotEmpty
+        ? IconButton(
+            icon: const Icon(
+              Icons.close,
+              color: Colors.black,
             ),
-          ),
+            onPressed: () {
+              
+              setState(() {
+                _searchController.clear();
+                suggestions = [];
+                testcard = false;
+                 
+              });
+               
+            },
+          )
+        : null,
+    hintText: 'Recherche....',
+    hintStyle: TextStyle(color: Colors.grey),
+    border: InputBorder.none,
+  ),
+)
+
         ),
-        // actions: <Widget>[
+      ),
+
+     // actions: <Widget>[
         //   IconButton(
         //     color: Colors.black,
         //     onPressed: showSelectedLocation,
         //     icon: Icon(Icons.gps_fixed),
         //   )
         // ],
-      ),
-
-    
       body: Stack(
         children: [
           if (isLoading) 
@@ -410,8 +428,18 @@ class MapSampleState extends State<MapSample> {
               ),
 
               ),
-
             
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end, 
+              children: [
+                IconButton(
+                  color: Colors.black,
+                  onPressed: showSelectedLocation,
+                  icon: Icon(Icons.gps_fixed),
+                ),
+              ],
+            )
+            ,
              Positioned(
             left: 10.0,
             right: 10.0,

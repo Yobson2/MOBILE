@@ -3,17 +3,14 @@ import 'package:flutter_notabene/main.dart';
 import 'package:flutter_notabene/screens/login_screen.dart';
 import 'package:flutter_notabene/views/carte_view.dart';
 import 'package:flutter_notabene/views/photo_view.dart';
-import 'package:flutter_notabene/views/views_Connect/profit_connect.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../components/infosConnexion.dart';
+
 import '../../components/option_component.dart';
-import '../home_notconnect.dart';
 import '../home_view.dart';
 import '../parametres_view.dart';
-import 'insertEntrepise.dart';
-import 'notification_connect.dart';
+
 
 
 
@@ -51,9 +48,24 @@ Future<void> _initializeUserData() async {
   try {
     Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token!);
     id = jwtDecodedToken['userId'];
-    print("object id: " + id.toString());
-   
+    // print("object id: " + id.toString());
+         
     await _saveUserIdToStorage(id); 
+    ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "Bienvenue ! Vous êtes maintenant connecté.",
+            style: TextStyle(
+              color: Colors.white, 
+              fontSize: 16.0, 
+            ),
+          ),
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.green,
+        ),
+      );
+      return;
+
   } catch (e) {
     print('Erreur lors du décodage du token : $e');
   }
@@ -92,7 +104,7 @@ Future<void> _initializeUserData() async {
 
     return Scaffold(
       appBar: PreferredSize(
-          preferredSize: Size.fromHeight(60.0), 
+          preferredSize: const Size.fromHeight(60.0), 
           child: AppBar(
              automaticallyImplyLeading: false,
             backgroundColor: Colors.blue,
@@ -126,7 +138,7 @@ Future<void> _initializeUserData() async {
         actions: [
           isLoggedIn ?
          Container(
-        padding: EdgeInsets.all(2),
+        padding: const EdgeInsets.all(2),
         width: 50,
         height: 40,
         decoration: BoxDecoration(
@@ -136,7 +148,7 @@ Future<void> _initializeUserData() async {
             width: 2.0, 
           ),
         ),
-        child: ClipOval(
+        child: const ClipOval(
           child: Image(
             image: NetworkImage(
               'https://images.unsplash.com/photo-1699378999301-8c88a6a237d9?q=80&w=1364&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
@@ -173,15 +185,15 @@ Future<void> _initializeUserData() async {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           FloatingActionButton(
-             backgroundColor: Colors.black12,
+             backgroundColor: Colors.grey[400],
             shape: const CircleBorder(),
              elevation: 5,
-            child: Icon(Icons.comment_bank),
+            child:const Icon(Icons.comment_bank),
             onPressed: () {
               showDialog(
               context: context,
               builder: (BuildContext context) {
-                return CategoriesModal();
+                return const CategoriesModal();
               },
             );
               

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_notabene/main.dart';
 import 'package:flutter_notabene/services/api_service.dart';
 
 import '../../components/moreAvis_component.dart';
@@ -24,8 +25,12 @@ class _MyCommentState extends State<MyComment> {
     final reponse = await ApiManager().fetchData("getAllCommentaire", "message", "messageError");
     if (reponse != null && reponse.containsKey('data')) {
       final res = reponse['data'];
+      
       setState(() {
         myItemsData = List<dynamic>.from(res);
+       
+
+
       });
     } else {
       print("Erreur: Réponse de l'API invalide");
@@ -57,6 +62,9 @@ class _MyCommentState extends State<MyComment> {
               shrinkWrap: true,
               itemCount: 3,
               itemBuilder: (context, index) {
+                if (myItemsData.isEmpty || index >= myItemsData.length) {
+                return const Center();
+              }
                 final avis = myItemsData[index];
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),

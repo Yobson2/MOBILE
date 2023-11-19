@@ -43,6 +43,8 @@ class SessionManager {
   }
   setCalNumEtoille(int item){
     nbreTolalEtoille= item ~/taille;
+
+    print("mes etoilles $nbreTolalEtoille");
   }
  
   
@@ -52,4 +54,20 @@ class SessionManager {
     return prefs.getInt('user_id');
   }
 
+
+List<Map<String, dynamic>> getDataByIdUtilisateur(int idUtilisateur, List<Map<String, dynamic>> dataList) {
+  List<Map<String, dynamic>> result = [];
+
+  for (var data in dataList) {
+    if (data['id_utilisateur'] == idUtilisateur) {
+      result.add(data);
+    }
+  }
+
+  return result;
+}
+
+// List<Map<String, dynamic>> result = mainSession.getDataByIdUtilisateur(mainSession.userId,  res);
+
+        
 }

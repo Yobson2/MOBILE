@@ -46,18 +46,20 @@ class _CompanyRegistrationSectionState
   }
     
 Future<void> EnregistrerCompagny(userId) async {
-   if (selectedOption.isEmpty ||
-              (textFieldController.text.isEmpty || addressFieldController.text.isEmpty 
-             )) {
-            // Show a SnackBar with a message
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Veuillez remplir tous les champs.'),
-                duration: Duration(seconds: 2),
-              ),
-            );
-            return; 
-          }
+   if (
+              textFieldController.text.isEmpty || addressFieldController.text.isEmpty 
+             ) {
+          //   // Show a SnackBar with a message
+          //   ScaffoldMessenger.of(context).showSnackBar(
+          //     const SnackBar(
+          //       content: Text("Veuillez remplir tous les champs y compris le champ falcultatif s'il s'agit d'une entreprise."),
+          //       duration: Duration(seconds: 2),
+          //     ),
+          //   );
+          //   return; 
+          prin
+           }
+
   
   var url = '${ApiManager().baseUrl}/insertEntreprise/$userId';
     

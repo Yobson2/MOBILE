@@ -34,6 +34,16 @@ class MyDetailsItemsState extends State<MyDetailsItems> {
           child: AppBar(
             backgroundColor: Colors.blue,
             elevation: 0,
+            //  leading: IconButton(
+            //   icon: Icon(Icons.arrow_back),
+            //   onPressed: () {
+            //     Navigator.pop(context);
+            //     final int btn=0;
+            //     setState(() {
+            //       mainSession.nbreTolalEtoille=btn;
+            //     });
+            //   },
+            // ),
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(30.0), 
@@ -370,7 +380,6 @@ class InfosAvisState extends State<InfosAvis> {
         myItemsData = reponse['utilisateursAvecCommentaires'];
         mainSession.setItemsLength(myItemsData.length);
 
-       
       });
 
     } catch (e) {
@@ -445,9 +454,9 @@ class AvisListeState extends State<AvisListe> {
   Widget build(BuildContext context) {
     widget.tabEtoilles.add(widget.commentaires["nombre_etoiles"]);
     int somme = widget.tabEtoilles.map((element) => element as int).reduce((value, element) => value + element);
-    print("this is my etoilles $somme");
+    // print("this is my etoilles $somme");
 
-   
+    mainSession.setCalNumEtoille(somme);
    setState(() {
       widget.tabNbFinal.add( somme );
    });
