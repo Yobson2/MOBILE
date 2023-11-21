@@ -30,10 +30,12 @@ class ListesInsertAvisWidgetState extends State<ListesInsertAvisWidget> {
        setState(() {
       isLoading = true; 
     });
-     final response= await ApiManager().fetchData("getAllEntreprises/${userId}", "message", "messageError");
+     final response= await ApiManager().fetchData("message/${userId}", "message", "messageError");
      
      try {
-       final res = response['allEntreprises'];
+       final res = response['userComments'];
+
+       print("object ===== $res");
        setState(() {
          companies=List<dynamic>.from(res);
           isLoading = false; 
@@ -94,6 +96,7 @@ class ListesInsertAvisWidgetState extends State<ListesInsertAvisWidget> {
         child: ListView.builder(
           itemCount: companies.length,
           itemBuilder: (BuildContext context, int index) {
+            var company = companies[index];
             return Card(
                 elevation: 1,
                 margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 4),
@@ -103,18 +106,18 @@ class ListesInsertAvisWidgetState extends State<ListesInsertAvisWidget> {
                 color: Colors.white, 
 
                 child: ListTile(
-                  leading:  CircleAvatar(
-                    backgroundImage: NetworkImage("http://192.168.1.4:8082/imageEntreprise/${companies[index]["photo_entreprises"]}"),
-                    radius: 20,
-                  ),
+                  // leading:  CircleAvatar(
+                  //   backgroundImage: NetworkImage("http://192.168.1.4:8082/imageEntreprise/${companies[index]["photo_entreprises"]}"),
+                  //   radius: 20,
+                  // ),
                   title: Text(
-                    companies[index]["nom_entreprise"],
+                     company?["entreprise"]["nom_entreprise"] ?? "Nom non disponible",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  subtitle:  Padding(
+                  subtitle:  const Padding(
                     padding: EdgeInsets.only(top: 8), 
                     child: Text(
-                      "Vous avez laissé 45 commentaires concernant cette entreprise.",
+                      "Vous avez laissé un commentaires concernant cette entreprise.",
                       style: TextStyle(fontSize: 12),
                     ),
                   ),

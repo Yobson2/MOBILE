@@ -57,7 +57,7 @@ Future<void> EnregistrerCompagny(userId) async {
           //     ),
           //   );
           //   return; 
-          prin
+          print('mon test ok');
            }
 
   

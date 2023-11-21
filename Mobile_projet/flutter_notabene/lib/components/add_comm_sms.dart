@@ -120,19 +120,19 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
 
  
  Future<void> addCommentaire(int myId) async {
-  if (selectedOption.isEmpty ||
-              (_commentaireController.text.isEmpty || _images.isNotEmpty ||
-               _images.isNotEmpty || _images.isNotEmpty || _images.isNotEmpty
-             )) {
-            // Show a SnackBar with a message
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Veuillez remplir tous les champs.'),
-                duration: Duration(seconds: 2),
-              ),
-            );
-            return; 
-          }
+  // if (selectedOption.isEmpty ||
+  //             (_commentaireController.text.isEmpty || _images.isNotEmpty ||
+  //              _images.isNotEmpty || _images.isNotEmpty || _images.isNotEmpty
+  //            )) {
+  //           // Show a SnackBar with a message
+  //           ScaffoldMessenger.of(context).showSnackBar(
+  //             const SnackBar(
+  //               content: Text('Veuillez remplir tous les champs.'),
+  //               duration: Duration(seconds: 2),
+  //             ),
+  //           );
+  //           return; 
+  //         }
   var request = http.MultipartRequest(
     'POST',
     Uri.parse('${ApiManager().baseUrl}/addPost/$myId'),

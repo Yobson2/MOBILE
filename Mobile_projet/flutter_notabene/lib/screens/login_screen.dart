@@ -134,10 +134,22 @@ final RegExp passwordRegex = RegExp(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text('NOTABENE',
+                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                            'NOTA',
+                            style: GoogleFonts.lilitaOne(
+                            color: Colors.black, fontSize: 30)
+                          ),
+                          Text(
+                            'BENE',
                         style: GoogleFonts.lilitaOne(
-                            color: Colors.white, fontSize: 30)),
-                    const SizedBox(height: 10),
+                            color: Colors.yellow, fontSize: 30)
+                          ),
+                      ],
+                    ),
+            const SizedBox(height: 10),
                     Text("Veuillez vous connecter à votre compte",
                         style: GoogleFonts.caveat(
                             color: Colors.white, fontSize: 20)),
