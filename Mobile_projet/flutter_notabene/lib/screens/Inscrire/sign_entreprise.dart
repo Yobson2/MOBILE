@@ -22,8 +22,7 @@ class _CompanyRegistrationSectionState
   File? _image;
   final TextEditingController textFieldController = TextEditingController();
   final TextEditingController addressFieldController = TextEditingController();
-  final TextEditingController emailFieldController = TextEditingController();
-  final TextEditingController phoneFieldController = TextEditingController();
+ 
     int? userId;
     List<dynamic> resultat=[];
 
@@ -46,18 +45,15 @@ class _CompanyRegistrationSectionState
   }
     
 Future<void> EnregistrerCompagny(userId) async {
-   if (
-              textFieldController.text.isEmpty || addressFieldController.text.isEmpty 
-             ) {
-          //   // Show a SnackBar with a message
-          //   ScaffoldMessenger.of(context).showSnackBar(
-          //     const SnackBar(
-          //       content: Text("Veuillez remplir tous les champs y compris le champ falcultatif s'il s'agit d'une entreprise."),
-          //       duration: Duration(seconds: 2),
-          //     ),
-          //   );
-          //   return; 
-          print('mon test ok');
+   if (selectedOption.isEmpty || _image == null || textFieldController.text.isEmpty || addressFieldController.text.isEmpty) {
+            // Show a SnackBar with a message
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("Veuillez remplir tous les champs!!"),
+                duration: Duration(seconds: 2),
+              ),
+            );
+            return; 
            }
 
   
@@ -104,21 +100,28 @@ Future<void> EnregistrerCompagny(userId) async {
   @override
   Widget build(BuildContext context) {
   
-    return SingleChildScrollView(
+    return Scaffold(
+      // backgroundColor:Colors.blue.shade50,
+      body: SingleChildScrollView(
+        
       child: Container(
+        // color: Colors.blue.shade50,
         padding: EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
              const Text(
-              "Remplissez les informations de votre entreprise ",
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+                "Remplissez les informations de votre entreprise",
+                style: TextStyle(
+                  color: Colors.black, 
+                  fontSize: 16, 
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic, 
+                  letterSpacing: 1.2, 
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
-            ),
+
             
             SizedBox(height: 15),
 
@@ -190,77 +193,80 @@ Future<void> EnregistrerCompagny(userId) async {
 
       SizedBox(height: 10),
            if (selectedOption!="")
-          Text(
-            "Catégorie sélectionnée : $selectedOption",
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          ),
-           SizedBox(height: 10),
-           ElevatedButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return CategoriesModal2(
-                    onCategorySelected: (selectedCategory) {
-                      setState(() {
-                        selectedOption = selectedCategory;
-                      });
-                    },
-                  );
-                },
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              primary: Colors.blue, 
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10), 
-              ),
-            ),
-            child: const Text(
-              "Associer une catégorie",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-         
+         Text(
+  "Catégorie sélectionnée : $selectedOption",
+  style: TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.bold,
+    color: Colors.grey,
+  ),
+),
+
+SizedBox(height: 10),
+
+ElevatedButton(
+  onPressed: () {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CategoriesModal2(
+          onCategorySelected: (selectedCategory) {
+            setState(() {
+              selectedOption = selectedCategory;
+            });
+          },
+        );
+      },
+    );
+  },
+  style: ElevatedButton.styleFrom(
+    primary: Colors.blue,
+    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10),
+    ),
+  ),
+  child: Text(
+    "Associer une catégorie",
+    style: TextStyle(
+      color: Colors.white,
+      fontSize: 14,
+      fontWeight: FontWeight.bold,
+    ),
+  ),
+),
+
 
             SizedBox(height: 30),
 
-            Align(
-              alignment: Alignment.centerRight,
-              child: ElevatedButton(
-                onPressed: () {
-                 EnregistrerCompagny(userId);
+           Align(
+  alignment: Alignment.centerRight,
+  child: ElevatedButton(
+    onPressed: () {
+      EnregistrerCompagny(userId);
+    },
+    style: ElevatedButton.styleFrom(
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      primary: Colors.blue,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+    ),
+    child: Text(
+      "S'inscrire",
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+  ),
+),
 
-                },
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: 5),
-                  primary: Colors.blue,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: const Text(
-                  "S'inscrire",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
           ],
         ),
       ),
+    ),
     );
   }
 }

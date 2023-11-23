@@ -246,7 +246,7 @@ class ParamsView extends StatelessWidget {
             ListTile(
                contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               leading: const Icon(Icons.create),
-              title: const Text('Entreprise'),
+              title: const Text('Mes Entreprises'),
               onTap: () {
                 if(mainSession.userId!=0){
                     Navigator.push(
