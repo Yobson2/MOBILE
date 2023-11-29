@@ -67,6 +67,15 @@ final RegExp passwordRegex = RegExp(
         _nameController.clear();
         _emailController.clear();
         _passwordController.clear();
+       ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Inscription réussie !"),
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.blue,
+          ),
+        );
+        return;
+
       } catch (e) {
         print("erreur message $e");
       }

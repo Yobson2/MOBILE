@@ -232,7 +232,7 @@ class MapSampleState extends State<MapSample> {
           showCurrentUserLocation=false; 
       });
       
-   print('ontapapap $tappedPoint');
+  //  print('ontapapap $tappedPoint');
 
       searchPlaceInfo(tappedPoint.latitude, tappedPoint.longitude);
        setState(() {

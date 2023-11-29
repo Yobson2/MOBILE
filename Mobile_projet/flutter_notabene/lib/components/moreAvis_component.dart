@@ -85,7 +85,7 @@ List<dynamic> mes =  [
   @override
   Widget build(BuildContext context) {
     print("mes données $mes");
-     print("mes données 2 $mesDonnees");
+     print("mes données 2 ${ApiManager().baseUrlImage}/images/");
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -194,7 +194,7 @@ List<dynamic> mes =  [
       
                 SizedBox(height: 16),
                 CarouselSlider(
-                  items: mes.map((donnees) {
+                  items: mesDonnees.map((donnees) {
                     return Container(
                       width: double.infinity,
                       margin: EdgeInsets.symmetric(horizontal: 8),
@@ -205,8 +205,10 @@ List<dynamic> mes =  [
                         color: Colors.grey[200],
                         child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
+                        // mesDonnees
+                        // "https://images.unsplash.com/photo-1554980291-c3e7cea75872?q=80&w=1396&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                         child:Image.network(
-                          "https://images.unsplash.com/photo-1554980291-c3e7cea75872?q=80&w=1396&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                          "${ApiManager().baseUrlImage}/images/$donnees",
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
                             print("Error loading image: $error");
