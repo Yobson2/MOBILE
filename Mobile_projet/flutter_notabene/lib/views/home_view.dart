@@ -223,67 +223,65 @@ class _HomeViewState extends State<HomeView> {
                 }
 
                     return ListTile(
-                      title: Container(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                           Row(
-                            children: [
-                               Text(searchResultsFinal[index]['nom_entreprise'],
-                               style: const TextStyle(
-                                    fontSize: 18, 
-                                    color: Colors.black54
-                                    
-                                  ),
-                               ),
-                            ],
-                           ),
-                            
-                            Row(
-                              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                 const Icon(Icons.location_on, size: 14),
-                              const SizedBox(width: 4),
-                              Flexible(
-                                
-                                child: Text(
-                                 searchResultsFinal[index]['adresse_entreprise']  ,
-                                  softWrap: true, 
-                                  style: const TextStyle(
-                                    fontSize: 13, 
-                                    
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 10,),
-                              
-                               Container(
-                                alignment: Alignment.centerRight,
-                                width: 180,
-                                 child: Text(
-                                   searchResultsFinal[index]['categories'] ,
-                                  style: const TextStyle(
-                                      fontSize: 10, 
-                                      color: Colors.blue, 
-                                      
-                                    ),
-                                  
-                                  ),
-                               ),
-                               
-                              ],
-                            ),
-                            const Divider()
-                          ],
-                        )
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                             context,
-                            MaterialPageRoute(builder: (context) => MyDetailsItems(idEntreprise:searchResultsFinal[index]["id_entreprise"],nomEntreprise:searchResultsFinal[index]["nom_entreprise"],idLocalisation:searchResultsFinal[index]["id_Localisation"],adresseEntreprise:searchResultsFinal[index]["adresse_entreprise"],categorieName:searchResultsFinal[index]["categories"])),
-                          );
-                        },
-                    );
+  title: Container(
+    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          searchResultsFinal[index]['nom_entreprise'],
+          style: TextStyle(
+            fontSize: 18,
+            color: Colors.black54,
+          ),
+        ),
+        SizedBox(height: 8),
+        Row(
+          children: [
+            Icon(Icons.location_on, size: 14),
+            SizedBox(width: 4),
+            Flexible(
+              child: Text(
+                searchResultsFinal[index]['adresse_entreprise'],
+                softWrap: true,
+                style: TextStyle(
+                  fontSize: 13,
+                ),
+              ),
+            ),
+            SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                searchResultsFinal[index]['categories'],
+                style: TextStyle(
+                  fontSize: 10,
+                  color: Colors.blue,
+                ),
+                textAlign: TextAlign.right,
+              ),
+            ),
+          ],
+        ),
+        Divider(),
+      ],
+    ),
+  ),
+  onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MyDetailsItems(
+          idEntreprise: searchResultsFinal[index]["id_entreprise"],
+          nomEntreprise: searchResultsFinal[index]["nom_entreprise"],
+          idLocalisation: searchResultsFinal[index]["id_Localisation"],
+          adresseEntreprise: searchResultsFinal[index]["adresse_entreprise"],
+          categorieName: searchResultsFinal[index]["categories"],
+        ),
+      ),
+    );
+  },
+);
+
                   },
                 ), 
                 ),

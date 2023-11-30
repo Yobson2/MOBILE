@@ -15,8 +15,9 @@ class MapSample extends StatefulWidget {
   final double? longLoc;
   final bool? testPrint;
   final bool? testPrint2;
+  final String? nomBoite;
 
-  const MapSample({Key? key, this.latLoc,this.longLoc, this.testPrint,this.testPrint2});
+  const MapSample({Key? key, this.latLoc,this.longLoc, this.testPrint,this.testPrint2,this.nomBoite});
 
   @override
   State<MapSample> createState() => MapSampleState();
@@ -44,7 +45,7 @@ class MapSampleState extends State<MapSample> {
   bool useManualCursor = true;
   bool testcard = false;
   bool isLoading = false;
-
+  String locName="Votre position actuelle";
   bool showCurrentUserLocation = true;
   bool isLoadingCarte=false;
 
@@ -90,10 +91,11 @@ class MapSampleState extends State<MapSample> {
     // double longitude = position.longitude;
     // LatLng userLocation = LatLng(latitude, longitude);
 
-    if(widget.latLoc!=null && widget.longLoc!=null){
+    if(widget.latLoc!=null && widget.longLoc!=null && widget.nomBoite!=null){
       latitude=widget.latLoc;
       longitude=widget.longLoc;
        userLocation = LatLng(latitude!, longitude!);
+       locName=widget.nomBoite!;
     }else{
        latitude=position.latitude;
       longitude=position.longitude;
@@ -107,7 +109,7 @@ class MapSampleState extends State<MapSample> {
       
       _kUserMarker = Marker(
         markerId: const MarkerId("position"),
-        infoWindow: const InfoWindow(title: "Votre position actuelle"),
+        infoWindow: InfoWindow(title: "$locName"),
         position: userLocation,
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
       );

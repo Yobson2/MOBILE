@@ -205,8 +205,6 @@ List<dynamic> mes =  [
                         color: Colors.grey[200],
                         child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
-                        // mesDonnees
-                        // "https://images.unsplash.com/photo-1554980291-c3e7cea75872?q=80&w=1396&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                         child:Image.network(
                           "${ApiManager().baseUrlImage}/images/$donnees",
                           fit: BoxFit.cover,
@@ -243,9 +241,11 @@ List<dynamic> mes =  [
                   setState(() {
                     printBtn = false;
                   });
+
+                  print("object nom de l'entreprise ${widget.entrepriseName}");
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => MapSample(longLoc:logitude,latLoc:latitude,testPrint: printBtn,testPrint2:false)),
+                    MaterialPageRoute(builder: (context) => MapSample(longLoc:logitude,latLoc:latitude,testPrint: printBtn,testPrint2:false, nomBoite:widget.entrepriseName)),
                   );
                 },
                 child: const Column(
