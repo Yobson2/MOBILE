@@ -16,6 +16,7 @@ class MapSample extends StatefulWidget {
   final bool? testPrint;
   final bool? testPrint2;
   final String? nomBoite;
+  
 
   const MapSample({Key? key, this.latLoc,this.longLoc, this.testPrint,this.testPrint2,this.nomBoite});
 
@@ -59,6 +60,12 @@ class MapSampleState extends State<MapSample> {
     target: LatLng(5.3709971, 0),
     zoom: 14.4746,
   );
+
+  @override
+  void dispose() {
+  
+    super.dispose();
+  }
 
   @override
   void initState() {

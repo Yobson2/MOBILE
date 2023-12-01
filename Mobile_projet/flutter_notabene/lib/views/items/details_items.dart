@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_notabene/main.dart';
+import 'package:flutter_notabene/screens/Inscrire/sign_user.dart';
 import 'package:flutter_notabene/services/api_service.dart';
+import 'package:flutter_notabene/views/photo_view.dart';
 
 import '../../components/moreAvis_component.dart';
 import '../carte_view.dart';
@@ -18,13 +20,39 @@ class MyDetailsItems extends StatefulWidget {
 
 class MyDetailsItemsState extends State<MyDetailsItems> {
   bool printBtn = true;
+  late double logitude = 0.0;
+  late double latitude = 0.0;
 
   @override
   void initState() {
     super.initState();
     printBtn = true;
-  
+  getPhotoDataLocalisation();
   }
+  Future<void> getPhotoDataLocalisation() async {
+  try {
+    if (widget.idLocalisation != null) {
+      final reponse = await ApiManager().fetchData("getAllLocalisation/${widget.idLocalisation}", "message of photo", "messageError");
+
+      final res = reponse['AllLocalisations'];
+      print("Response from API: $res");
+      
+      if (res != null) {
+        setState(() {
+          logitude = res["longitude"];
+          latitude = res["latitude"];
+        });
+      } else {
+        // Handle the case when res is null
+        print("Error: res is null");
+      }
+    } else {
+      print("Error: widget.idLocalisation is null");
+    }
+  } catch (e) {
+    print("Erreur : Les photos n'ont pas été récupérées $e");
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +87,7 @@ class MyDetailsItemsState extends State<MyDetailsItems> {
           children: [
             
             DetailsHeader(nom: widget.nomEntreprise, idCompagny:widget.idEntreprise, adresseEntreprise:widget.adresseEntreprise), 
-            MyChangeInfos(adresseEntreprise:widget.adresseEntreprise),
+            MyChangeInfos(adresseEntreprise:widget.adresseEntreprise,nomEntreprise:widget.nomEntreprise, logitude:logitude,latitude :latitude ),
             const Infos1Description(),
             InfosAvis(idEntreprise:widget.idEntreprise,categorieName:widget.categorieName),
             SizedBox(height: 10), 
@@ -84,12 +112,12 @@ class DetailsHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
 
-          const SizedBox(height: 18),
+          const SizedBox(height: 15),
           Padding(
             padding: const EdgeInsets.only(left: 18.0),
             child: Text(
               "$nom ", 
-              style: const TextStyle(color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+              style: const TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
           Padding(
@@ -119,8 +147,11 @@ class MyChangeInfos extends StatelessWidget {
   
   
   final String? adresseEntreprise;
+  final String? nomEntreprise;
+  final double? latitude;
+  final double? logitude;
 
-  const MyChangeInfos({Key? key, this.adresseEntreprise,}) : super(key: key);
+  const MyChangeInfos({Key? key, this.adresseEntreprise,this.nomEntreprise, this.latitude,this.logitude}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return  Padding(
@@ -141,7 +172,7 @@ class MyChangeInfos extends StatelessWidget {
                 ),
                 SizedBox(
                   height: 130,
-                  child: MyTables(adresseEntreprise:adresseEntreprise),
+                  child: MyTables(adresseEntreprise:adresseEntreprise,nomEntreprise:nomEntreprise,latitude :latitude, logitude: logitude),
                 ),
               ],
             ),
@@ -153,7 +184,10 @@ class MyChangeInfos extends StatelessWidget {
 }
 class MyTables extends StatelessWidget {
   final String ? adresseEntreprise;
-  const MyTables({Key? key, this.adresseEntreprise}) : super(key: key);
+  final String? nomEntreprise;
+  final double? latitude;
+  final double? logitude;
+  const MyTables({Key? key, this.adresseEntreprise,this.nomEntreprise,this.latitude,this.logitude}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -167,7 +201,7 @@ class MyTables extends StatelessWidget {
               child: Infos1Blocs(adresseEntreprise:adresseEntreprise),
             ),
             Center(
-              child: Infos2(),
+              child: Infos2(nomEntreprise:nomEntreprise,latitude:latitude, logitude:logitude),
             ),
           ],
         ),
@@ -182,20 +216,29 @@ class MyTables extends StatelessWidget {
 //-------------------------MES INFORMATIONS---------------------------------------
 
 class Infos2 extends StatelessWidget {
-  const Infos2({Key? key});
+  final String? nomEntreprise;
+  final double? latitude;
+  final double? logitude;
+  const Infos2({Key? key, this.nomEntreprise,this.latitude,this.logitude});
 
   @override
   Widget build(BuildContext context) {
+
     return GestureDetector(
       onTap: () {
-       
-         Navigator.push(
-            context,
-            MaterialPageRoute(
-            builder: (context) =>  MapSample(),
-            ),
-        );
-      },
+          // if (latitude != null && logitude != null) {
+          //   Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //       builder: (context) =>  const MapSample(),
+          //     ),
+          //   );
+          // } else {
+          //   print("Error: Latitude or longitude is null");
+          //   // Faites quelque chose pour gérer le cas où latitude ou longitude est null
+          // }
+        },
+
       child: SingleChildScrollView(
         child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -265,7 +308,7 @@ class Infos1 extends StatelessWidget {
                     Text(
                       adresseEntreprise!,
                       style: const TextStyle(
-                        fontSize: 16,
+                        fontSize: 12,
                         color: Colors.black,
                       ),
                     ),
@@ -286,9 +329,9 @@ class Infos1 extends StatelessWidget {
                     Icon(Icons.open_in_new, color: Colors.yellow, size: 20),
                     SizedBox(width: 6),
                     Text(
-                      "Ouvert à 20:00",
+                      "Ouvert à --:--",
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 13,
                         color: Colors.black,
                       ),
                     ),
@@ -300,9 +343,9 @@ class Infos1 extends StatelessWidget {
                     Icon(Icons.close_fullscreen, color: Colors.blue, size: 20),
                     SizedBox(width: 6),
                     Text(
-                      "Fermé à 20:00",
+                      "Fermé à --:--",
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 13,
                         color: Colors.black,
                       ),
                     ),

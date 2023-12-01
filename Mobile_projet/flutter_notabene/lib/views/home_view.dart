@@ -267,6 +267,9 @@ class _HomeViewState extends State<HomeView> {
     ),
   ),
   onTap: () {
+    setState(() {
+        mainSession.nbreTolalEtoille=0;
+        });
     Navigator.push(
       context,
       MaterialPageRoute(
