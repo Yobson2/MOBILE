@@ -111,21 +111,43 @@ class _ListesBlocItemsState extends State<ListesBlocItems> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Expanded(
-                child: isLoading
-                  ? Center(child: CircularProgressIndicator())
-                  : myItemsData.isNotEmpty
-                    ? ListView.builder(
-                        itemCount: myItemsData.length,
-                        itemBuilder: (context, index) {
+             Expanded(
+              child: isLoading
+                ? Center(child: CircularProgressIndicator())
+                : myItemsData != null && myItemsData.isNotEmpty
+                  ? ListView.builder(
+                      itemCount: myItemsData.length,
+                      itemBuilder: (context, index) {
+                        if (index >= 0 && index < myItemsData.length) {
                           Map<String, dynamic> item = myItemsData[index];
-                          return MyItems(item: item,categorieName:widget.title);
-                        },
-                      )
-                    : Center(
-                        child: Text("Aucune donnée disponible"), 
+                          return MyItems(item: item, categorieName: widget.title);
+                        } else {
+                          return Container(); 
+                        }
+                      },
+                    )
+                  : const Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.warning,
+                        size: 50, 
+                        color: Colors.orange, 
                       ),
-              ),
+                      SizedBox(height: 10), 
+                      Text(
+                        "Aucune donnée disponible",
+                        style: TextStyle(
+                          fontSize: 16, 
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+
+            ),
+
             ],
           ),
         ),

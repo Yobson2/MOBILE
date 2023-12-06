@@ -120,19 +120,18 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
 
  
  Future<void> addCommentaire(int myId) async {
-  // if (selectedOption.isEmpty ||
-  //             (_commentaireController.text.isEmpty || _images.isNotEmpty ||
-  //              _images.isNotEmpty || _images.isNotEmpty || _images.isNotEmpty
-  //            )) {
-  //           // Show a SnackBar with a message
-  //           ScaffoldMessenger.of(context).showSnackBar(
-  //             const SnackBar(
-  //               content: Text('Veuillez remplir tous les champs.'),
-  //               duration: Duration(seconds: 2),
-  //             ),
-  //           );
-  //           return; 
-  //         }
+    if (
+      _commentaireController.text.isEmpty &&
+       _images.isEmpty ||
+       mesPhotos==null &&
+      // _nameEntrepriseController.text.isEmpty ||
+       texteAfficheAddresse.isEmpty &&
+       nombreEtoiles == null &&
+       mainSession.categorie.isEmpty
+      ) {
+        print("toutuututuutut");
+    
+    }
   var request = http.MultipartRequest(
     'POST',
     Uri.parse('${ApiManager().baseUrl}/addPost/$myId'),
@@ -259,7 +258,6 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
 
   @override
   Widget build(BuildContext context) {
-    print('User $userId   created ');
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -536,12 +534,6 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
                               leading: Icon(Icons.photo_album),
                               title: Text("Galerie de notabene"),
                               onTap: () async {
-                                // Navigator.pop(context); 
-                                // Navigator.pop(context); 
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(builder: (context) => const GalleryPage()),
-                                // );
                                  resultat = await Navigator.push(
                                     context,
                                     MaterialPageRoute(builder: (context) => GalleryPage()),
@@ -570,7 +562,19 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
                 style: ElevatedButton.styleFrom(
                   primary: Colors.blue,
                 ),
-                child: const Text("Ajouter une photo"),
+                child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 10.0),
+                      child: const Center(
+                        child: Text(
+                          "Ajouter une photo",
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
               ),
 
             const Divider(),

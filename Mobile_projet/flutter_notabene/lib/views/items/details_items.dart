@@ -23,21 +23,23 @@ class MyDetailsItemsState extends State<MyDetailsItems> {
   late double logitude = 0.0;
   late double latitude = 0.0;
   bool isLoading = true;
+  List<dynamic> myItemsData = [];
 
   @override
   void initState() {
     super.initState();
     printBtn = true;
   getPhotoDataLocalisation();
+  
   }
   Future<void> getPhotoDataLocalisation() async {
+   
   try {
     if (widget.idLocalisation != null) {
       final reponse = await ApiManager().fetchData("getAllLocalisation/${widget.idLocalisation}", "message of photo", "messageError");
 
       final res = reponse['AllLocalisations'];
-      print("Response from API: $res");
-      
+        getData();
       if (res != null) {
         setState(() {
           logitude = res["longitude"];
@@ -55,6 +57,20 @@ class MyDetailsItemsState extends State<MyDetailsItems> {
     print("Erreur : Les photos n'ont pas été récupérées $e");
   }
 }
+
+Future<void> getData() async {
+    try {
+      final reponse = await ApiManager().fetchData("getAllCommentaire/${widget.categorieName}/${widget.idEntreprise}", "message de recuperation des commentaires", "messageError");
+
+      setState(() {
+        myItemsData = reponse['utilisateursAvecCommentaires'];
+       isLoading = false;
+      });
+
+    } catch (e) {
+      print("Erreur : Les données n'ont pas été récupérées $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,6 +121,7 @@ class MyDetailsItemsState extends State<MyDetailsItems> {
 class DetailsHeader extends StatelessWidget {
   final String? nom;
    final int? idCompagny; 
+  //  final int? totalEtoile;
    final String? adresseEntreprise; 
   const DetailsHeader({Key? key, this.nom, this.idCompagny, this.adresseEntreprise}) : super(key: key);
 
