@@ -145,9 +145,12 @@ class MyItems extends StatelessWidget {
     return SingleChildScrollView(
         child:Card(
        color: Colors.white,
-      child: ListTile(
-        leading: const CircleAvatar(
-          backgroundImage: NetworkImage('https://plus.unsplash.com/premium_photo-1664870883044-0d82e3d63d99?auto=format&fit=crop&q=80&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&w=1470'),
+      child:ListTile(
+        leading: item['photo_user']!=null ?
+        CircleAvatar(
+          backgroundImage: NetworkImage("${ApiManager().baseUrlImage}/imageUser/${item["photo_user"]}"),
+        ):const CircleAvatar(
+          backgroundImage: NetworkImage("https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg?w=740&t=st=1701674933~exp=1701675533~hmac=f0fa4c7c1274f6531895813218723638b6356b1f413ab8a0d1bf30381e07624b"),
         ),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -169,6 +172,7 @@ class MyItems extends StatelessWidget {
               onTap: () {
                 final userName= item['nom_utilisateur'];
                 final usercontenu= item['contenu_commentaire'];
+                final userPhoto= item['photo_user'];
                 final entrepriseName = item['entreprise'] != null ? item['entreprise']['nom_entreprise'] : 'null';
                 final idLoc= item['entreprise'] != null ? item['entreprise']['id_Localisation']:  item['id_localisation'];
                 final heure=item['heure'];
@@ -179,7 +183,7 @@ class MyItems extends StatelessWidget {
                           showDialog(
               context: context,
               builder: (BuildContext context) {
-                return  AvisModal(userName:userName,usercontenu:usercontenu,entrepriseName:entrepriseName,heure:heure,date:date,nbre_etoiles:nbre_etoiles, idPhoto:item['id_photo'],idLoc: idLoc);
+                return  AvisModal(userName:userName,usercontenu:usercontenu,entrepriseName:entrepriseName,heure:heure,date:date,nbre_etoiles:nbre_etoiles, idPhoto:item['id_photo'],idLoc: idLoc,userPhoto:userPhoto);
               },
             );  
                           },

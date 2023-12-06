@@ -140,7 +140,7 @@ Future<void> getInfosUserOk(int? id) async {
                     )
               ),
               Text(
-                'BENE ${userData["photo_user"]}',
+                'BENE',
                  style: GoogleFonts.lilitaOne(
                    color: Colors.yellow,
                     fontSize: 17

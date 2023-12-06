@@ -511,10 +511,16 @@ class AvisListeState extends State<AvisListe> {
       padding: EdgeInsets.only(top: 20.0),
       child: Row(
         children: [
-          const CircleAvatar(
+           widget.commentaires["photo_user"]!=null ?
+           CircleAvatar(
             radius: 30,
             backgroundImage: NetworkImage(
-                "https://images.unsplash.com/photo-1524499982521-1ffd58dd89ea?auto=format&fit=crop&q=80&w=1571&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+              "${ApiManager().baseUrlImage}/imageUser/${widget.commentaires["photo_user"]}"
+            ),
+          ):const CircleAvatar(
+            radius: 30,
+            backgroundImage: NetworkImage(
+               "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg?w=740&t=st=1701674933~exp=1701675533~hmac=f0fa4c7c1274f6531895813218723638b6356b1f413ab8a0d1bf30381e07624b"),
           ),
           SizedBox(width: 10),
           Expanded(
@@ -561,6 +567,7 @@ class AvisListeState extends State<AvisListe> {
                                     nbre_etoiles: nbre_etoiles,
                                     idPhoto: widget.commentaires['id_photo'],
                                     idLoc: widget.commentaires['entreprise']['id_Localisation'],
+                                    userPhoto:widget.commentaires['photo_user']
                                   );
                                 },
                               );

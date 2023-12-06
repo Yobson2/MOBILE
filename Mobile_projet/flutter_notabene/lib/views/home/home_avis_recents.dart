@@ -71,8 +71,12 @@ class _MyCommentState extends State<MyComment> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const CircleAvatar(
-                        backgroundImage: NetworkImage("https://images.unsplash.com/photo-1695653420505-19343dd89ac1?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+                      avis["photo_user"]!=null ?
+                       CircleAvatar(
+                        backgroundImage: NetworkImage("${ApiManager().baseUrlImage}/imageUser/${avis["photo_user"]}"),
+                        radius: 30,
+                      ): const CircleAvatar(
+                        backgroundImage: NetworkImage("https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg?w=740&t=st=1701674933~exp=1701675533~hmac=f0fa4c7c1274f6531895813218723638b6356b1f413ab8a0d1bf30381e07624b"),
                         radius: 30,
                       ),
                       const SizedBox(width: 10),
@@ -85,7 +89,7 @@ class _MyCommentState extends State<MyComment> {
                                 SizedBox(
                               width: 120,
                               child:Text(
-                             '${avis["nom_utilisateur"]}',
+                             '${avis["nom_utilisateur"]} ',
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
@@ -96,6 +100,7 @@ class _MyCommentState extends State<MyComment> {
             InkWell(
               onTap: () {
                 final userName= avis['nom_utilisateur'];
+                 final userPhoto= avis['photo_user'];
                 final usercontenu= avis['contenu_commentaire'];
                 final entrepriseName = avis['entreprise'] != null ? avis['entreprise']['nom_entreprise'] : 'null';
                 final idLoc= avis['entreprise'] != null ? avis['entreprise']['id_Localisation']:  avis['id_localisation'];
@@ -107,7 +112,7 @@ class _MyCommentState extends State<MyComment> {
                   showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return  AvisModal(userName:userName,usercontenu:usercontenu,entrepriseName:entrepriseName,heure:heure,date:date,nbre_etoiles:nbre_etoiles, idPhoto:avis['id_photo'],idLoc: idLoc);
+                    return  AvisModal(userName:userName,usercontenu:usercontenu,entrepriseName:entrepriseName,heure:heure,date:date,nbre_etoiles:nbre_etoiles, idPhoto:avis['id_photo'],idLoc: idLoc,userPhoto:userPhoto);
                   },
                 );  
                           },

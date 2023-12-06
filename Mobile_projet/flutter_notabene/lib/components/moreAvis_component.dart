@@ -18,6 +18,7 @@ class AvisModal extends StatefulWidget {
   final int? nbre_etoiles;
   final int? idPhoto;
   final int? idLoc;
+  final String? userPhoto;
 
   AvisModal({
     Key? key,
@@ -29,6 +30,7 @@ class AvisModal extends StatefulWidget {
     this.idPhoto,
     this.idLoc,
     this.heure,
+    this.userPhoto
   }) : super(key: key);
 
   @override
@@ -86,8 +88,6 @@ List<dynamic> mes =  [
   }
   @override
   Widget build(BuildContext context) {
-    print("mes données $mes");
-     print("mes données 2 ${ApiManager().baseUrlImage}/images/");
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -141,9 +141,14 @@ List<dynamic> mes =  [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    widget.userPhoto!=null ?
                     CircleAvatar(
                       backgroundImage: NetworkImage(
-                          'https://plus.unsplash.com/premium_photo-1664870883044-0d82e3d63d99?auto=format&fit=crop&q=80&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&w=1470'),
+                          "${ApiManager().baseUrlImage}/imageUser/${widget.userPhoto}"),
+                      radius: 30, 
+                    ):const CircleAvatar(
+                      backgroundImage: NetworkImage(
+                        "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg?w=740&t=st=1701674933~exp=1701675533~hmac=f0fa4c7c1274f6531895813218723638b6356b1f413ab8a0d1bf30381e07624b"),
                       radius: 30, 
                     ),
                     SizedBox(width: 10),

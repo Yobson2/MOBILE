@@ -98,8 +98,6 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
            final isLoggedIn = mainSession.userId!= 0;
-
-           print("test connection $isLoggedIn");
     return Scaffold(
       appBar: PreferredSize(
           preferredSize: const Size.fromHeight(60.0), 

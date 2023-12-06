@@ -52,7 +52,7 @@ Future<void> _initializeUserData() async {
   try {
     Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token!);
     id = jwtDecodedToken['userId'];
-    print("object id: " + id.toString());
+    // print("object id: " + id.toString());
      setState(() {
         this.userId = id;
       }); 
