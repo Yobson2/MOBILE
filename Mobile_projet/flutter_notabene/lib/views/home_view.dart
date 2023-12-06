@@ -13,7 +13,8 @@ import 'items/details_items.dart';
 
 
 class HomeView extends StatefulWidget {
-  const HomeView({Key? key}) : super(key: key);
+  final bool? testConnexion;
+  const HomeView({Key? key,  this.testConnexion}) : super(key: key);
 
   @override
   _HomeViewState createState() => _HomeViewState();
@@ -25,12 +26,34 @@ class _HomeViewState extends State<HomeView> {
   List<dynamic> searchResultsFinal = [];
   bool searcheck=true;
   bool isLoading = true;
- 
-  @override
+  Map<String, dynamic> userData = {};
+   int? userId;
+ String imageUrl = "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg?w=740&t=st=1701674933~exp=1701675533~hmac=f0fa4c7c1274f6531895813218723638b6356b1f413ab8a0d1bf30381e07624b";
+  
+   
+     @override
   void initState() {
     super.initState();
-  }
+      // getInfosUser(mainSession.userId);
+     
+    }
+    
 
+
+  //    Future<void> getInfosUser(int? id) async {
+   
+  //   try {
+  //     final myData = await ApiManager().fetchData("userById/$id","données récupérées","Erreur de récupération des données");
+  //     setState(() {
+  //         userData = myData['users']; 
+  //         isLoading = false; 
+  //       });
+  //       isLoading = false;
+  //   } catch (e) {
+  //     isLoading = false;
+  //      print("Erreur lors de la récupération des données utilisateur : $e");
+  //   }
+  // }
   Future<void> getAllData() async {
     final response = await ApiManager().fetchData("getAllEntreprise", "message ok", "messageError barre de recherche");
     
@@ -68,12 +91,15 @@ class _HomeViewState extends State<HomeView> {
        setState(() {
           isLoading = false; 
         });
-    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
            final isLoggedIn = mainSession.userId!= 0;
-    // print("object  $searchResultsFinal");
+
+           print("test connection $isLoggedIn");
     return Scaffold(
       appBar: PreferredSize(
           preferredSize: const Size.fromHeight(60.0), 
@@ -106,7 +132,8 @@ class _HomeViewState extends State<HomeView> {
           ],
         ),
         actions: [
-          isLoggedIn ?
+       
+          isLoggedIn && imageUrl.isNotEmpty ?
          Container(
         padding: const EdgeInsets.all(2),
         width: 50,
@@ -118,10 +145,11 @@ class _HomeViewState extends State<HomeView> {
             width: 2.0, 
           ),
         ),
-        child: const ClipOval(
-          child: Image(
+        child: ClipOval(
+          child: 
+          Image(
             image: NetworkImage(
-              'https://images.unsplash.com/photo-1699378999301-8c88a6a237d9?q=80&w=1364&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+             imageUrl
             ),
             fit: BoxFit.fill,
           ),

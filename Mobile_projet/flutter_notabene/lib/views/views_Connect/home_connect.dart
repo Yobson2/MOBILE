@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 import '../../components/option_component.dart';
+import '../../services/api_service.dart';
 import '../home_view.dart';
 import '../parametres_view.dart';
 
@@ -22,13 +23,15 @@ class ConnectedUserWidget extends StatefulWidget {
   State<ConnectedUserWidget> createState() => _ConnectedUserWidgetState();
 }
 class _ConnectedUserWidgetState extends State<ConnectedUserWidget> {
-  late int id;
+  // late int id;
+  late int id = 0;
   
   Map<String, dynamic> userData = {};
   int _currentIndex = 0;
    bool printBtn = true;
    bool printBtn2 = true;
-
+   int? userId;
+    bool isFirstLogin = true;
   List<Widget> pages = [
     const HomeView(),
     const MapSample(),
@@ -41,6 +44,7 @@ class _ConnectedUserWidgetState extends State<ConnectedUserWidget> {
 void initState() {
   super.initState();
    printBtn = true;
+   isFirstLogin = true;
   _initializeUserData();
 }
 
@@ -48,9 +52,19 @@ Future<void> _initializeUserData() async {
   try {
     Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token!);
     id = jwtDecodedToken['userId'];
-    // print("object id: " + id.toString());
-         
+    print("object id: " + id.toString());
+     setState(() {
+        this.userId = id;
+      }); 
+
     await _saveUserIdToStorage(id); 
+    if (isFirstLogin) {
+      // Actualisez la page ici
+      setState(() {
+        isFirstLogin = false;
+      });
+    }
+  
     ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
@@ -100,7 +114,12 @@ Future<void> _initializeUserData() async {
   @override
   Widget build(BuildContext context) {
       pages[1] = MapSample(testPrint: printBtn,testPrint2:printBtn2);
+     
        final isLoggedIn = mainSession.userId!= 0;
+      //  print('connnnnnnn $userId');
+      //  final isLoggedIn = userId!= 0;
+       pages[0] = HomeView(testConnexion: isFirstLogin);
+        pages[3] = ParamsView(testConnexion: isFirstLogin);
 
     return Scaffold(
       body: IndexedStack(

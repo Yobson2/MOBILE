@@ -17,8 +17,9 @@ class SessionManager {
     String categorie="";
     int taille=0;
     int nbreTolalEtoille=0;
+    String photo="";
     
-
+  
   late String sessionId;
   late User mainUser;
   int userId=0;
@@ -27,11 +28,13 @@ class SessionManager {
   void init(){
     this.sessionId = Uuid().v4();
     mainUser = User.createDefault();
+  
   }
 
 
   setuserId(int userId_){
     userId = userId_;  
+      print("mes donnees de la session $userId");
   }
 
 
@@ -47,6 +50,10 @@ class SessionManager {
     print("mes etoilles $nbreTolalEtoille");
   }
  
+ setPhoto(String item){
+    photo=item;
+    print("mes modifs $photo");
+  }
   
 
    Future<int?> getUserIdFromLocalStorage() async {

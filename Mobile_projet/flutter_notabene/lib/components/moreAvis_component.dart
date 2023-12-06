@@ -41,6 +41,7 @@ class AvisModalState extends State<AvisModal> {
  late double logitude = 0.0;
  late double latitude = 0.0;
  bool printBtn = true;
+ bool isLoading = true;
 
 
 List<dynamic> mes =  [
@@ -77,6 +78,7 @@ List<dynamic> mes =  [
       setState(() {
         logitude=res["longitude"];
         latitude=res["latitude"];
+        isLoading = false;
       });
     } catch (e) {
        print("Erreur : Les photos n'ont pas été recuperer $e");
@@ -193,6 +195,9 @@ List<dynamic> mes =  [
 
       
                 SizedBox(height: 16),
+                 isLoading 
+                ? Center(child: CircularProgressIndicator())
+                :
                 CarouselSlider(
                   items: mesDonnees.map((donnees) {
                     return Container(
@@ -242,7 +247,6 @@ List<dynamic> mes =  [
                     printBtn = false;
                   });
 
-                  print("object nom de l'entreprise ${widget.entrepriseName}");
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => MapSample(longLoc:logitude,latLoc:latitude,testPrint: printBtn,testPrint2:false, nomBoite:widget.entrepriseName)),
@@ -261,10 +265,7 @@ List<dynamic> mes =  [
 
           GestureDetector(
                 onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => SecondPage()),
-                  // );
+
                 },
                 child: Column(
                   children: [

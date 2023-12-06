@@ -96,31 +96,26 @@ class _ImagePreviewPageState extends State<ImagePreviewPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(10.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton.icon(
                     onPressed: () {
                       savePhoto(id);
                     },
-                    icon: const Icon(Icons.check),
-                    label: const Text('Enregistrer'),
-                    style: ElevatedButton.styleFrom(primary: Colors.blue),
+                    icon: const Icon(Icons.check,color: Colors.blue),
+                    label: const Text(''),
+                    style: ElevatedButton.styleFrom(primary: Colors.transparent),
                   ),
-                  const SizedBox(width: 16.0),
+                  const SizedBox(width: 130.0),
                   ElevatedButton.icon(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const PrintCamera(),
-                        ),
-                      );
+                       Navigator.of(context).pop();
                     },
-                    icon: const Icon(Icons.delete_forever),
-                    label: const Text('Supprimer'),
-                    style: ElevatedButton.styleFrom(primary: Colors.red),
+                    icon: const Icon(Icons.close, color: Colors.white,),
+                    label: const Text(''),
+                    style: ElevatedButton.styleFrom(primary: Colors.transparent),
                   ),
                 ],
               ),

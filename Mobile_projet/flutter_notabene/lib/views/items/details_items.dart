@@ -22,6 +22,7 @@ class MyDetailsItemsState extends State<MyDetailsItems> {
   bool printBtn = true;
   late double logitude = 0.0;
   late double latitude = 0.0;
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -41,6 +42,7 @@ class MyDetailsItemsState extends State<MyDetailsItems> {
         setState(() {
           logitude = res["longitude"];
           latitude = res["latitude"];
+          isLoading = false;
         });
       } else {
         // Handle the case when res is null
@@ -85,7 +87,9 @@ class MyDetailsItemsState extends State<MyDetailsItems> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            
+             isLoading 
+        ? Center(child: CircularProgressIndicator())
+        :
             DetailsHeader(nom: widget.nomEntreprise, idCompagny:widget.idEntreprise, adresseEntreprise:widget.adresseEntreprise), 
             MyChangeInfos(adresseEntreprise:widget.adresseEntreprise,nomEntreprise:widget.nomEntreprise, logitude:logitude,latitude :latitude ),
             const Infos1Description(),

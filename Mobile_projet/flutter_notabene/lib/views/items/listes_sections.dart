@@ -101,8 +101,8 @@ class _ListesBlocItemsState extends State<ListesBlocItems> {
       body: Container(
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20.0),
-            topRight: Radius.circular(20.0),
+            topLeft: Radius.circular(30.0),
+            topRight: Radius.circular(30.0),
           ),
         ),
         child: Padding(
@@ -238,11 +238,12 @@ class MyItems extends StatelessWidget {
 
           ],
         ),
+        
       subtitle: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-  children: [
+        mainAxisAlignment: MainAxisAlignment.start,
+      children: [
       if(item['entreprise'] != null)
-    InkWell(
+        InkWell(
           onTap: () {
                  final name= item['entreprise']['nom_entreprise'] ?? 'null';
                 final idEntreprise=item['entreprise']['id_entreprise'];
@@ -260,7 +261,8 @@ class MyItems extends StatelessWidget {
                  ]),
                 ),
                  const SizedBox(width: 5),
-                Text(
+              Flexible(
+                child:   Text(
       item['entreprise'] != null
         ? "${item['entreprise']['nom_entreprise'] ?? 'Nom non disponible'}"
         : '',
@@ -269,10 +271,12 @@ class MyItems extends StatelessWidget {
         color: Colors.grey,
         fontWeight: FontWeight.normal,
       ),
-    ),
-
-  ],
-),
+        ),
+                
+                )
+      
+      ],
+      ),
 
         
       ),

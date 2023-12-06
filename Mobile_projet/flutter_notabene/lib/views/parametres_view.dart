@@ -7,10 +7,32 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../main.dart';
 import '../screens/login_screen.dart';
+import '../services/api_service.dart';
 
-class ParamsView extends StatelessWidget {
-  const ParamsView({super.key});
+class ParamsView extends StatefulWidget {
+  final bool? testConnexion;
+  const ParamsView({Key? key,this.testConnexion}) : super(key: key);
 
+  @override
+  _ParamsViewState createState() => _ParamsViewState();
+}
+
+class _ParamsViewState extends State<ParamsView> {
+  String selectedPhoto = ''; 
+  int? userId;
+  Map<String, dynamic> userData = {};
+  bool isLoading = true;
+   String imageUrl = "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg?w=740&t=st=1701674933~exp=1701675533~hmac=f0fa4c7c1274f6531895813218723638b6356b1f413ab8a0d1bf30381e07624b";
+
+   @override
+  void initState() {
+    super.initState();
+      // getInfosUserOk(mainSession.userId);
+     
+    }
+
+
+ 
  void _showExitConfirmationDialog(BuildContext context) {
   
   showDialog(
@@ -74,9 +96,27 @@ class ParamsView extends StatelessWidget {
 }
 
 
+Future<void> getInfosUserOk(int? id) async {
+  try {
+    final myData = await ApiManager().fetchData("userById/$id","données récupérées","Erreur de récupération des données");
+    final res = myData['users'];
+
+    print(" mes données du paramtres $res");
+    setState(() {
+      userData = myData['users'];
+      isLoading = false;
+    });
+  } catch (e) {
+    isLoading = false;
+    print("Erreur lors de la récupération des données utilisateur : $e");
+  }
+}
+
+
   @override
   Widget build(BuildContext context) {
      final isLoggedIn = mainSession.userId!= 0;
+
     return Scaffold(
        appBar: PreferredSize(
           preferredSize: const Size.fromHeight(60.0), 
@@ -100,7 +140,7 @@ class ParamsView extends StatelessWidget {
                     )
               ),
               Text(
-                'BENE',
+                'BENE ${userData["photo_user"]}',
                  style: GoogleFonts.lilitaOne(
                    color: Colors.yellow,
                     fontSize: 17
@@ -109,56 +149,52 @@ class ParamsView extends StatelessWidget {
           ],
         ),
         actions: [
-          isLoggedIn ?
-         Container(
-        padding: const EdgeInsets.all(2),
-        width: 50,
-        height: 40,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(
-            color: Colors.black12, 
-            width: 2.0, 
-          ),
+          isLoggedIn && imageUrl.isNotEmpty 
+                ? Container(
+                    padding: const EdgeInsets.all(2),
+                    width: 50,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.black12,
+                        width: 2.0,
+                      ),
+                    ),
+                    child: ClipOval(
+                      child: Image(
+                        image: NetworkImage(
+                          imageUrl,
+                        ),
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  )
+                : InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const LoginForm()),
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(8.0),
+                      width: 50,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15.0),
+                        color: Colors.blue,
+                      ),
+                      child: Icon(
+                        Icons.person_outline,
+                        color: Colors.black,
+                      ),
+                    ),
+                  )
+          ],
+          centerTitle: true,
         ),
-        child: const ClipOval(
-          child: Image(
-            image: NetworkImage(
-              'https://images.unsplash.com/photo-1699378999301-8c88a6a237d9?q=80&w=1364&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-            ),
-            fit: BoxFit.fill,
-          ),
-        ),
-      )
-
-          :InkWell(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const LoginForm()),
-            );
-          },
-          child: Container(
-            padding: const EdgeInsets.all(8.0),
-            width: 50,
-            height: 30,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15.0), 
-              color: Colors.blue,
-            ),
-            child: Icon(
-              Icons.person_outline,
-              color: Colors.black, 
-            ),
-          ),
-        )
-
-          
-        ],
-    
-            centerTitle: true,
-          ),
-        ),
+      ),
       body: SingleChildScrollView(
       
       child: Container(
@@ -182,7 +218,7 @@ class ParamsView extends StatelessWidget {
               width: 400,
               padding: EdgeInsets.all(20),
               child: Text(
-                'Paramètres',
+                'Paramètres ',
                 style: TextStyle(
                   fontSize: 24.0,
                   fontWeight: FontWeight.bold,
@@ -197,12 +233,14 @@ class ParamsView extends StatelessWidget {
               leading: const Icon(Icons.person_outline),
               title: const Text('Profil'),
               
-              onTap: () {
+              onTap: ()  {
+                
                 if(mainSession.userId!=0){
-                  Navigator.push(
+                   Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const NoteUserWidget()),
                 );
+                
                 }else{
                   ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(

@@ -32,6 +32,8 @@ class MapSampleState extends State<MapSample> {
   String? placeAddress;
 
   String? place1;
+  Timer? _timer;
+  double _markerAlpha = 1.0;
   static const apiKey = 'AIzaSyCRD-FSgdo6Tcpoj-RTuLQfmERxBagzm04';
   static const apiUrl='https://maps.googleapis.com/maps/api/place/textsearch/json?query';
 
@@ -61,9 +63,10 @@ class MapSampleState extends State<MapSample> {
     zoom: 14.4746,
   );
 
+ 
   @override
   void dispose() {
-  
+   
     super.dispose();
   }
 
@@ -76,6 +79,7 @@ class MapSampleState extends State<MapSample> {
     final idUser= mainSession.userId;
 
     print("idUser $idUser");
+    
 
   }
 
@@ -118,7 +122,7 @@ class MapSampleState extends State<MapSample> {
         markerId: const MarkerId("position"),
         infoWindow: InfoWindow(title: "$locName"),
         position: userLocation,
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
       );
     });
 
@@ -134,7 +138,7 @@ class MapSampleState extends State<MapSample> {
     longitude2 = longitude!; 
   });
 
- 
+
   }
 
 
