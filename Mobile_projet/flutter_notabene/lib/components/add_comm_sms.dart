@@ -15,6 +15,7 @@ import '../views/photos/galerie_photo.dart';
 
 import 'package:http/http.dart' as http;
 
+import '../views/views_Connect/home_connect.dart';
 import 'message_component.dart';
 
 class CommentaireComponent extends StatefulWidget {
@@ -71,6 +72,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
   bool test=true;
   List<dynamic> resultat=[];
    bool printBtn = false;
+    bool isDataValid = true;
 
 
  
@@ -120,18 +122,20 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
 
  
  Future<void> addCommentaire(int myId) async {
-    if (
-      _commentaireController.text.isEmpty &&
-       _images.isEmpty ||
-       mesPhotos==null &&
-      // _nameEntrepriseController.text.isEmpty ||
-       texteAfficheAddresse.isEmpty &&
-       nombreEtoiles == null &&
-       mainSession.categorie.isEmpty
-      ) {
-        print("toutuututuutut");
-    
-    }
+     if (
+      (_commentaireController.text.isEmpty  
+     || mainSession.categorie.isEmpty
+    || texteAfficheAddresse.isEmpty 
+    || nombreEtoiles == 0)  &&
+    (mesPhotos== null  || _images.isEmpty) 
+      
+  ) {
+    print("Remplissez tous les champs");
+    setState(() {
+       isDataValid=false;
+    });
+    return; // Arrêtez la fonction s'il manque des champs obligatoires
+  }
   var request = http.MultipartRequest(
     'POST',
     Uri.parse('${ApiManager().baseUrl}/addPost/$myId'),
@@ -177,6 +181,7 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
       print('Images envoyées avec succès');
        _commentaireController.clear();
        _nameEntrepriseController.clear();
+       print("Success ok images $mesPhotos");
       setState(() {
          nombreEtoiles = 0;
         mainSession.selectedImageUrl_=[];
@@ -184,6 +189,8 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
          testImage2=false;
          texteAfficheAddresse = "Adresse du lieu";
          mainSession.categorie="";
+         isDataValid=true;
+        //  mesPhotos=null;
        
       });
 
@@ -196,10 +203,15 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
         },
       );
       
-
+       
       Timer(const Duration(seconds: 1), () {
-        Navigator.of(context).pop(); 
+         Navigator.of(context).pop(); 
       });
+     
+      // Navigator.pushReplacement(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => ConnectedUserWidget(token: "")),
+      // );
     } else {
       print('Erreur lors de l\'envoi des images. Statut ${response.statusCode}');
       // Fermer le loader
@@ -578,6 +590,15 @@ class _CommentaireComponentState extends State<CommentaireComponent> {
               ),
 
             const Divider(),
+            if (!isDataValid)
+                          Container(
+                            margin:EdgeInsets.only(left: 200),
+                            child: const Text(
+                              "Veuillez renseigner toutes les informations demandées",
+                              style: TextStyle(color: Colors.red,fontSize: 10),
+                            ),
+                          ),
+                      const SizedBox(height: 10),
              
              Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

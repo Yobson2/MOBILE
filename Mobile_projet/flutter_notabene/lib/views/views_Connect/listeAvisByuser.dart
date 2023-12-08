@@ -12,66 +12,67 @@ class ListesInsertAvisWidget extends StatefulWidget {
 }
 
 class ListesInsertAvisWidgetState extends State<ListesInsertAvisWidget> {
-     int? userId;
+  int? userId;
   List<dynamic> companies = [];
-   bool isLoading = true;
+  bool isLoading = true;
 
-   @override
-   void initState() {
+  @override
+  void initState() {
     super.initState();
     final id = mainSession.userId;
-      setState(() {
-        this.userId = id;
-      }); 
-     getCompagny();
-    }
-
-    Future<void> getCompagny() async {
-       setState(() {
-      isLoading = true; 
-    });
-     final response= await ApiManager().fetchData("message/${userId}", "message", "messageError");
-     
-     try {
-       final res = response['userComments'];
-
-       print("object ===== $res");
-       setState(() {
-         companies=List<dynamic>.from(res);
-          isLoading = false; 
-       });
-     } catch (e) {
-        print("erreur message $e");
-     }
-    }
-    
-    Future<void> deleteCompagny(int idCompagny) async {
-  try {
     setState(() {
-      isLoading = true; 
+      this.userId = id;
     });
-    final response = await ApiManager().deleteData("deleteEntreprise/${userId}/${idCompagny}", "message", "messageError");
+    getCompagny();
+  }
 
-    if (response != null && response.containsKey("data") && response["data"] == "ok") {
-      Flushbar(
-        title: 'Succès',
-        message: 'Suppression d\'entreprise réussie',
-        duration: Duration(seconds: 1),
-      )..show(context);
-    
+  Future<void> getCompagny() async {
+    setState(() {
+      isLoading = true;
+    });
+    final response =
+        await ApiManager().fetchData("message/${userId}", "message", "messageError");
+
+    try {
+      final res = response['userComments'];
       setState(() {
-        companies.removeWhere((company) => company["id_entreprise"] == idCompagny);
-        isLoading = false; 
+        companies = List<dynamic>.from(res);
+        isLoading = false;
+      });
+    } catch (e) {
+      print("erreur message $e");
+    }
+  }
+
+  Future<void> deleteCompagny(int idCompagny) async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      final response = await ApiManager()
+          .deleteData("deleteEntreprise/${userId}/${idCompagny}", "message", "messageError");
+
+      if (response != null &&
+          response.containsKey("data") &&
+          response["data"] == "ok") {
+        Flushbar(
+          title: 'Succès',
+          message: 'Suppression d\'entreprise réussie',
+          duration: Duration(seconds: 1),
+        )..show(context);
+
+        setState(() {
+          companies.removeWhere((company) => company["id_entreprise"] == idCompagny);
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      print("erreur message $e");
+      setState(() {
+        isLoading = false;
       });
     }
-  } catch (e) {
-    print("erreur message $e");
-    setState(() {
-      isLoading = false;
-    });
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -87,68 +88,79 @@ class ListesInsertAvisWidgetState extends State<ListesInsertAvisWidget> {
           ),
         ),
       ),
-      body:  isLoading 
+      body: isLoading
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          :Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ListView.builder(
-          itemCount: companies.length,
-          itemBuilder: (BuildContext context, int index) {
-            var company = companies[index];
-            return Card(
-                elevation: 1,
-                margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 4),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                color: Colors.white, 
-
-                child: ListTile(
-                  // leading:  CircleAvatar(
-                  //   backgroundImage: NetworkImage("http://192.168.1.4:8082/imageEntreprise/${companies[index]["photo_entreprises"]}"),
-                  //   radius: 20,
-                  // ),
-                  title: Text(
-                     company?["entreprise"]["nom_entreprise"] ?? "Nom non disponible",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          : companies.isEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.warning,
+                        size: 50,
+                        color: Colors.orange,
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        "Aucune donnée disponible",
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
                   ),
-                  subtitle:  const Padding(
-                    padding: EdgeInsets.only(top: 8), 
-                    child: Text(
-                      "Vous avez laissé un commentaires concernant cette entreprise.",
-                      style: TextStyle(fontSize: 12),
-                    ),
+                )
+              : Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: ListView.builder(
+                    itemCount: companies.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      var company = companies[index];
+                      return Card(
+                        elevation: 1,
+                        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 4),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        color: Colors.white,
+                        child: ListTile(
+                          title: Text(
+                            company?["entreprise"]["nom_entreprise"] ?? "Nom non disponible",
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          subtitle: const Padding(
+                            padding: EdgeInsets.only(top: 8),
+                            child: Text(
+                              "Vous avez laissé un commentaire concernant cette entreprise.",
+                              style: TextStyle(fontSize: 12),
+                            ),
+                          ),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  // Add your delete functionality here
+                                  // deleteCompagny(company["id_entreprise"]);
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.all(8),
+                                  child: Icon(
+                                    Icons.horizontal_rule,
+                                    color: Colors.black,
+                                    size: 18,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                  trailing:Row(
-  mainAxisSize: MainAxisSize.min,
-  children: [
-    GestureDetector(
-      onTap: () {
-       
-      },
-      child: Container(
-        padding: EdgeInsets.all(8),
-        child: Icon(
-          Icons.horizontal_rule, 
-          color: Colors.black, 
-          size: 18, 
-        ),
-      ),
-    ),
-  ],
-),
-
                 ),
-              );
-
-          },
-        ),
-      ),
     );
   }
 }
-
-
-

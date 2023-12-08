@@ -131,7 +131,7 @@ Future<void> saveInfosUser(int? id) async {
       ),
       body: Padding(
         padding: EdgeInsets.all(20),
-        child:isLoading
+        child:isLoading 
                   ? Center(child: CircularProgressIndicator())
                   : Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -144,7 +144,7 @@ Future<void> saveInfosUser(int? id) async {
                   
                     print('Changer la photo');
                   },
-                  child: _image!=null
+                  child: _image!=null 
                    ? Card(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(100.0),
@@ -165,7 +165,16 @@ Future<void> saveInfosUser(int? id) async {
                             backgroundImage: NetworkImage("${ApiManager().baseUrlImage}/imageUser/${userData["photo_user"]}"),
                           ),
                         )
-                      : Container()
+                      : Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(100.0),
+                          ),
+                          elevation: 5,
+                          child: CircleAvatar(
+                            radius: 70,
+                            backgroundImage: NetworkImage(imageUrl),
+                          ),
+                        )
                 ),
                 Positioned(
                   bottom: 0,

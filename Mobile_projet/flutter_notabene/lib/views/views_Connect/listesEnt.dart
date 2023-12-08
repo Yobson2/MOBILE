@@ -94,7 +94,28 @@ class ListesInsertCompagnyWidgetState extends State<ListesInsertCompagnyWidget> 
       body:  isLoading 
           ? const Center(
               child: CircularProgressIndicator(),
-            )
+            ):
+          companies.isEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.warning,
+                        size: 40,
+                        color: Colors.orange,
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        "Aucune donnée disponible",
+                        style: TextStyle(
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              
           :Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView.builder(
