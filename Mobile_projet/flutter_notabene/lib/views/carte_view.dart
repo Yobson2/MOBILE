@@ -454,73 +454,75 @@ class MapSampleState extends State<MapSample> {
             )
             ,
              Positioned(
-            left: 10.0,
-            right: 10.0,
-            bottom: 10.0, 
-            child: Column(
-              children: [
-                Center(
-                  child: Container(
-                    width: 400,
-                    padding: EdgeInsets.all(10.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          blurRadius: 5.0,
+  left: 10.0,
+  right: 10.0,
+  bottom: 10.0,
+  child: Column(
+    children: [
+      Center(
+        child: Container(
+          width: 400,
+          padding: EdgeInsets.all(10.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                blurRadius: 5.0,
+              ),
+            ],
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          child: placeName != null && placeAddress != null
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.place, color: Colors.blue),
+                        SizedBox(width: 8.0),
+                        Flexible(
+                          child: Text(
+                            "Nom de l'endroit: $placeName",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ],
-                      borderRadius: BorderRadius.circular(16.0),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    SizedBox(height: 8.0),
+                    Row(
                       children: [
-                         Row(
-                          children: [
-                            Icon(Icons.place, color: Colors.blue), 
-                            SizedBox(width: 8.0),
-                           Flexible(
-                            child:  Text(
-                              "Nom de l'endroit: $placeName",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            )
-                          ],
+                        Icon(Icons.location_on, color: Colors.green),
+                        SizedBox(width: 8.0),
+                        Flexible(
+                          child: Text("Adresse: $placeAddress"),
                         ),
-                        SizedBox(height: 8.0),
-                        Row(
+                      ],
+                    ),
+                    SizedBox(height: 10.0),
+                    if (widget.testPrint!)
+                      Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.location_on, color: Colors.green), 
-                            SizedBox(width: 8.0),
-                            Flexible(
-                              child: Text("Adresse: $placeAddress"),)
-                          ],
-                        ),
-                        SizedBox(height: 10.0),
-                    
-                        if(widget.testPrint!)
-                          Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                  width: 200,
-                                  height: 40,
-                                   child: ElevatedButton(
-                                     onPressed: () {
+                            SizedBox(
+                              width: 200,
+                              height: 40,
+                              child: ElevatedButton(
+                                onPressed: () {
                                   if (isLoggedIn) {
-                                    
-                                     Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => CommentaireComponent(
-                                        placeName: placeName ?? "",
-                                        placeAddress: placeAddress ?? "",
-                                        latitude: latitude2,
-                                        longitude: longitude2 ,
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            CommentaireComponent(
+                                          placeName: placeName ?? "",
+                                          placeAddress: placeAddress ?? "",
+                                          latitude: latitude2,
+                                          longitude: longitude2,
+                                        ),
                                       ),
-                                    ),);
+                                    );
                                   } else {
                                     Navigator.push(
                                       context,
@@ -530,56 +532,56 @@ class MapSampleState extends State<MapSample> {
                                     );
                                   }
                                 },
-                                      child: const Text('Terminé'),
-                                    ),
-                                 ),
-
-
-                            ],
-                          ),
+                                child: const Text('Terminé'),
+                              ),
+                            ),
+                          ],
                         ),
-                         if(widget.testPrint2!=false)
-                        Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                  width: 200,
-                                  height: 40,
-                                  
-                                  child: ElevatedButton(
-                                    
-                                     onPressed: () {
-                                     List<dynamic> resultat = [placeName ?? "", placeAddress, latitude2, longitude2];
-                                      Navigator.pop(context, resultat);
-                                     },
-                                     
-                                      child: const Text('Selectionné'),)
-                                  )
-                                  
-                                  ]
-                            )
-
-
+                      ),
+                    if (widget.testPrint2 != false)
+                      Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 200,
+                              height: 40,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  List<dynamic> resultat = [
+                                    placeName ?? "",
+                                    placeAddress,
+                                    latitude2,
+                                    longitude2,
+                                  ];
+                                  Navigator.pop(context, resultat);
+                                },
+                                child: const Text('Selectionné'),
+                              ),
+                            ),
+                          ],
                         ),
-                       Container(
-                        height: 22,
-                        alignment: Alignment.center, 
-                        child: Icon(
-                          Icons.horizontal_rule,
-                          size: 50.0, 
-                          color: Colors.blue, 
-                        ),
-                      )
-
-                      ],
+                      ),
+                    Container(
+                      height: 22,
+                      alignment: Alignment.center,
+                      child: Icon(
+                        Icons.horizontal_rule,
+                        size: 50.0,
+                        color: Colors.blue,
+                      ),
                     ),
-                  ),
+                  ],
+                )
+              : Center(
+                  child: CircularProgressIndicator(),
                 ),
+        ),
+      ),
+    ],
+  ),
+),
 
-              ],
-            ),
-          ),
         ],
       ),
     );
